@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Microsoft.MixedReality.Toolkit.Input;
+using Microsoft.MixedReality.Toolkit.UI;
 
 [RequireComponent(typeof(PieceCreator))]
 public class ChessGameController : MonoBehaviour
@@ -48,7 +50,13 @@ public class ChessGameController : MonoBehaviour
     private void CreatePieceAndInitialize(Vector2Int squareCoords, TeamColor team, Type type)
     {
         Piece newPiece = pieceCreator.CreatePiece(type).GetComponent<Piece>();
+        //make each piece interactable with AR
+        newPiece.gameObject.AddComponent<BoxCollider>();
+        newPiece.gameObject.AddComponent<NearInteractionGrabbable>();
+        newPiece.gameObject.AddComponent<ObjectManipulator>();
+
         newPiece.SetData(squareCoords, team, board);
+
 
         Material teamMaterial = pieceCreator.GetTeamMaterial(team);
         newPiece.SetMaterial(teamMaterial);
