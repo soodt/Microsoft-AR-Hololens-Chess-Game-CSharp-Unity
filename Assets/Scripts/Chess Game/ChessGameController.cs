@@ -54,9 +54,7 @@ public class ChessGameController : MonoBehaviour
         newPiece.gameObject.AddComponent<BoxCollider>();
         newPiece.gameObject.AddComponent<NearInteractionGrabbable>();
         newPiece.gameObject.AddComponent<ObjectManipulator>();
-
         newPiece.SetData(squareCoords, team, board);
-
 
         Material teamMaterial = pieceCreator.GetTeamMaterial(team);
         newPiece.SetMaterial(teamMaterial);
