@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Microsoft.MixedReality.Toolkit.Input;
+using Microsoft.MixedReality.Toolkit.UI;
 
 public class PieceCreator : MonoBehaviour
 {
@@ -18,12 +20,15 @@ public class PieceCreator : MonoBehaviour
         }
     }
 
+
     public GameObject CreatePiece(Type type)
     {
         GameObject prefab = nameToPieceDict[type.ToString()];
         if (prefab)
         {
             GameObject newPiece = Instantiate(prefab);
+            Vector3 scaleChange = new Vector3(-0.8f, -0.8f, -0.8f);
+            newPiece.transform.localScale += scaleChange;
             return newPiece;
         }
         return null;

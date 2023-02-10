@@ -1,1 +1,0 @@
-# Microsoft-Hololens-Chess-Game

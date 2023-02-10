@@ -3,9 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Microsoft.MixedReality.Toolkit.Input;
+using Microsoft.MixedReality.Toolkit.UI;
 
 [RequireComponent(typeof(MaterialSetter))]
 [RequireComponent(typeof(IObjectTweener))]
+
+
 public abstract class Piece : MonoBehaviour
 {
 	[SerializeField] private MaterialSetter materialSetter;
@@ -54,6 +58,7 @@ public abstract class Piece : MonoBehaviour
 	{
 		avaliableMoves.Add(coords);
 	}
+
 
 	public void SetData(Vector2Int coords, TeamColor team, Board board)
 	{
