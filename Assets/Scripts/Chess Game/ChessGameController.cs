@@ -74,10 +74,10 @@ public class ChessGameController : MonoBehaviour
                 }
                 if (distance < board.squareSize*1.5)
                 {
-                    newPiece.SetData(newCoords, team, board);
+                    newPiece.MovePiece(newCoords);
                 } else 
                 {
-                    newPiece.SetData(newPiece.occupiedSquare, team, board);
+                    newPiece.MovePiece(newPiece.occupiedSquare);
                 }
             }
         );
