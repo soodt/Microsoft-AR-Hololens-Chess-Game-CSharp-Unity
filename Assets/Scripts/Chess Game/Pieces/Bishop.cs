@@ -8,4 +8,10 @@ public class Bishop : Piece
     {
         throw new System.NotImplementedException();
     }
+
+    public override void MovePiece(Vector2Int coords)
+    {
+        this.occupiedSquare = coords;
+        transform.position = this.board.CalculatePositionFromCoords(coords);
+    }
 }

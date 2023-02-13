@@ -54,8 +54,39 @@ public class ChessGameController : MonoBehaviour
         newPiece.gameObject.AddComponent<BoxCollider>();
         newPiece.gameObject.AddComponent<NearInteractionGrabbable>();
         newPiece.gameObject.AddComponent<ObjectManipulator>();
+
         // add gravity to each piece
-        newPiece.gameObject.AddComponent<Rigidbody>();
+        //newPiece.gameObject.AddComponent<Rigidbody>();
+
+        // add snapping to each piece
+        newPiece.GetComponent<ObjectManipulator>().OnManipulationEnded.AddListener(delegate
+            {
+                float distance = board.squareSize * 4;
+                Vector2Int newCoords = new Vector2Int(-1, -1);
+                for (int i = 0; i < 8; i++)
+                {
+                    for (int j = 0; j < 8; j++)
+                    {
+                        Vector2Int nextSquare = new Vector2Int(i, j);
+                        float newDistance = Vector3.Distance(newPiece.transform.position, board.CalculatePositionFromCoords(nextSquare));
+                        if (newDistance < distance)
+                        {
+                            distance = newDistance;
+                            newCoords.Set(i, j);
+                        }
+                    }
+                }
+                if (distance < board.squareSize * 1.5)
+                {
+                    newPiece.MovePiece(newCoords);
+                }
+                else
+                {
+                    newPiece.MovePiece(newPiece.occupiedSquare);
+                }
+            }
+        );
+
         newPiece.SetData(squareCoords, team, board);
 
         Material teamMaterial = pieceCreator.GetTeamMaterial(team);
