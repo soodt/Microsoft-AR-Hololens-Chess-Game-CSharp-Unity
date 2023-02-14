@@ -82,12 +82,13 @@ public class ChessGameController : MonoBehaviour
                 }
             }
         );
-        
+
         newPiece.SetData(squareCoords, team, board);
 
         Material teamMaterial = pieceCreator.GetTeamMaterial(team);
         newPiece.SetMaterial(teamMaterial);
-        if (team == TeamColor.Black) {
+        if (team == TeamColor.Black)
+        {
             newPiece.transform.Rotate(0.0f, 180.0f, 0.0f, Space.Self);
         }
     }

@@ -11,8 +11,9 @@ public class King : Piece
     }
 
     public override void MovePiece(Vector2Int coords)
-	{
+    {
         this.occupiedSquare = coords;
-		transform.position = this.board.CalculatePositionFromCoords(coords);
-	}
+        transform.position = this.board.CalculatePositionFromCoords(coords);
+    }
+
 }

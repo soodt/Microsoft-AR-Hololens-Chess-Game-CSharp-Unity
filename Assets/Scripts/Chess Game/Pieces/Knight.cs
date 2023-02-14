@@ -36,5 +36,6 @@ public class Knight : Piece
 		if (!moved) {
 			transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
 		}
+
 	}
 }
