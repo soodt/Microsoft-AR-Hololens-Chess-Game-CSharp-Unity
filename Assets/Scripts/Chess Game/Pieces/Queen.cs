@@ -21,7 +21,6 @@ public class Queen : Piece
         throw new System.NotImplementedException();
     }
 
-
 public override void MovePiece(Vector2Int coords)
 {
     Vector2Int displacement = coords - this.occupiedSquare;
@@ -48,6 +47,5 @@ public override void MovePiece(Vector2Int coords)
   
     
 }
-
 
 }
