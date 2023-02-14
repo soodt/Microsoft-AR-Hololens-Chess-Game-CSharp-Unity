@@ -15,4 +15,5 @@ public class King : Piece
         this.occupiedSquare = coords;
         transform.position = this.board.CalculatePositionFromCoords(coords);
     }
+
 }

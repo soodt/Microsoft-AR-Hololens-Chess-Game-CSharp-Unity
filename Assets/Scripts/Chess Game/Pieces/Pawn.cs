@@ -12,6 +12,7 @@ public class Pawn : Piece
 
     public override void MovePiece(Vector2Int coords)
     {
+
         if ((coords.x != 1 & coords.x-this.occupiedSquare.x == 0 & coords.y-this.occupiedSquare.y == 1) | 
             (coords.x == 1 & coords.x-this.occupiedSquare.x == 0 & coords.y-this.occupiedSquare.y <= 2 & coords.y - this.occupiedSquare.y >= 1))
         {
@@ -23,4 +24,5 @@ public class Pawn : Piece
             transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
         }
     }
+
 }

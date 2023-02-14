@@ -14,4 +14,5 @@ public class Rook : Piece
         this.occupiedSquare = coords;
         transform.position = this.board.CalculatePositionFromCoords(coords);
     }
+
 }
