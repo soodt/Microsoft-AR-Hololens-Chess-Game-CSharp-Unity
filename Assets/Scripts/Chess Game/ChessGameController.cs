@@ -77,6 +77,7 @@ public class ChessGameController : MonoBehaviour
                 {
                     newPiece.MovePiece(newCoords);
                 } else 
+
                 {
                     newPiece.MovePiece(newPiece.occupiedSquare);
                 }

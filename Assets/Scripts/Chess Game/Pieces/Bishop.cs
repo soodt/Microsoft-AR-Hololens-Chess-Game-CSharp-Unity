@@ -11,6 +11,7 @@ public class Bishop : Piece
 
     public override void MovePiece(Vector2Int coords)
 
+
     {
         Vector2Int displacement = coords - this.occupiedSquare;
         //bool moved = false;
@@ -29,6 +30,7 @@ public class Bishop : Piece
         }  
 
     }
+
 
 
 }
