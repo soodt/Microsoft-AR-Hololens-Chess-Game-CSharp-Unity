@@ -54,6 +54,7 @@ public class ChessGameController : MonoBehaviour
         newPiece.gameObject.AddComponent<BoxCollider>();
         newPiece.gameObject.AddComponent<NearInteractionGrabbable>();
         newPiece.gameObject.AddComponent<ObjectManipulator>();
+
         // add snapping to each piece
         newPiece.GetComponent<ObjectManipulator>().OnManipulationEnded.AddListener ( delegate 
             { 
@@ -81,7 +82,7 @@ public class ChessGameController : MonoBehaviour
                 }
             }
         );
-
+        
         newPiece.SetData(squareCoords, team, board);
 
         Material teamMaterial = pieceCreator.GetTeamMaterial(team);
