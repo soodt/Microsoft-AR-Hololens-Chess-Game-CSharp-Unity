@@ -9,6 +9,7 @@ public class Rook : Piece
     {
         throw new System.NotImplementedException();
     }
+
     public override void MovePiece(Vector2Int coords)
 	{
         if (coords.x - this.occupiedSquare.x == 0 | coords.y - this.occupiedSquare.y == 0) {
@@ -19,4 +20,5 @@ public class Rook : Piece
             transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
         }
 	}
+
 }

@@ -9,4 +9,11 @@ public class Pawn : Piece
     {
         throw new NotImplementedException();
     }
+
+    public override void MovePiece(Vector2Int coords)
+    {
+        this.occupiedSquare = coords;
+        transform.position = this.board.CalculatePositionFromCoords(coords);
+    }
+
 }

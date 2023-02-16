@@ -11,6 +11,7 @@ public class Board : MonoBehaviour
 
     public Vector3 CalculatePositionFromCoords(Vector2Int coords)
     {
+        
         return bottomLeftSquareTransform.position + new Vector3(coords.x * squareSize, 0f, coords.y * squareSize);
     }
 }
