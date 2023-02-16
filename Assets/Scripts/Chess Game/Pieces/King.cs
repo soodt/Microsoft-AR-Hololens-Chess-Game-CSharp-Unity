@@ -12,8 +12,16 @@ public class King : Piece
 
     public override void MovePiece(Vector2Int coords)
     {
-        this.occupiedSquare = coords;
-        transform.position = this.board.CalculatePositionFromCoords(coords);
+        if (coords.x - this.occupiedSquare.x <= 1 & coords.x - this.occupiedSquare.x >= -1 &
+             coords.y - this.occupiedSquare.y <= 1 & coords.y - this.occupiedSquare.y >= -1)
+        {
+            this.occupiedSquare = coords;
+            transform.position = this.board.CalculatePositionFromCoords(coords);
+        }
+        else
+        {
+            transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
+        }
     }
 
 }
