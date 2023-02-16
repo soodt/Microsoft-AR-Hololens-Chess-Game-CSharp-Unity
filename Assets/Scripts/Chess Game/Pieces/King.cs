@@ -23,4 +23,5 @@ public class King : Piece
             transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
         }
     }
+
 }

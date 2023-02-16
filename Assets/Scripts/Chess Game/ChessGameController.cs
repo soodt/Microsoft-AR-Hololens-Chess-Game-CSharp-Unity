@@ -54,6 +54,7 @@ public class ChessGameController : MonoBehaviour
         newPiece.gameObject.AddComponent<BoxCollider>();
         newPiece.gameObject.AddComponent<NearInteractionGrabbable>();
         newPiece.gameObject.AddComponent<ObjectManipulator>();
+
         // add snapping to each piece
         newPiece.GetComponent<ObjectManipulator>().OnManipulationEnded.AddListener ( delegate 
             { 
@@ -86,7 +87,8 @@ public class ChessGameController : MonoBehaviour
 
         Material teamMaterial = pieceCreator.GetTeamMaterial(team);
         newPiece.SetMaterial(teamMaterial);
-        if (team == TeamColor.Black) {
+        if (team == TeamColor.Black)
+        {
             newPiece.transform.Rotate(0.0f, 180.0f, 0.0f, Space.Self);
         }
     }
