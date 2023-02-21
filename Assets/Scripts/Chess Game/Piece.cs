@@ -31,6 +31,10 @@ public abstract class Piece : MonoBehaviour
 		hasMoved = false;
 	}
 
+	public TeamColor getTeam() {
+		return this.team;
+	}
+
 	public void SetMaterial(Material selectedMaterial)
 	{
         if (materialSetter == null) 

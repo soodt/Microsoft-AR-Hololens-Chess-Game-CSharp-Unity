@@ -38,7 +38,7 @@ public class Board : MonoBehaviour
     }
 
 
-    public void takePiece(Vector2Int coords)
+    public void takePiece(Piece itself, Vector2Int coords)
     {
 
         Piece pieceTaken = getPiece(coords);
@@ -46,16 +46,16 @@ public class Board : MonoBehaviour
 
         for (int i = 0; i < 32; i++)
         {
-            if (controller.activePieces[i] != null)
+            /* if the piece is in activePieces, it is the same Piece as the one at given coords,
+               it is not the piece we are looking to move, and the two pieces are not on the same team
+            */
+            if ((controller.activePieces[i] != null) && (controller.activePieces[i] == pieceTaken) && (pieceTaken != itself) && (!pieceTaken.IsFromSameTeam(itself)))
             {
-                if (controller.activePieces[i] == pieceTaken)
-                {
-                    controller.activePieces[i] = null;
-                    break;
-                }
+                controller.activePieces[i] = null;
+                Destroy(pieceTaken.gameObject);
+                break;
             }
         }
-               Destroy(pieceTaken.gameObject);
     }
 
 }

@@ -13,6 +13,10 @@ public class ChessGameController : MonoBehaviour
     private PieceCreator pieceCreator;
     public Piece[] activePieces = new Piece[32];
 
+    private ChessPlayer whitePlayer;
+    private ChessPlayer blackPlayer;
+    // private ChessPlayer activePlayer;     could perhaps use this for turn taking instead of a count, just easier??
+
     private void Awake()
     {
         SetDependencies();
@@ -33,6 +37,12 @@ public class ChessGameController : MonoBehaviour
     {
         CreatePiecesFromLayout(startingBoardLayout);
         board.SetDependencies(this);
+    }
+
+    private void CreatePlayers()
+    {
+        whitePlayer = new ChessPlayer(TeamColor.White, board);
+        blackPlayer = new ChessPlayer(TeamColor.Black, board);
     }
 
 
@@ -103,12 +113,26 @@ public class ChessGameController : MonoBehaviour
         for (int i = 0; i < 32; i++)
         {
             if (activePieces[i] == null)
-            {
-                activePieces[i] = piece;
-                break;
-            }
+                {
+                    activePieces[i] = piece;
+                    break;
+                }
         }
      //   Debug.Log(piece); // this will print the message in the debugging console.
+    }
+
+    public void recordPieceRemoval(Piece piece)
+    {
+        // removedFrom is the player that the piece was taken from
+        ChessPlayer removedFrom = piece.getTeam() == TeamColor.White ? whitePlayer : blackPlayer;
+        // piece is the piece that was taken
+
+        removedFrom.RemovePiece(piece);
+        if (removedFrom == whitePlayer) {
+            blackPlayer.AddToTakenPieces(piece);
+        } else {
+            whitePlayer.AddToTakenPieces(piece);
+        }
     }
 
    

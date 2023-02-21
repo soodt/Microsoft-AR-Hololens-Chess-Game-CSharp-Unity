@@ -16,7 +16,7 @@ public class Rook : Piece
             Piece pieceCheck = board.getPiece(coords);
             if (pieceCheck)
             {
-                board.takePiece(coords);
+                board.takePiece(this, coords);
             }
             this.occupiedSquare = coords;
 		    transform.position = this.board.CalculatePositionFromCoords(coords);
