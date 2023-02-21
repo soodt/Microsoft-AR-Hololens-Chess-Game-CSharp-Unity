@@ -27,6 +27,11 @@ public class Knight : Piece
 		bool moved = false;
 		for (int i = 0; i < offsets.Length; i++) {
 			if (offsets[i] == displacement) {
+				Piece pieceCheck = board.getPiece(coords);
+				if (pieceCheck)
+				{
+					board.takePiece(coords);
+				}
 				this.occupiedSquare = coords;
 				transform.position = this.board.CalculatePositionFromCoords(coords);
 				moved = true;

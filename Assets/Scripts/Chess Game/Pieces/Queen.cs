@@ -32,7 +32,12 @@ public override void MovePiece(Vector2Int coords)
         {
             if (coords == this.occupiedSquare + direction * i)
             {
-                this.occupiedSquare = coords;
+                    Piece pieceCheck = board.getPiece(coords);
+                    if (pieceCheck)
+                    {
+                        board.takePiece(coords);
+                    }
+                    this.occupiedSquare = coords;
                 transform.position = this.board.CalculatePositionFromCoords(coords);
                 available = true;
                 break;

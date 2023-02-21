@@ -12,6 +12,11 @@ public class Pawn : Piece
 
     public override void MovePiece(Vector2Int coords)
     {
+        Piece pieceCheck = board.getPiece(coords);
+        if (pieceCheck)
+        {
+            board.takePiece(coords);
+        }
         this.occupiedSquare = coords;
         transform.position = this.board.CalculatePositionFromCoords(coords);
     }

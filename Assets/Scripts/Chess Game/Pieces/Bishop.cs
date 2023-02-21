@@ -19,6 +19,11 @@ public class Bishop : Piece
 
         if (System.Math.Abs(displacement.x) == System.Math.Abs(displacement.y))
         {
+            Piece pieceCheck = board.getPiece(coords);
+            if (pieceCheck)
+            {
+                board.takePiece(coords);
+            }
             this.occupiedSquare = coords;
             transform.position = this.board.CalculatePositionFromCoords(coords);
             //moved = true;

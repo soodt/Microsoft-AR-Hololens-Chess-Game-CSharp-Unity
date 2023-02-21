@@ -15,8 +15,13 @@ public class King : Piece
         if (coords.x - this.occupiedSquare.x <= 1 & coords.x - this.occupiedSquare.x >= -1 &
              coords.y - this.occupiedSquare.y <= 1 & coords.y - this.occupiedSquare.y >= -1)
         {
+            Piece pieceCheck = board.getPiece(coords);
+            if (pieceCheck)
+            {
+                board.takePiece(coords);
+            }
             this.occupiedSquare = coords;
-            transform.position = this.board.CalculatePositionFromCoords(coords);
+            transform.position = this.board.CalculatePositionFromCoords(coords);  
         }
         else
         {

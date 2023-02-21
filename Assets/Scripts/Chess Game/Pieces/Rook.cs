@@ -13,6 +13,11 @@ public class Rook : Piece
     public override void MovePiece(Vector2Int coords)
 	{
         if (coords.x - this.occupiedSquare.x == 0 | coords.y - this.occupiedSquare.y == 0) {
+            Piece pieceCheck = board.getPiece(coords);
+            if (pieceCheck)
+            {
+                board.takePiece(coords);
+            }
             this.occupiedSquare = coords;
 		    transform.position = this.board.CalculatePositionFromCoords(coords);
         } 
