@@ -19,6 +19,7 @@ public class Pawn : Piece
         }
         this.occupiedSquare = coords;
         transform.position = this.board.CalculatePositionFromCoords(coords);
+        
     }
 
 }
