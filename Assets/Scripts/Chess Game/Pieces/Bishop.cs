@@ -13,15 +13,28 @@ public class Bishop : Piece
         int xPos = this.occupiedSquare.x;
         int yPos = this.occupiedSquare.y;
         if (xPos < coords.x) {
-            for (xPos = this.occupiedSquare.x; xPos < coords.x; xPos++) {
-                if (board.getPiece(new Vector2Int(xPos, yPos))) {
+            for (xPos = this.occupiedSquare.x; xPos <= coords.x; xPos++) {
+                Piece temp = board.getPiece(new Vector2Int(xPos, yPos));
+                /* If there is a piece at (xPos, yPos), it is not the bishop itself
+                   They are not from the same team, and the (xPos, yPos) == coords (the exact square the piece wants to move to)
+                   Then let the bishop move there
+                   Else, not allowed move there
+                */
+                if (temp && temp != this) {
+                    if ((!temp.IsFromSameTeam(this)) && (xPos == coords.x && yPos == coords.y)) {
+                        return true;
+                    }
                     return false;
                 }
                 yPos++;
             }
         } else if (xPos > coords.x){
-            for (xPos = this.occupiedSquare.x; xPos > coords.x; xPos--) {
-                if (board.getPiece(new Vector2Int(xPos, yPos))) {
+            for (xPos = this.occupiedSquare.x; xPos >= coords.x; xPos--) {
+                Piece temp = board.getPiece(new Vector2Int(xPos, yPos));
+                if (temp && temp != this) {
+                    if ((!temp.IsFromSameTeam(this)) && (xPos == coords.x && yPos == coords.y)) {
+                        return true;
+                    }
                     return false;
                 }
                 yPos--;
