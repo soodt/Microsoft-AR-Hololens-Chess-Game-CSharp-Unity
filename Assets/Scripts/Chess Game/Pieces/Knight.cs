@@ -21,6 +21,17 @@ public class Knight : Piece
 		throw new System.NotImplementedException();
 	}
 
+	public bool canMoveThere(Vector2Int coords) {
+		Piece temp = board.getPiece(coords);
+        if (temp && temp != this) {
+			if (temp.IsFromSameTeam(this)) {
+				return false;
+			}
+			return true;
+        }
+        return true;
+	}
+
 	public override void MovePiece(Vector2Int coords)
 	{
 		Vector2Int displacement = coords - this.occupiedSquare;

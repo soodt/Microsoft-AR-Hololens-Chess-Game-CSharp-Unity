@@ -12,6 +12,10 @@ public class Bishop : Piece
     public bool canMoveThere(Vector2Int coords) {
         int xPos = this.occupiedSquare.x;
         int yPos = this.occupiedSquare.y;
+        int yModifier = 1;
+        if (yPos > coords.y) {
+                yModifier = -1;
+            }
         if (xPos < coords.x) {
             for (xPos = this.occupiedSquare.x; xPos <= coords.x; xPos++) {
                 Piece temp = board.getPiece(new Vector2Int(xPos, yPos));
@@ -21,23 +25,25 @@ public class Bishop : Piece
                    Else, not allowed move there
                 */
                 if (temp && temp != this) {
-                    if ((!temp.IsFromSameTeam(this)) && (xPos == coords.x && yPos == coords.y)) {
-                        return true;
+                    if (temp.IsFromSameTeam(this)) {
+                        return false;
                     }
-                    return false;
+                    return true;
                 }
-                yPos++;
+                yPos+= yModifier;
             }
         } else if (xPos > coords.x){
             for (xPos = this.occupiedSquare.x; xPos >= coords.x; xPos--) {
+                Debug.Log("xPos: " + xPos);
+                Debug.Log("yPos: " + yPos);
                 Piece temp = board.getPiece(new Vector2Int(xPos, yPos));
                 if (temp && temp != this) {
-                    if ((!temp.IsFromSameTeam(this)) && (xPos == coords.x && yPos == coords.y)) {
-                        return true;
+                    if (temp.IsFromSameTeam(this)) {
+                        return false;
                     }
-                    return false;
+                    return true;
                 }
-                yPos--;
+                yPos += yModifier;
             }
         }
         return true;

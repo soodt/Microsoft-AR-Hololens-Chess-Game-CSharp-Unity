@@ -10,6 +10,12 @@ public class Rook : Piece
         throw new System.NotImplementedException();
     }
 
+    public bool canMoveThere(Vector2Int coords) {
+		int xPos = this.occupiedSquare.x;
+        int yPos = this.occupiedSquare.y;
+        return true;
+	}
+
     public override void MovePiece(Vector2Int coords)
 	{
         if (coords.x - this.occupiedSquare.x == 0 | coords.y - this.occupiedSquare.y == 0) {
