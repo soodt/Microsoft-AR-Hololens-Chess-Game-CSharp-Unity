@@ -25,10 +25,11 @@ public class Bishop : Piece
                    Else, not allowed move there
                 */
                 if (temp && temp != this) {
-                    if (temp.IsFromSameTeam(this)) {
-                        return false;
+                    if (!temp.IsFromSameTeam(this) && (xPos == coords.x && yPos == coords.y)) {
+                        return true;
                     }
-                    return true;
+
+                    return false;
                 }
                 yPos+= yModifier;
             }
@@ -38,10 +39,11 @@ public class Bishop : Piece
                 Debug.Log("yPos: " + yPos);
                 Piece temp = board.getPiece(new Vector2Int(xPos, yPos));
                 if (temp && temp != this) {
-                    if (temp.IsFromSameTeam(this)) {
-                        return false;
+                    if (!temp.IsFromSameTeam(this) && (xPos == coords.x && yPos == coords.y)) {
+                        return true;
                     }
-                    return true;
+
+                    return false;
                 }
                 yPos += yModifier;
             }
