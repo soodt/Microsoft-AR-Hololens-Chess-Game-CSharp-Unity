@@ -86,6 +86,10 @@ public class Queen : Piece
         return true;
 	}
 
+public override bool isAttackingSquare(Vector2Int coords) {
+        return canMoveThere(coords);
+    }
+
 public override void MovePiece(Vector2Int coords)
 {
     Vector2Int displacement = coords - this.occupiedSquare;

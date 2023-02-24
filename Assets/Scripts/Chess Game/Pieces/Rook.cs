@@ -61,6 +61,10 @@ public class Rook : Piece
         return false; // should never reach here, just clears an error
 	}
 
+    public override bool isAttackingSquare(Vector2Int coords) {
+        return canMoveThere(coords);
+    }
+
     public override void MovePiece(Vector2Int coords)
 	{
         if ((coords.x - this.occupiedSquare.x == 0 | coords.y - this.occupiedSquare.y == 0) && canMoveThere(coords)) {

@@ -5,9 +5,18 @@ using UnityEngine;
 
 public class King : Piece
 {
+    public bool isInCheck{ get; set; }
     public override List<Vector2Int> SelectAvaliableSquares()
     {
         throw new NotImplementedException();
+    }
+
+    public bool getInCheck() {
+        return this.isInCheck;
+    }
+
+    public void setInCheck(bool val) {
+        this.isInCheck = val;
     }
 
     public bool canMoveThere(Vector2Int coords) {
@@ -20,6 +29,10 @@ public class King : Piece
         }
         return true;
 	}
+
+    public override bool isAttackingSquare(Vector2Int coords) {
+        return canMoveThere(coords);
+    }
 
     public override void MovePiece(Vector2Int coords)
     {

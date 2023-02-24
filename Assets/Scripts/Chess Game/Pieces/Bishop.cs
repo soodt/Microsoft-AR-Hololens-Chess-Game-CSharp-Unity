@@ -35,8 +35,6 @@ public class Bishop : Piece
             }
         } else if (xPos > coords.x){
             for (xPos = this.occupiedSquare.x; xPos >= coords.x; xPos--) {
-                Debug.Log("xPos: " + xPos);
-                Debug.Log("yPos: " + yPos);
                 Piece temp = board.getPiece(new Vector2Int(xPos, yPos));
                 if (temp && temp != this) {
                     if (!temp.IsFromSameTeam(this) && (xPos == coords.x && yPos == coords.y)) {
@@ -49,6 +47,10 @@ public class Bishop : Piece
             }
         }
         return true;
+    }
+
+    public override bool isAttackingSquare(Vector2Int coords) {
+        return canMoveThere(coords);
     }
 
     public override void MovePiece(Vector2Int coords)
