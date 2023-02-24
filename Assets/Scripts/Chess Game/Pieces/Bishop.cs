@@ -6,6 +6,14 @@ public class Bishop : Piece
 {
     public override List<Vector2Int> SelectAvaliableSquares()
     {
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; i< 8; j++)
+            {
+
+            }
+        }
+
         throw new System.NotImplementedException();
     }
     // Checks to see if there is a piece in the way
@@ -54,28 +62,32 @@ public class Bishop : Piece
     }
 
     public override void MovePiece(Vector2Int coords)
-
     {
-        Vector2Int displacement = coords - this.occupiedSquare;
-        //bool moved = false;
-        //int x = System.Math.Abs(displacement.x);
-        //int y = System.Math.Abs(displacement.y); 
-
-        if (System.Math.Abs(displacement.x) == System.Math.Abs(displacement.y) && canMoveThere(coords))
+        if (this.getTeam() == controller.getActivePlayer().getTeam())
         {
-            Piece pieceCheck = board.getPiece(coords);
-            if (pieceCheck)
+            Vector2Int displacement = coords - this.occupiedSquare;
+            if (System.Math.Abs(displacement.x) == System.Math.Abs(displacement.y) && canMoveThere(coords))
             {
-                board.takePiece(this, coords);
+                Piece pieceCheck = board.getPiece(coords);
+                if (pieceCheck)
+                {
+                    board.takePiece(this, coords);
+                }
+                this.occupiedSquare = coords;
+                transform.position = this.board.CalculatePositionFromCoords(coords);
+                controller.endTurn();
+                //moved = true;
             }
-            this.occupiedSquare = coords;
-            transform.position = this.board.CalculatePositionFromCoords(coords);
-            //moved = true;
-        }
-        else
+            else
+            {
+                transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
+            }
+        } else
         {
+            // If not this team's turn, snap back to occupied square
             transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
-        }  
+            Debug.Log("NoMoving!");
+        }
 
     }
 

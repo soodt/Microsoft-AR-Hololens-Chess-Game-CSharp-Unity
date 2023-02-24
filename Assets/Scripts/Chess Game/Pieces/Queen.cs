@@ -22,7 +22,7 @@ public class Queen : Piece
     }
 
    public bool canMoveThere(Vector2Int coords) {
-		 int xPos = this.occupiedSquare.x;
+		int xPos = this.occupiedSquare.x;
         int yPos = this.occupiedSquare.y;
         int yModifier = 0;
         if (yPos > coords.y) {
@@ -94,30 +94,39 @@ public override void MovePiece(Vector2Int coords)
 {
     Vector2Int displacement = coords - this.occupiedSquare;
     bool available = false;
-    foreach (var direction in directions)
-    {
-        for(int i = 1; i < 20; i++)
-            //for(int i = 1;i<board.size;i++)
+        if (this.getTeam() == controller.getActivePlayer().getTeam())
         {
-            if ((coords == this.occupiedSquare + direction * i) && canMoveThere(coords))
+            foreach (var direction in directions)
             {
-                    Piece pieceCheck = board.getPiece(coords);
-                    if (pieceCheck)
+                for (int i = 1; i < 20; i++)
+                //for(int i = 1;i<board.size;i++)
+                {
+                    if ((coords == this.occupiedSquare + direction * i) && canMoveThere(coords))
                     {
-                        board.takePiece(this, coords);
+                        Piece pieceCheck = board.getPiece(coords);
+                        if (pieceCheck)
+                        {
+                            board.takePiece(this, coords);
+                        }
+                        this.occupiedSquare = coords;
+                        transform.position = this.board.CalculatePositionFromCoords(coords);
+                        available = true;
+                        controller.endTurn();
+                        break;
                     }
-                    this.occupiedSquare = coords;
-                transform.position = this.board.CalculatePositionFromCoords(coords);
-                available = true;
-                break;
+                }
+                if (available) break;
             }
+            if (!available)
+            {
+                transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
+            }
+        } else
+        {
+            // If not this team's turn, snap back to occupied square
+            transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
+            Debug.Log("NoMoving!");
         }
-        if (available) break;
-    }
-    if (!available)
-    {
-        transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
-    }
   
     
 }

@@ -36,20 +36,29 @@ public class King : Piece
 
     public override void MovePiece(Vector2Int coords)
     {
-        if ((coords.x - this.occupiedSquare.x <= 1 & coords.x - this.occupiedSquare.x >= -1 &
+        if (this.getTeam() == controller.getActivePlayer().getTeam())
+        {
+            if ((coords.x - this.occupiedSquare.x <= 1 & coords.x - this.occupiedSquare.x >= -1 &
              coords.y - this.occupiedSquare.y <= 1 & coords.y - this.occupiedSquare.y >= -1) && canMoveThere(coords))
-        {
-            Piece pieceCheck = board.getPiece(coords);
-            if (pieceCheck)
             {
-                board.takePiece(this, coords);
+                Piece pieceCheck = board.getPiece(coords);
+                if (pieceCheck)
+                {
+                    board.takePiece(this, coords);
+                }
+                this.occupiedSquare = coords;
+                transform.position = this.board.CalculatePositionFromCoords(coords);
+                controller.endTurn();
             }
-            this.occupiedSquare = coords;
-            transform.position = this.board.CalculatePositionFromCoords(coords);  
-        }
-        else
+            else
+            {
+                transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
+            }
+        } else
         {
+            // If not this team's turn, snap back to occupied square
             transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
+            Debug.Log("NoMoving!");
         }
     }
 

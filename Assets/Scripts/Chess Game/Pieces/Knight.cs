@@ -40,22 +40,34 @@ public class Knight : Piece
 	{
 		Vector2Int displacement = coords - this.occupiedSquare;
 		bool moved = false;
-		for (int i = 0; i < offsets.Length; i++) {
-			if (offsets[i] == displacement) {
-				Piece pieceCheck = board.getPiece(coords);
-				if (pieceCheck)
+		if (this.getTeam() == controller.getActivePlayer().getTeam())
+		{
+			for (int i = 0; i < offsets.Length; i++)
+			{
+				if (offsets[i] == displacement)
 				{
-					board.takePiece(this, coords);
+					Piece pieceCheck = board.getPiece(coords);
+					if (pieceCheck)
+					{
+						board.takePiece(this, coords);
+					}
+					this.occupiedSquare = coords;
+					transform.position = this.board.CalculatePositionFromCoords(coords);
+                    controller.endTurn();
+                    moved = true;
+					i = offsets.Length;
 				}
-				this.occupiedSquare = coords;
-				transform.position = this.board.CalculatePositionFromCoords(coords);
-				moved = true;
-				i = offsets.Length;
 			}
-		}
-		if (!moved) {
-			transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
-		}
+			if (!moved)
+			{
+				transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
+			}
+		} else
+		{
+            // If not this team's turn, snap back to occupied square
+            transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
+            Debug.Log("NoMoving!");
+        }
 
 	}
 }

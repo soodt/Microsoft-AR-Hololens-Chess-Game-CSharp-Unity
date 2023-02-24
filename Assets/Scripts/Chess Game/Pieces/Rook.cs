@@ -67,18 +67,29 @@ public class Rook : Piece
 
     public override void MovePiece(Vector2Int coords)
 	{
-        if ((coords.x - this.occupiedSquare.x == 0 | coords.y - this.occupiedSquare.y == 0) && canMoveThere(coords)) {
-            Piece pieceCheck = board.getPiece(coords);
-            if (pieceCheck)
+        if (this.getTeam() == controller.getActivePlayer().getTeam())
+        {
+            if ((coords.x - this.occupiedSquare.x == 0 | coords.y - this.occupiedSquare.y == 0) && canMoveThere(coords))
             {
-                board.takePiece(this, coords);
+                Piece pieceCheck = board.getPiece(coords);
+                if (pieceCheck)
+                {
+                    board.takePiece(this, coords);
+                }
+                this.occupiedSquare = coords;
+                transform.position = this.board.CalculatePositionFromCoords(coords);
+                controller.endTurn();
             }
-            this.occupiedSquare = coords;
-		    transform.position = this.board.CalculatePositionFromCoords(coords);
-        } 
-        else {
-            transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
+            else
+            {
+                transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
+            }
         }
-	}
-
+        else
+        {
+            // If not this team's turn, snap back to occupied square
+            transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
+            Debug.Log("NoMoving!");
+        }
+    }
 }

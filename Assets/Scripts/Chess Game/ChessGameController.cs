@@ -15,7 +15,7 @@ public class ChessGameController : MonoBehaviour
 
     private ChessPlayer whitePlayer;
     private ChessPlayer blackPlayer;
-    private ChessPlayer activePlayer{get; set;}    // could perhaps use this for turn taking instead of a count, just easier??
+    private ChessPlayer activePlayer{get; set;}    
 
     private void Awake()
     {
@@ -156,6 +156,18 @@ public class ChessGameController : MonoBehaviour
             Debug.Log("White");
         } else {
             Debug.Log("Black");
+        }
+    }
+
+    public void ChangeTeam()
+    {
+        if (getActivePlayer() == whitePlayer)
+        {
+            activePlayer = blackPlayer;
+        }
+        else if (getActivePlayer() == blackPlayer)
+        {
+            activePlayer = whitePlayer;
         }
     }
 }
