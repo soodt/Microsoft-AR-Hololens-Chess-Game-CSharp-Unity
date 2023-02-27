@@ -1,25 +1,37 @@
+using Microsoft.MixedReality.Toolkit.Input;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Bishop : Piece
 {
+    /*
+    public UnityEvent onGrabStarted;
+
+    private NearInteractionGrabbable grabbable;
+
+    private void Start()
+    {
+        grabbable = GetComponent<NearInteractionGrabbable>();
+        grabbable.OnGrabStarted.AddListener(HandleGrabStarted); // Starting to try to implement highlightSquare when the piece is picked up!
+    }
+
+    private void HandleGrabStarted(GrabEventData eventData)
+    {
+        onGrabStarted.Invoke();
+    }
+    */
     public override List<Vector2Int> SelectAvaliableSquares()
     {
-        for (int i = 0; i < 8; i++)
-        {
-            for (int j = 0; i< 8; j++)
-            {
-
-            }
-        }
-
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
+
     // Checks to see if there is a piece in the way
     public bool canMoveThere(Vector2Int coords) {
         int xPos = this.occupiedSquare.x;
-        int yPos = this.occupiedSquare.y;
+        int yPos = this.occupiedSquare.y;  
         int yModifier = 1;
         if (yPos > coords.y) {
                 yModifier = -1;
@@ -66,6 +78,8 @@ public class Bishop : Piece
         if (this.getTeam() == controller.getActivePlayer().getTeam())
         {
             Vector2Int displacement = coords - this.occupiedSquare;
+            
+
             if (System.Math.Abs(displacement.x) == System.Math.Abs(displacement.y) && canMoveThere(coords))
             {
                 Piece pieceCheck = board.getPiece(coords);
@@ -91,5 +105,32 @@ public class Bishop : Piece
 
     }
 
+    public override void PossibleMoves()
+    {
+        avaliableMoves.Clear();
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                Vector2Int square = new Vector2Int(i, j);
+                Vector2Int displacementToSquare = square - this.occupiedSquare; // this is to go through all the squares checking which are safe to move to
+                if (squareIsMoveable(displacementToSquare) && canMoveThere(square)) // this should be implemented when the obj is picked up to highlight the possible squares. 
+                {
+                    avaliableMoves.Add(square);
+                }
+            }
+        }
+    }
 
+    private bool squareIsMoveable(Vector2Int displacementToSquare)
+    {
+        if (System.Math.Abs(displacementToSquare.x) == System.Math.Abs(displacementToSquare.y))// checks if the piece can move
+        {
+            Debug.Log("Turn Green");
+            return true;
+        }
+        
+        
+        return false;
+    }
 }

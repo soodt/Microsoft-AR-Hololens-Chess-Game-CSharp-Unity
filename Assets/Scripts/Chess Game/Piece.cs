@@ -10,7 +10,7 @@ using Microsoft.MixedReality.Toolkit.UI;
 [RequireComponent(typeof(IObjectTweener))]
 
 
-public abstract class Piece : MonoBehaviour
+public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
 {
 	[SerializeField] private MaterialSetter materialSetter;
 	public Board board { protected get; set; }
@@ -56,9 +56,12 @@ public abstract class Piece : MonoBehaviour
 	{
 
 	}
+    public virtual void PossibleMoves()
+	{
 
+	}
 
-	protected void TryToAddMove(Vector2Int coords)
+    protected void TryToAddMove(Vector2Int coords)
 	{
 		avaliableMoves.Add(coords);
 	}
@@ -72,4 +75,28 @@ public abstract class Piece : MonoBehaviour
 		this.controller = c;
 		transform.position = board.CalculatePositionFromCoords(coords);
 	}
+
+    public void OnPointerDown(MixedRealityPointerEventData eventData)
+    {
+        PossibleMoves();
+        board.HightlightTiles(avaliableMoves);
+        Debug.Log("Down"); ;
+    }
+
+    public void OnPointerDragged(MixedRealityPointerEventData eventData)
+    {
+
+    }
+
+    public void OnPointerUp(MixedRealityPointerEventData eventData)
+    {
+        avaliableMoves.Clear();
+        board.HightlightTiles(avaliableMoves);
+        Debug.Log("up");
+    }
+
+    public void OnPointerClicked(MixedRealityPointerEventData eventData)
+    {
+        Debug.Log("click");
+    }
 }

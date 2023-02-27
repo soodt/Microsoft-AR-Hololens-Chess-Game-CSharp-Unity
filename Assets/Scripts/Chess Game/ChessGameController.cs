@@ -159,7 +159,7 @@ public class ChessGameController : MonoBehaviour
         }
     }
 
-    public void ChangeTeam()
+    public void ChangeTeam() // to make cleaner
     {
         if (getActivePlayer() == whitePlayer)
         {

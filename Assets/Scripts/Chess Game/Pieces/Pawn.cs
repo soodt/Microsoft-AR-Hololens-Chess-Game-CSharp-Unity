@@ -1,9 +1,10 @@
+using Microsoft.MixedReality.Toolkit.Input;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pawn : Piece
+public class Pawn : Piece, IMixedRealityPointerHandler
 {
     public override List<Vector2Int> SelectAvaliableSquares()
     {
@@ -71,4 +72,70 @@ public class Pawn : Piece
         }
     }
 
+    public override void PossibleMoves()
+    {
+        avaliableMoves.Clear();
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                Vector2Int square = new Vector2Int(i, j); // this is to go through all the squares checking which are safe to move to
+                if (squareIsMoveable(square) && canMoveThere(square)) // this should be implemented when the obj is picked up to highlight the possible squares. 
+                {
+                    avaliableMoves.Add(square);
+                }
+            }
+        }
+    }
+
+    private bool squareIsMoveable(Vector2Int square)
+    {
+
+        if (this.team == TeamColor.White & ((this.occupiedSquare.y != 1 & square.x - this.occupiedSquare.x == 0 & square.y - this.occupiedSquare.y == 1) |
+        (this.occupiedSquare.y == 1 & square.x - this.occupiedSquare.x == 0 & square.y - this.occupiedSquare.y <= 2 & square.y - this.occupiedSquare.y >= 1)))
+        {
+            Debug.Log("Turn Green");
+            return true;
+        }
+        else if (this.team == TeamColor.Black & ((this.occupiedSquare.y != 6 & square.x - this.occupiedSquare.x == 0 & this.occupiedSquare.y - square.y == 1) |
+            (this.occupiedSquare.y == 6 & square.x - this.occupiedSquare.x == 0 & this.occupiedSquare.y - square.y <= 2 & this.occupiedSquare.y - square.y >= 1)))
+        {
+            Debug.Log("Turn Green");
+            return true;
+        }
+        else if (canPawnTake(square)) // doesn't work for diagonal takes...
+        {
+            Debug.Log("Turn Green");
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    /*
+    public void OnPointerDown(MixedRealityPointerEventData eventData)
+    {
+        PossibleMoves();
+        board.HightlightTiles(avaliableMoves);
+        Debug.Log("Down"); ;
+    }
+
+    public void OnPointerDragged(MixedRealityPointerEventData eventData)
+    {
+        Debug.Log("Drag");
+    }
+
+    public void OnPointerUp(MixedRealityPointerEventData eventData)
+    {
+        avaliableMoves.Clear();
+        board.HightlightTiles(avaliableMoves);
+        Debug.Log("up");
+    }
+
+    public void OnPointerClicked(MixedRealityPointerEventData eventData)
+    {
+        Debug.Log("click");
+    }
+    */
 }
