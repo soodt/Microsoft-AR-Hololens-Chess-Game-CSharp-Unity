@@ -14,6 +14,7 @@ public class PieceCreator : MonoBehaviour
 
     private void Awake()
     {
+        //fill dictionary with piece type names as keys and piece prefabs as values
         foreach (var piece in piecesPrefabs)
         {
             nameToPieceDict.Add(piece.GetComponent<Piece>().GetType().ToString(), piece);
@@ -23,6 +24,7 @@ public class PieceCreator : MonoBehaviour
 
     public GameObject CreatePiece(Type type)
     {
+        //choose prefab based on type passed as parameter
         GameObject prefab = nameToPieceDict[type.ToString()];
         if (prefab)
         {
@@ -34,6 +36,7 @@ public class PieceCreator : MonoBehaviour
         return null;
     }
 
+    //return team material based on team passed as parameter
     public Material GetTeamMaterial(TeamColor team)
     {
         return team == TeamColor.White ? whiteMaterial : blackMaterial;
