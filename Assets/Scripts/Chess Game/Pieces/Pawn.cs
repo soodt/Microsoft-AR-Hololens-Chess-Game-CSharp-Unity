@@ -80,7 +80,7 @@ public class Pawn : Piece, IMixedRealityPointerHandler
             for (int j = 0; j < 8; j++)
             {
                 Vector2Int square = new Vector2Int(i, j); // this is to go through all the squares checking which are safe to move to
-                if (squareIsMoveable(square) && canMoveThere(square)) // this should be implemented when the obj is picked up to highlight the possible squares. 
+                if (squareIsMoveable(square)) // this should be implemented when the obj is picked up to highlight the possible squares. 
                 {
                     avaliableMoves.Add(square);
                 }

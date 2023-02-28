@@ -80,7 +80,7 @@ public class Bishop : Piece
             Vector2Int displacement = coords - this.occupiedSquare;
             
 
-            if (System.Math.Abs(displacement.x) == System.Math.Abs(displacement.y) && canMoveThere(coords))
+            if (coords != this.occupiedSquare && System.Math.Abs(displacement.x) == System.Math.Abs(displacement.y) && canMoveThere(coords))
             {
                 Piece pieceCheck = board.getPiece(coords);
                 if (pieceCheck)
@@ -114,7 +114,7 @@ public class Bishop : Piece
             {
                 Vector2Int square = new Vector2Int(i, j);
                 Vector2Int displacementToSquare = square - this.occupiedSquare; // this is to go through all the squares checking which are safe to move to
-                if (squareIsMoveable(displacementToSquare) && canMoveThere(square)) // this should be implemented when the obj is picked up to highlight the possible squares. 
+                if (square != this.occupiedSquare && squareIsMoveable(displacementToSquare) && canMoveThere(square)) // this should be implemented when the obj is picked up to highlight the possible squares. 
                 {
                     avaliableMoves.Add(square);
                 }
