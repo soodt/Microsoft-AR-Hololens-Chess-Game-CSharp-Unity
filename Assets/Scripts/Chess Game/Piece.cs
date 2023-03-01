@@ -76,7 +76,7 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
 		transform.position = board.CalculatePositionFromCoords(coords);
 	}
 
-    public void OnPointerDown(MixedRealityPointerEventData eventData)
+    public void OnPointerDown(MixedRealityPointerEventData eventData) //activates highlighter
     {
         PossibleMoves();
         board.HightlightTiles(avaliableMoves);
