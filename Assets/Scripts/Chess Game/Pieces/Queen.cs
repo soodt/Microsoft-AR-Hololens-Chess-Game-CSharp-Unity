@@ -21,55 +21,39 @@ public class Queen : Piece
         throw new System.NotImplementedException();
     }
 
-
-    //returns true if can move to coords passed in as parameter , false otherwise
-    public bool canMoveThere(Vector2Int coords)
-    {
-        // assign current position to variables 
-        int xPos = this.occupiedSquare.x;
+   public bool canMoveThere(Vector2Int coords) {
+		int xPos = this.occupiedSquare.x;
         int yPos = this.occupiedSquare.y;
         int yModifier = 0;
-        if (yPos > coords.y)
-        {
+        if (yPos > coords.y) {
             yModifier = -1;
-        }
-        else if (yPos < coords.y)
-        {
+        } else if (yPos < coords.y) {
             yModifier = 1;
         }
-        if (xPos < coords.x)
-        {
-            for (xPos = this.occupiedSquare.x; xPos <= coords.x; xPos++)
-            {
+        if (xPos < coords.x) {
+            for (xPos = this.occupiedSquare.x; xPos <= coords.x; xPos++) {
                 Piece temp = board.getPiece(new Vector2Int(xPos, yPos));
-                /* If there is a piece at (xPos, yPos), it is not the queen itself
+                /* If there is a piece at (xPos, yPos), it is not the bishop itself
                    They are not from the same team, and the (xPos, yPos) == coords (the exact square the piece wants to move to)
-                   Then let the queen move there
+                   Then let the bishop move there
                    Else, not allowed move there
                 */
-                if (temp && temp != this)
-                {
-                    if (!temp.IsFromSameTeam(this) && (xPos == coords.x && yPos == coords.y))
-                    {
+                if (temp && temp != this) {
+                    if (!temp.IsFromSameTeam(this) && (xPos == coords.x && yPos == coords.y)) {
                         return true;
                     }
 
                     return false;
                 }
-                yPos += yModifier;
+                yPos+= yModifier;
             }
-        }
-        else if (xPos > coords.x)
-        {
-            for (xPos = this.occupiedSquare.x; xPos >= coords.x; xPos--)
-            {
+        } else if (xPos > coords.x){
+            for (xPos = this.occupiedSquare.x; xPos >= coords.x; xPos--) {
                 Debug.Log("xPos: " + xPos);
                 Debug.Log("yPos: " + yPos);
                 Piece temp = board.getPiece(new Vector2Int(xPos, yPos));
-                if (temp && temp != this)
-                {
-                    if (!temp.IsFromSameTeam(this) && (xPos == coords.x && yPos == coords.y))
-                    {
+                if (temp && temp != this) {
+                    if (!temp.IsFromSameTeam(this) && (xPos == coords.x && yPos == coords.y)) {
                         return true;
                     }
 
@@ -77,32 +61,22 @@ public class Queen : Piece
                 }
                 yPos += yModifier;
             }
-        }
-        else if (yPos < coords.y)
-        {
-            for (yPos = this.occupiedSquare.y; yPos <= coords.y; yPos++)
-            {
+        } else if (yPos < coords.y) {
+            for (yPos = this.occupiedSquare.y; yPos <= coords.y; yPos++) {
                 Piece temp = board.getPiece(new Vector2Int(xPos, yPos));
-                if (temp && temp != this)
-                {
-                    if (!temp.IsFromSameTeam(this) && (xPos == coords.x && yPos == coords.y))
-                    {
+                if (temp && temp != this) {
+                    if (!temp.IsFromSameTeam(this) && (xPos == coords.x && yPos == coords.y)) {
                         return true;
                     }
                     return false;
                 }
             }
             return true;
-        }
-        else if (yPos > coords.y)
-        {
-            for (yPos = this.occupiedSquare.y; yPos >= coords.y; yPos--)
-            {
+        } else if (yPos > coords.y) {
+            for (yPos = this.occupiedSquare.y; yPos >= coords.y; yPos--) {
                 Piece temp = board.getPiece(new Vector2Int(xPos, yPos));
-                if (temp && temp != this)
-                {
-                    if (!temp.IsFromSameTeam(this) && (xPos == coords.x && yPos == coords.y))
-                    {
+                if (temp && temp != this) {
+                    if (!temp.IsFromSameTeam(this) && (xPos == coords.x && yPos == coords.y)) {
                         return true;
                     }
                     return false;
@@ -110,19 +84,16 @@ public class Queen : Piece
             }
         }
         return true;
-    }
+	}
 
-    public override bool isAttackingSquare(Vector2Int coords)
-    {
+    public override bool isAttackingSquare(Vector2Int coords) {
         return canMoveThere(coords);
     }
 
     public override void MovePiece(Vector2Int coords)
     {
-        //distance from coords and occupying square
         Vector2Int displacement = coords - this.occupiedSquare;
         bool available = false;
-        //if current player's turn, move the piece
         if (this.getTeam() == controller.getActivePlayer().getTeam())
         {
             foreach (var direction in directions)
@@ -130,7 +101,6 @@ public class Queen : Piece
                 for (int i = 1; i < 20; i++)
                 //for(int i = 1;i<board.size;i++)
                 {
-                    //if the coords passed in is where queen and move to and is available 
                     if ((coords == this.occupiedSquare + direction * i) && canMoveThere(coords))
                     {
                         Piece pieceCheck = board.getPiece(coords);
@@ -147,20 +117,51 @@ public class Queen : Piece
                 }
                 if (available) break;
             }
-            //if not available, stay in the occupied square
             if (!available)
             {
                 transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
             }
-        }
-        else
+        } else
         {
             // If not this team's turn, snap back to occupied square
             transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
             Debug.Log("NoMoving!");
         }
+  
+    
+    }
 
+    public override void PossibleMoves()
+    {
+        avaliableMoves.Clear();
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                Vector2Int square = new Vector2Int(i, j); // this is to go through all the squares checking which are safe to move to
+                if (squareIsMoveable(square) && canMoveThere(square)) // this should be implemented when the obj is picked up to highlight the possible squares. 
+                {
+                    avaliableMoves.Add(square);
+                }
+            }
+        }
+    }
 
+    private bool squareIsMoveable(Vector2Int square)
+    {
+
+        foreach (var direction in directions)
+        {
+            for (int i = 1; i < 20; i++)
+            {
+                if ((square == this.occupiedSquare + direction * i))
+                {
+                    Debug.Log("Turn Green");
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }
