@@ -10,7 +10,7 @@ using Microsoft.MixedReality.Toolkit.UI;
 [RequireComponent(typeof(IObjectTweener))]
 
 
-public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
+public abstract class Piece : MonoBehaviour
 {
 	[SerializeField] private MaterialSetter materialSetter;
 	public Board board { protected get; set; }
@@ -19,14 +19,14 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
 	public bool hasMoved { get; set; }
 	public List<Vector2Int> avaliableMoves;
 
-	public ChessGameController controller {get; set;}
+	private IObjectTweener tweener;
 
 	public abstract List<Vector2Int> SelectAvaliableSquares();
-	public abstract bool isAttackingSquare(Vector2Int coords);
 
 	private void Awake()
 	{
 		avaliableMoves = new List<Vector2Int>();
+		tweener = GetComponent<IObjectTweener>();
 		materialSetter = GetComponent<MaterialSetter>();
 		hasMoved = false;
 	}
@@ -56,47 +56,19 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
 	{
 
 	}
-    public virtual void PossibleMoves()
-	{
 
-	}
 
-    protected void TryToAddMove(Vector2Int coords)
+	protected void TryToAddMove(Vector2Int coords)
 	{
 		avaliableMoves.Add(coords);
 	}
 
 
-	public void SetData(Vector2Int coords, TeamColor team, Board board, ChessGameController c)
+	public void SetData(Vector2Int coords, TeamColor team, Board board)
 	{
 		this.team = team;
 		occupiedSquare = coords;
 		this.board = board;
-		this.controller = c;
 		transform.position = board.CalculatePositionFromCoords(coords);
 	}
-
-    public void OnPointerDown(MixedRealityPointerEventData eventData)
-    {
-        PossibleMoves();
-        board.HightlightTiles(avaliableMoves);
-        Debug.Log("Down"); ;
-    }
-
-    public void OnPointerDragged(MixedRealityPointerEventData eventData)
-    {
-
-    }
-
-    public void OnPointerUp(MixedRealityPointerEventData eventData)
-    {
-        avaliableMoves.Clear();
-        board.HightlightTiles(avaliableMoves);
-        Debug.Log("up");
-    }
-
-    public void OnPointerClicked(MixedRealityPointerEventData eventData)
-    {
-        Debug.Log("click");
-    }
 }

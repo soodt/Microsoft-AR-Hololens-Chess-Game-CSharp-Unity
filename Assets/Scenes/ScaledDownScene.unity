@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -155,39 +155,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startingBoardLayout: {fileID: 11400000, guid: 6cfba3c73eb853c47a7d336987e0fc43, type: 2}
   board: {fileID: 119872357}
-  activePieces:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!114 &119498245
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -312,7 +279,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bottomLeftSquareTransform: {fileID: 416698249}
   squareSize: 0.3
-  controller: {fileID: 0}
 --- !u!114 &119872358
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -325,9 +291,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aaa0af672ae2da644a87b6b7020a6be2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  freeSquareMaterial: {fileID: 2100000, guid: a319da9ce2632db40842dad69da7a343, type: 2}
-  enemySquareMaterial: {fileID: 2100000, guid: 0d01ec64241ec35489d9e8030e6a42d1, type: 2}
-  selectorPrefab: {fileID: 2912707483993903054, guid: ca9f2642268fecb498f8084d6cc88ec0, type: 3}
 --- !u!1 &416698248
 GameObject:
   m_ObjectHideFlags: 0
@@ -586,7 +549,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 487252, guid: 31270e9f38d5e7a448ae050b9633fce3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.86
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 487252, guid: 31270e9f38d5e7a448ae050b9633fce3, type: 3}
       propertyPath: m_LocalPosition.y
@@ -594,7 +557,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 487252, guid: 31270e9f38d5e7a448ae050b9633fce3, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -3.46
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 487252, guid: 31270e9f38d5e7a448ae050b9633fce3, type: 3}
       propertyPath: m_LocalRotation.w

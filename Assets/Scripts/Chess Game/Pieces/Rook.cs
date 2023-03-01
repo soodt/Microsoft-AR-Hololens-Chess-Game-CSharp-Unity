@@ -61,63 +61,20 @@ public class Rook : Piece
         return false; // should never reach here, just clears an error
 	}
 
-    public override bool isAttackingSquare(Vector2Int coords) {
-        return canMoveThere(coords);
-    }
-
     public override void MovePiece(Vector2Int coords)
 	{
-        if (this.getTeam() == controller.getActivePlayer().getTeam())
-        {
-            if ((coords.x - this.occupiedSquare.x == 0 | coords.y - this.occupiedSquare.y == 0) && canMoveThere(coords))
+        if ((coords.x - this.occupiedSquare.x == 0 | coords.y - this.occupiedSquare.y == 0) && canMoveThere(coords)) {
+            Piece pieceCheck = board.getPiece(coords);
+            if (pieceCheck)
             {
-                Piece pieceCheck = board.getPiece(coords);
-                if (pieceCheck)
-                {
-                    board.takePiece(this, coords);
-                }
-                this.occupiedSquare = coords;
-                transform.position = this.board.CalculatePositionFromCoords(coords);
-                controller.endTurn();
+                board.takePiece(this, coords);
             }
-            else
-            {
-                transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
-            }
-        }
-        else
-        {
-            // If not this team's turn, snap back to occupied square
+            this.occupiedSquare = coords;
+		    transform.position = this.board.CalculatePositionFromCoords(coords);
+        } 
+        else {
             transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
-            Debug.Log("NoMoving!");
         }
-    }
+	}
 
-    public override void PossibleMoves()
-    {
-        avaliableMoves.Clear();
-        for (int i = 0; i < 8; i++)
-        {
-            for (int j = 0; j < 8; j++)
-            {
-                Vector2Int square = new Vector2Int(i, j); // this is to go through all the squares checking which are safe to move to
-                if (squareIsMoveable(square) && canMoveThere(square)) // this should be implemented when the obj is picked up to highlight the possible squares. 
-                {
-                    avaliableMoves.Add(square);
-                }
-            }
-        }
-    }
-
-    private bool squareIsMoveable(Vector2Int square)
-    {
-        if ((square.x - this.occupiedSquare.x == 0 | square.y - this.occupiedSquare.y == 0) && canMoveThere(square))// checks if the piece can move
-        {
-            Debug.Log("Turn Green");
-            return true;
-        }
-
-
-        return false;
-    }
 }

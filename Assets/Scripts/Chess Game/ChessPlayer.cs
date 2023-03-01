@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChessPlayer 
+public class ChessPlayer : MonoBehaviour
 {
 
     public TeamColor team { get; set; }
