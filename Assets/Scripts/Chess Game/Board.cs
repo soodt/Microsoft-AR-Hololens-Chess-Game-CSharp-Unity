@@ -9,12 +9,6 @@ public class Board : MonoBehaviour
     [SerializeField] private Transform bottomLeftSquareTransform;
     [SerializeField] public float squareSize;
     public ChessGameController controller;
-    private SquareSelector squareSelector;
-
-    private void Awake()
-    {
-        squareSelector= GetComponent<SquareSelector>();
-    }
 
     public Vector3 CalculatePositionFromCoords(Vector2Int coords)
     {
@@ -62,18 +56,6 @@ public class Board : MonoBehaviour
                 break;
             }
         }
-    }
-
-    //to highlight the tiles that can be taken
-    public void HightlightTiles(List<Vector2Int> selection)
-    {
-        Dictionary<Vector3, bool> squaresInfo= new Dictionary<Vector3, bool>();
-        for (int i = 0; i < selection.Count; i++)
-        {
-            Vector3 position = CalculatePositionFromCoords(selection[i]);// counts through all available place - (at the moment everything is set to true)
-            squaresInfo.Add(position, true); // eventually true can be free places and false can be places with opponents on
-        }
-        squareSelector.ShowSelection(squaresInfo);
     }
 
 }

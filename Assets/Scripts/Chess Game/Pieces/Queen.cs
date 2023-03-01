@@ -22,7 +22,7 @@ public class Queen : Piece
     }
 
    public bool canMoveThere(Vector2Int coords) {
-		int xPos = this.occupiedSquare.x;
+		 int xPos = this.occupiedSquare.x;
         int yPos = this.occupiedSquare.y;
         int yModifier = 0;
         if (yPos > coords.y) {
@@ -86,82 +86,36 @@ public class Queen : Piece
         return true;
 	}
 
-    public override bool isAttackingSquare(Vector2Int coords) {
-        return canMoveThere(coords);
-    }
-
-    public override void MovePiece(Vector2Int coords)
+public override void MovePiece(Vector2Int coords)
+{
+    Vector2Int displacement = coords - this.occupiedSquare;
+    bool available = false;
+    foreach (var direction in directions)
     {
-        Vector2Int displacement = coords - this.occupiedSquare;
-        bool available = false;
-        if (this.getTeam() == controller.getActivePlayer().getTeam())
+        for(int i = 1; i < 20; i++)
+            //for(int i = 1;i<board.size;i++)
         {
-            foreach (var direction in directions)
+            if ((coords == this.occupiedSquare + direction * i) && canMoveThere(coords))
             {
-                for (int i = 1; i < 20; i++)
-                //for(int i = 1;i<board.size;i++)
-                {
-                    if ((coords == this.occupiedSquare + direction * i) && canMoveThere(coords))
+                    Piece pieceCheck = board.getPiece(coords);
+                    if (pieceCheck)
                     {
-                        Piece pieceCheck = board.getPiece(coords);
-                        if (pieceCheck)
-                        {
-                            board.takePiece(this, coords);
-                        }
-                        this.occupiedSquare = coords;
-                        transform.position = this.board.CalculatePositionFromCoords(coords);
-                        available = true;
-                        controller.endTurn();
-                        break;
+                        board.takePiece(this, coords);
                     }
-                }
-                if (available) break;
+                    this.occupiedSquare = coords;
+                transform.position = this.board.CalculatePositionFromCoords(coords);
+                available = true;
+                break;
             }
-            if (!available)
-            {
-                transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
-            }
-        } else
-        {
-            // If not this team's turn, snap back to occupied square
-            transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
-            Debug.Log("NoMoving!");
         }
+        if (available) break;
+    }
+    if (!available)
+    {
+        transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
+    }
   
     
-    }
-
-    public override void PossibleMoves()
-    {
-        avaliableMoves.Clear();
-        for (int i = 0; i < 8; i++)
-        {
-            for (int j = 0; j < 8; j++)
-            {
-                Vector2Int square = new Vector2Int(i, j); // this is to go through all the squares checking which are safe to move to
-                if (squareIsMoveable(square) && canMoveThere(square)) // this should be implemented when the obj is picked up to highlight the possible squares. 
-                {
-                    avaliableMoves.Add(square);
-                }
-            }
-        }
-    }
-
-    private bool squareIsMoveable(Vector2Int square)
-    {
-
-        foreach (var direction in directions)
-        {
-            for (int i = 1; i < 20; i++)
-            {
-                if ((square == this.occupiedSquare + direction * i))
-                {
-                    Debug.Log("Turn Green");
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+}
 
 }
