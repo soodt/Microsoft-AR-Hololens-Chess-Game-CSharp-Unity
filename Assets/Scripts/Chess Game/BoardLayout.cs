@@ -11,18 +11,21 @@ public class BoardLayout : ScriptableObject
   [Serializable]
   private class BoardSquareSetup {
     public Vector2Int position;
-    public PieceType pieceType;
-    public TeamColor teamColor;
+    public PieceType pieceType;    //piecetype occpuying the square
+    public TeamColor teamColor;    //teamcolor the piece belongs to 
   }
 
   [SerializeField] private BoardSquareSetup[] boardSquares;
 
+ 
     public int GetPiecesCount()
     {
         return boardSquares.Length;
     }
 
 
+
+     //returns coordinates of the boardSquare object
     public Vector2Int GetSquareCoordsAtIndex(int index)
     {
         if (boardSquares.Length <= index) {
@@ -31,6 +34,8 @@ public class BoardLayout : ScriptableObject
         }
         return new Vector2Int(boardSquares[index].position.x - 1, boardSquares[index].position.y - 1);
     }
+
+    //return piece name at board square
     public string GetSquarePieceNameAtIndex(int index)
     {
         if (boardSquares.Length <= index) {
@@ -38,7 +43,11 @@ public class BoardLayout : ScriptableObject
             return "";
         }
         return boardSquares[index].pieceType.ToString();
+
+
     }
+
+    //return team color of a board square
     public TeamColor GetSquareTeamColorAtIndex(int index)
     {
         if (boardSquares.Length <= index) {
