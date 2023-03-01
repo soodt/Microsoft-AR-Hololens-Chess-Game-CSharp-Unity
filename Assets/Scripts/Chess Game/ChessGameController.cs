@@ -15,11 +15,12 @@ public class ChessGameController : MonoBehaviour
 
     private ChessPlayer whitePlayer;
     private ChessPlayer blackPlayer;
-    // private ChessPlayer activePlayer;     could perhaps use this for turn taking instead of a count, just easier??
+    private ChessPlayer activePlayer{get; set;}    
 
     private void Awake()
     {
         SetDependencies();
+        CreatePlayers();
     }
 
     private void SetDependencies()
@@ -37,6 +38,11 @@ public class ChessGameController : MonoBehaviour
     {
         CreatePiecesFromLayout(startingBoardLayout);
         board.SetDependencies(this);
+        activePlayer = whitePlayer;
+    }
+
+    public ChessPlayer getActivePlayer() {
+        return activePlayer;
     }
 
     private void CreatePlayers()
@@ -96,8 +102,14 @@ public class ChessGameController : MonoBehaviour
             }
         );
         //Debug.Log("This is a sample debugging message"); // this will print the message in the debugging console.
-        newPiece.SetData(squareCoords, team, board);
+        newPiece.SetData(squareCoords, team, board, this);
         initailzeActivePieces(newPiece);
+
+        if (newPiece.getTeam() == TeamColor.White) {
+            whitePlayer.AddPiece(newPiece);
+        } else {
+            blackPlayer.AddPiece(newPiece);
+        }
 
         Material teamMaterial = pieceCreator.GetTeamMaterial(team);
         newPiece.SetMaterial(teamMaterial);
@@ -112,29 +124,50 @@ public class ChessGameController : MonoBehaviour
 
         for (int i = 0; i < 32; i++)
         {
-            if (activePieces[i] == null)
+            if (this.activePieces[i] == null)
                 {
-                    activePieces[i] = piece;
+                    this.activePieces[i] = piece;
                     break;
                 }
         }
      //   Debug.Log(piece); // this will print the message in the debugging console.
     }
 
-    public void recordPieceRemoval(Piece piece)
-    {
-        // removedFrom is the player that the piece was taken from
-        ChessPlayer removedFrom = piece.getTeam() == TeamColor.White ? whitePlayer : blackPlayer;
-        // piece is the piece that was taken
-
-        removedFrom.RemovePiece(piece);
-        if (removedFrom == whitePlayer) {
-            blackPlayer.AddToTakenPieces(piece);
+    public void recordPieceRemoval(Piece taken) {
+        if (taken.getTeam() == TeamColor.White) {
+            whitePlayer.RemovePiece(taken);
+            blackPlayer.AddToTakenPieces(taken);
         } else {
-            whitePlayer.AddToTakenPieces(piece);
+            blackPlayer.RemovePiece(taken);
+            whitePlayer.AddToTakenPieces(taken);
         }
     }
 
-   
+    public void endTurn() {
+        Debug.Log("yup");
+        // Swap active player
+        if (getActivePlayer() == whitePlayer) {
+            activePlayer = blackPlayer;
+        } else if (getActivePlayer() == blackPlayer) {
+            activePlayer = whitePlayer;
+        }
+        // Debug
+        if (getActivePlayer() == whitePlayer) {
+            Debug.Log("White");
+        } else {
+            Debug.Log("Black");
+        }
+    }
 
+    public void ChangeTeam() // to make cleaner
+    {
+        if (getActivePlayer() == whitePlayer)
+        {
+            activePlayer = blackPlayer;
+        }
+        else if (getActivePlayer() == blackPlayer)
+        {
+            activePlayer = whitePlayer;
+        }
+    }
 }
