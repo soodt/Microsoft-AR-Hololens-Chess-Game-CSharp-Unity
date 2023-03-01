@@ -16,7 +16,7 @@ public abstract class Piece : MonoBehaviour
 	public Board board { protected get; set; }
 	public Vector2Int occupiedSquare { get; set; }
 	public TeamColor team { get; set; }
-	public bool hasMoved { get; private set; }
+	public bool hasMoved { get; set; }
 	public List<Vector2Int> avaliableMoves;
 
 	private IObjectTweener tweener;
@@ -29,6 +29,10 @@ public abstract class Piece : MonoBehaviour
 		tweener = GetComponent<IObjectTweener>();
 		materialSetter = GetComponent<MaterialSetter>();
 		hasMoved = false;
+	}
+
+	public TeamColor getTeam() {
+		return this.team;
 	}
 
 	public void SetMaterial(Material selectedMaterial)

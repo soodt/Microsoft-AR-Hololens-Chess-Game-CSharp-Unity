@@ -21,12 +21,28 @@ public class Knight : Piece
 		throw new System.NotImplementedException();
 	}
 
+	public bool canMoveThere(Vector2Int coords) {
+		Piece temp = board.getPiece(coords);
+        if (temp && temp != this) {
+			if (temp.IsFromSameTeam(this)) {
+				return false;
+			}
+			return true;
+        }
+        return true;
+	}
+
 	public override void MovePiece(Vector2Int coords)
 	{
 		Vector2Int displacement = coords - this.occupiedSquare;
 		bool moved = false;
 		for (int i = 0; i < offsets.Length; i++) {
 			if (offsets[i] == displacement) {
+				Piece pieceCheck = board.getPiece(coords);
+				if (pieceCheck)
+				{
+					board.takePiece(this, coords);
+				}
 				this.occupiedSquare = coords;
 				transform.position = this.board.CalculatePositionFromCoords(coords);
 				moved = true;
