@@ -81,4 +81,29 @@ public abstract class Piece : MonoBehaviour
 		//position calculated from board
 		transform.position = board.CalculatePositionFromCoords(coords);
 	}
+
+    public void OnPointerDown(MixedRealityPointerEventData eventData) //activates highlighter
+    {
+        PossibleMoves();
+        board.HightlightTiles(avaliableMoves);
+        Debug.Log("Down"); ;
+    }
+
+    public void OnPointerDragged(MixedRealityPointerEventData eventData)
+    {
+
+    }
+
+    public void OnPointerUp(MixedRealityPointerEventData eventData)
+    {
+        avaliableMoves.Clear();
+        board.HightlightTiles(avaliableMoves);
+        Debug.Log("up");
+    }
+
+    public void OnPointerClicked(MixedRealityPointerEventData eventData)
+    {
+        Debug.Log("click");
+    }
+
 }
