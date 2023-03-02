@@ -156,7 +156,7 @@ public class Queen : Piece
             {
                 if ((square == this.occupiedSquare + direction * i))
                 {
-                    Debug.Log("Turn Green");
+                    //Debug.Log("Turn Green");
                     return true;
                 }
             }

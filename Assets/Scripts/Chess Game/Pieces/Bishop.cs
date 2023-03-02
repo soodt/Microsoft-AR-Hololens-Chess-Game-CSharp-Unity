@@ -126,7 +126,7 @@ public class Bishop : Piece
     {
         if (System.Math.Abs(displacementToSquare.x) == System.Math.Abs(displacementToSquare.y))// checks if the piece can move
         {
-            Debug.Log("Turn Green");
+           // Debug.Log("Turn Green");
             return true;
         }
         

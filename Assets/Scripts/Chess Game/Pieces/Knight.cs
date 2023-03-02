@@ -95,7 +95,7 @@ public class Knight : Piece
         {
             if (offsets[i] == displacementToSquare)
             {
-                Debug.Log("Turn Green");
+                //Debug.Log("Turn Green");
                 return true;
             }
         }

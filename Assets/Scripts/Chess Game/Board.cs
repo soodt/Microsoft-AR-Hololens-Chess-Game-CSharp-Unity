@@ -48,8 +48,6 @@ public class Board : MonoBehaviour
     {
 
         Piece pieceTaken = getPiece(coords);
-        //Debug.Log("here");
-
         for (int i = 0; i < 32; i++)
         {
             /* if the piece is in activePieces, it is the same Piece as the one at given coords,

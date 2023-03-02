@@ -94,18 +94,18 @@ public class Pawn : Piece, IMixedRealityPointerHandler
         if (this.team == TeamColor.White & ((this.occupiedSquare.y != 1 & square.x - this.occupiedSquare.x == 0 & square.y - this.occupiedSquare.y == 1) |
         (this.occupiedSquare.y == 1 & square.x - this.occupiedSquare.x == 0 & square.y - this.occupiedSquare.y <= 2 & square.y - this.occupiedSquare.y >= 1)))
         {
-            Debug.Log("Turn Green");
+            //Debug.Log("Turn Green");
             return true;
         }
         else if (this.team == TeamColor.Black & ((this.occupiedSquare.y != 6 & square.x - this.occupiedSquare.x == 0 & this.occupiedSquare.y - square.y == 1) |
             (this.occupiedSquare.y == 6 & square.x - this.occupiedSquare.x == 0 & this.occupiedSquare.y - square.y <= 2 & this.occupiedSquare.y - square.y >= 1)))
         {
-            Debug.Log("Turn Green");
+           // Debug.Log("Turn Green");
             return true;
         }
         else if (canPawnTake(square)) // doesn't work for diagonal takes...
         {
-            Debug.Log("Turn Green");
+           // Debug.Log("Turn Green");
             return true;
         }
         else

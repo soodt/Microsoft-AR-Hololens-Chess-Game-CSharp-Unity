@@ -80,7 +80,7 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
     {
         PossibleMoves();
         board.HightlightTiles(avaliableMoves);
-        Debug.Log("Down"); ;
+       // Debug.Log("Down"); ;
     }
 
     public void OnPointerDragged(MixedRealityPointerEventData eventData)
@@ -90,13 +90,13 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
 
     public void OnPointerUp(MixedRealityPointerEventData eventData)
     {
-        avaliableMoves.Clear();
+         avaliableMoves.Clear();
         board.HightlightTiles(avaliableMoves);
-        Debug.Log("up");
+       // Debug.Log("up");
     }
 
     public void OnPointerClicked(MixedRealityPointerEventData eventData)
     {
-        Debug.Log("click");
+      //  Debug.Log("click");
     }
 }

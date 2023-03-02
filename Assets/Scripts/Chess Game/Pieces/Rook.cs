@@ -113,7 +113,7 @@ public class Rook : Piece
     {
         if ((square.x - this.occupiedSquare.x == 0 | square.y - this.occupiedSquare.y == 0) && canMoveThere(square))// checks if the piece can move
         {
-            Debug.Log("Turn Green");
+            //Debug.Log("Turn Green");
             return true;
         }
 

@@ -18,7 +18,6 @@ public class King : Piece
     public void setInCheck(bool val) {
         this.isInCheck = val;
     }
-
     public bool canMoveThere(Vector2Int coords) {
 		Piece temp = board.getPiece(coords);
         if (temp && temp != this) {
@@ -83,7 +82,7 @@ public class King : Piece
         if ((square.x - this.occupiedSquare.x <= 1 & square.x - this.occupiedSquare.x >= -1 &
         square.y - this.occupiedSquare.y <= 1 & square.y - this.occupiedSquare.y >= -1))
         {
-            Debug.Log("Turn Green");
+            //Debug.Log("Turn Green");
             return true;
         }
 

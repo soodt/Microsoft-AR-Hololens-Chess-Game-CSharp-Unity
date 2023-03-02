@@ -12,7 +12,9 @@ public class ChessGameController : MonoBehaviour
     [SerializeField] private Board board;
     private PieceCreator pieceCreator;
     public Piece[] activePieces = new Piece[32];
-
+    private Piece blackKing;
+    private Piece whiteKing;
+    private Piece checkedKing;
     private ChessPlayer whitePlayer;
     private ChessPlayer blackPlayer;
     private ChessPlayer activePlayer{get; set;}    
@@ -101,7 +103,6 @@ public class ChessGameController : MonoBehaviour
                 }
             }
         );
-        //Debug.Log("This is a sample debugging message"); // this will print the message in the debugging console.
         newPiece.SetData(squareCoords, team, board, this);
         initailzeActivePieces(newPiece);
 
@@ -130,7 +131,6 @@ public class ChessGameController : MonoBehaviour
                     break;
                 }
         }
-     //   Debug.Log(piece); // this will print the message in the debugging console.
     }
 
     public void recordPieceRemoval(Piece taken) {
@@ -144,8 +144,8 @@ public class ChessGameController : MonoBehaviour
     }
 
     public void endTurn() {
-        Debug.Log("yup");
         // Swap active player
+        checkCond();
         if (getActivePlayer() == whitePlayer) {
             activePlayer = blackPlayer;
         } else if (getActivePlayer() == blackPlayer) {
@@ -158,7 +158,6 @@ public class ChessGameController : MonoBehaviour
             Debug.Log("Black");
         }
     }
-
     public void ChangeTeam() // to make cleaner
     {
         if (getActivePlayer() == whitePlayer)
@@ -169,5 +168,39 @@ public class ChessGameController : MonoBehaviour
         {
             activePlayer = whitePlayer;
         }
+    }
+
+    public bool checkCond()                     // Evaluates check condition return true if checked else false
+    {
+        ChessPlayer checkedPlayer;
+        whiteKing = activePieces[4];
+        blackKing = activePieces[20];
+        if (activePlayer == whitePlayer)
+        {
+            checkedPlayer = blackPlayer;
+            checkedKing = blackKing;
+        }
+        else
+        {
+            checkedPlayer = whitePlayer;
+            checkedKing = whiteKing;
+        }
+
+        for (int i = 0; i < activePlayer.activePieces.Count; i++)
+        {
+            Piece piece = activePlayer.activePieces[i];
+            piece.PossibleMoves();                                                  // calculates the possible moves of the piece
+            for (int z = 0; z < piece.avaliableMoves.Count; z++)
+            {
+                if (piece.avaliableMoves[z] == checkedKing.occupiedSquare)
+                {
+                    Debug.Log("Check");
+                    return true;
+                }
+            }
+
+        }
+
+        return false;
     }
 }
