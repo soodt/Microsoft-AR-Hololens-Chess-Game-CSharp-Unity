@@ -55,8 +55,10 @@ public class Board : MonoBehaviour
             */
             if ((controller.activePieces[i] != null) && (controller.activePieces[i] == pieceTaken) && (pieceTaken != itself) && (!pieceTaken.IsFromSameTeam(itself)))
             {
+                controller.recordPieceRemoval(pieceTaken);               // adds taken piece to takenPieces list of player who took the piece and removes the taken piece from the activePieces list of the other player
                 controller.activePieces[i] = null;
-                Destroy(pieceTaken.gameObject);
+                pieceTaken.GetComponent<MeshRenderer>().enabled = false; // turns piece invisible instead of destroying it
+                //Destroy(pieceTaken.gameObject);
                 break;
             }
         }

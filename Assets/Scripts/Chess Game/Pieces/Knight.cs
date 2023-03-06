@@ -40,7 +40,7 @@ public class Knight : Piece
 	{
 		Vector2Int displacement = coords - this.occupiedSquare;
 		bool moved = false;
-		if (this.getTeam() == controller.getActivePlayer().getTeam())
+		if (this.getTeam() == controller.getActivePlayer().getTeam() && this.avaliableMoves.Contains(coords))
 		{
 			for (int i = 0; i < offsets.Length; i++)
 			{

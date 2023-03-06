@@ -44,6 +44,14 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
 		materialSetter.SetSingleMaterial(selectedMaterial);
 	}
 
+	public ChessPlayer getPlayerFromSameTeam() {
+		if (this.team == TeamColor.White) {
+			return controller.getWhitePlayer();
+		} else {
+			return controller.getBlackPlayer();
+		}
+	}
+
 	public bool IsFromSameTeam(Piece piece)
 	{
 		return team == piece.team;
@@ -68,6 +76,24 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
 		avaliableMoves.Add(coords);
 	}
 
+	public void removeMovesLeavingKingInCheck() {
+		List<Vector2Int> updatedMoves = new List<Vector2Int>();
+		foreach (Vector2Int move in this.avaliableMoves) 
+		{
+			Vector2Int temp = this.occupiedSquare;
+			this.occupiedSquare = move;
+			if (!controller.checkCond()) {
+				updatedMoves.Add(move);
+			}
+			this.occupiedSquare = temp;
+		}
+		this.avaliableMoves.Clear();
+		foreach (Vector2Int move in updatedMoves)
+		{
+			this.avaliableMoves.Add(move);
+		}
+	}
+
 
 	public void SetData(Vector2Int coords, TeamColor team, Board board, ChessGameController c, String type)
 	{
@@ -81,7 +107,10 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
 
     public void OnPointerDown(MixedRealityPointerEventData eventData)
     {
-        PossibleMoves();
+		PossibleMoves();
+		if (getPlayerFromSameTeam().kingInCheck) {
+			removeMovesLeavingKingInCheck();
+		}
         board.HightlightTiles(avaliableMoves);
        // Debug.Log("Down"); ;
     }
@@ -93,8 +122,10 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
 
     public void OnPointerUp(MixedRealityPointerEventData eventData)
     {
-         avaliableMoves.Clear();
-        board.HightlightTiles(avaliableMoves);
+		List<Vector2Int> temp = new List<Vector2Int>(avaliableMoves); // creates temporary copy
+        avaliableMoves.Clear();
+        board.HightlightTiles(avaliableMoves);	// destroys highlights
+		avaliableMoves = new List<Vector2Int>(temp); // resets available moves
        // Debug.Log("up");
     }
 

@@ -92,7 +92,7 @@ public class Queen : Piece
     {
         Vector2Int displacement = coords - this.occupiedSquare;
         bool available = false;
-        if (this.getTeam() == controller.getActivePlayer().getTeam())
+        if (this.getTeam() == controller.getActivePlayer().getTeam() && this.avaliableMoves.Contains(coords))
         {
             foreach (var direction in directions)
             {

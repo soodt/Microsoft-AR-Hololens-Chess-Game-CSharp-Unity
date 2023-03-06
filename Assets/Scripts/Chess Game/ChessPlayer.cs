@@ -17,6 +17,8 @@ public class ChessPlayer
 		this.board = board;
 		this.team = team;
 		this.kingInCheck = false;
+		this.takenPieces = new List<Piece>();
+		this.activePieces = new List<Piece>();
 	}
     public void AddPiece(Piece piece)
 	{
@@ -38,4 +40,10 @@ public class ChessPlayer
         takenPieces.Add(piece);
     }
 
+	public void removeMovesLeavingKingInCheck() {
+		foreach (Piece piece in activePieces)
+		{
+			piece.removeMovesLeavingKingInCheck();
+		}
+	}
 }

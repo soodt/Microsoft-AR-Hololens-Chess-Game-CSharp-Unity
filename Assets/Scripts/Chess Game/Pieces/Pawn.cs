@@ -42,15 +42,14 @@ public class Pawn : Piece, IMixedRealityPointerHandler
     }
     public override void MovePiece(Vector2Int coords)
     {
-        if (this.getTeam() == controller.getActivePlayer().getTeam()) {
-            Debug.Log(coords.y - this.occupiedSquare.y);
+        if (this.getTeam() == controller.getActivePlayer().getTeam() && this.avaliableMoves.Contains(coords)) {
             // If it is this team's turn
             if (squareIsMoveable(coords))
             {
                 this.occupiedSquare = coords;
                 transform.position = this.board.CalculatePositionFromCoords(coords);
                 controller.endTurn();
-            } else if (canPawnTake(coords) && board.getPiece(coords)){
+            } else if (canPawnTake(coords)){
                 board.takePiece(this, coords);
                 this.occupiedSquare = coords;
                 transform.position = this.board.CalculatePositionFromCoords(coords);
@@ -73,7 +72,7 @@ public class Pawn : Piece, IMixedRealityPointerHandler
             for (int j = 0; j < 8; j++)
             {
                 Vector2Int square = new Vector2Int(i, j); // this is to go through all the squares checking which are safe to move to
-                if (squareIsMoveable(square)) // this should be implemented when the obj is picked up to highlight the possible squares. 
+                if (squareIsMoveable(square) || canPawnTake(square)) // this should be implemented when the obj is picked up to highlight the possible squares. 
                 {
                     avaliableMoves.Add(square);
                 }
@@ -107,11 +106,6 @@ public class Pawn : Piece, IMixedRealityPointerHandler
                 return true;
             }
             return false;
-        }
-        else if (canPawnTake(square)) // doesn't work for diagonal takes...
-        {
-           // Debug.Log("Turn Green");
-            return true;
         }
         else
         {

@@ -67,7 +67,7 @@ public class Rook : Piece
 
     public override void MovePiece(Vector2Int coords)
 	{
-        if (this.getTeam() == controller.getActivePlayer().getTeam())
+        if (this.getTeam() == controller.getActivePlayer().getTeam() && this.avaliableMoves.Contains(coords))
         {
             if ((coords.x - this.occupiedSquare.x == 0 | coords.y - this.occupiedSquare.y == 0) && canMoveThere(coords))
             {

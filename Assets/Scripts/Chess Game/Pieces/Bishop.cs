@@ -75,7 +75,7 @@ public class Bishop : Piece
 
     public override void MovePiece(Vector2Int coords)
     {
-        if (this.getTeam() == controller.getActivePlayer().getTeam())
+        if (this.getTeam() == controller.getActivePlayer().getTeam() && this.avaliableMoves.Contains(coords))
         {
             Vector2Int displacement = coords - this.occupiedSquare;
             

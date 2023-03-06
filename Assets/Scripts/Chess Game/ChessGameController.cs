@@ -13,12 +13,12 @@ public class ChessGameController : MonoBehaviour
     private PieceCreator pieceCreator;
     public Piece[] activePieces = new Piece[32];
     
-    public Piece[,] grid = new Piece[8, 8]; // used for simulating moves before they are made, for checkmate checking etc
+
     private Piece blackKing;
     private Piece whiteKing;
     private Piece checkedKing;
-    private ChessPlayer whitePlayer;
-    private ChessPlayer blackPlayer;
+    public ChessPlayer whitePlayer{get; set;}
+    public ChessPlayer blackPlayer{get; set;}
     private ChessPlayer activePlayer{get; set;}    
 
     private void Awake()
@@ -47,6 +47,14 @@ public class ChessGameController : MonoBehaviour
 
     public ChessPlayer getActivePlayer() {
         return activePlayer;
+    }
+
+    public ChessPlayer getBlackPlayer() {
+        return blackPlayer;
+    }
+
+    public ChessPlayer getWhitePlayer() {
+        return whitePlayer;
     }
 
     private void CreatePlayers()
@@ -137,21 +145,30 @@ public class ChessGameController : MonoBehaviour
 
     public void recordPieceRemoval(Piece taken) {
         if (taken.getTeam() == TeamColor.White) {
-            whitePlayer.RemovePiece(taken);
             blackPlayer.AddToTakenPieces(taken);
+            whitePlayer.RemovePiece(taken);
         } else {
-            blackPlayer.RemovePiece(taken);
             whitePlayer.AddToTakenPieces(taken);
+            blackPlayer.RemovePiece(taken);
         }
+        taken.transform.position += new Vector3(0.0f, -5f, 0.0f);
     }
 
     public void endTurn() {
         // Swap active player
-        checkCond();
+        if (getActivePlayer().kingInCheck) {
+            // player managed to get themselves out of check
+            Debug.Log("Succesfully moved out of check");
+            getActivePlayer().kingInCheck = false;
+            checkedKing = null;
+        }
         if (getActivePlayer() == whitePlayer) {
             activePlayer = blackPlayer;
         } else if (getActivePlayer() == blackPlayer) {
             activePlayer = whitePlayer;
+        }
+        if(checkCond()) {
+            activePlayer.kingInCheck = true;
         }
         // Debug
         if (getActivePlayer() == whitePlayer) {
@@ -174,29 +191,29 @@ public class ChessGameController : MonoBehaviour
 
     public bool checkCond()                     // Evaluates check condition return true if checked else false
     {
-        ChessPlayer checkedPlayer;
+        ChessPlayer otherPlayer;
         whiteKing = activePieces[4];
         blackKing = activePieces[20];
         if (activePlayer == whitePlayer)
         {
-            checkedPlayer = blackPlayer;
-            checkedKing = blackKing;
+            checkedKing = whiteKing;
+            otherPlayer = blackPlayer;
         }
         else
         {
-            checkedPlayer = whitePlayer;
-            checkedKing = whiteKing;
+            checkedKing = blackKing;
+            otherPlayer = whitePlayer;
         }
 
-        for (int i = 0; i < activePlayer.activePieces.Count; i++)
+        for (int i = 0; i < otherPlayer.activePieces.Count; i++)
         {
-            Piece piece = activePlayer.activePieces[i];
-            piece.PossibleMoves();                                                  // calculates the possible moves of the piece
+            Piece piece = otherPlayer.activePieces[i];
+            piece.PossibleMoves();
             for (int z = 0; z < piece.avaliableMoves.Count; z++)
             {
                 if (piece.avaliableMoves[z] == checkedKing.occupiedSquare)
                 {
-                    //Debug.Log("Check");
+                    Debug.Log("Check");
                     return true;
                 }
             }
@@ -205,4 +222,20 @@ public class ChessGameController : MonoBehaviour
 
         return false;
     }
+
+    public bool isGameOver() {
+        foreach (Piece p in activePlayer.activePieces)
+        {
+            if (p.avaliableMoves.Count != 0) {
+                return false;
+            }
+        }
+        if (activePlayer.kingInCheck) {
+            Debug.Log("Checkmate");
+        } else {
+            Debug.Log("Stalemate");
+        }
+        return true;
+    }
+
 }
