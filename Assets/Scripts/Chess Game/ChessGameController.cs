@@ -12,6 +12,8 @@ public class ChessGameController : MonoBehaviour
     [SerializeField] private Board board;
     private PieceCreator pieceCreator;
     public Piece[] activePieces = new Piece[32];
+    
+    public Piece[,] grid = new Piece[8, 8]; // used for simulating moves before they are made, for checkmate checking etc
     private Piece blackKing;
     private Piece whiteKing;
     private Piece checkedKing;
@@ -103,7 +105,7 @@ public class ChessGameController : MonoBehaviour
                 }
             }
         );
-        newPiece.SetData(squareCoords, team, board, this);
+        newPiece.SetData(squareCoords, team, board, this, type.ToString());
         initailzeActivePieces(newPiece);
 
         if (newPiece.getTeam() == TeamColor.White) {
@@ -194,7 +196,7 @@ public class ChessGameController : MonoBehaviour
             {
                 if (piece.avaliableMoves[z] == checkedKing.occupiedSquare)
                 {
-                    Debug.Log("Check");
+                    //Debug.Log("Check");
                     return true;
                 }
             }

@@ -24,6 +24,8 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
 	public abstract List<Vector2Int> SelectAvaliableSquares();
 	public abstract bool isAttackingSquare(Vector2Int coords);
 
+	public String typeName {get; set;}
+
 	private void Awake()
 	{
 		avaliableMoves = new List<Vector2Int>();
@@ -67,12 +69,13 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
 	}
 
 
-	public void SetData(Vector2Int coords, TeamColor team, Board board, ChessGameController c)
+	public void SetData(Vector2Int coords, TeamColor team, Board board, ChessGameController c, String type)
 	{
 		this.team = team;
 		occupiedSquare = coords;
 		this.board = board;
 		this.controller = c;
+		this.typeName = type;
 		transform.position = board.CalculatePositionFromCoords(coords);
 	}
 

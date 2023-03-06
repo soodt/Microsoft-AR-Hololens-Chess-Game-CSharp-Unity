@@ -27,7 +27,7 @@ public class PieceCreator : MonoBehaviour
         if (prefab)
         {
             GameObject newPiece = Instantiate(prefab);
-            Vector3 scaleChange = new Vector3(-0.8f, -0.8f, -0.8f);
+            Vector3 scaleChange = new Vector3(-0.9f, -0.9f, -0.9f);
             newPiece.transform.localScale += scaleChange;
             return newPiece;
         }

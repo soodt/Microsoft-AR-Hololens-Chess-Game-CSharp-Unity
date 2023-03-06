@@ -4,17 +4,19 @@ using UnityEngine;
 
 public class ChessPlayer 
 {
-
     public TeamColor team { get; set; }
 	public Board board { get; set; }
 	public List<Piece> activePieces { get; private set; }
     public List<Piece> takenPieces { get; private set; } // pieces the player has taken from other team
+
+	public bool kingInCheck{get;set;}
 
 	public ChessPlayer(TeamColor team, Board board)
 	{
 		activePieces = new List<Piece>();
 		this.board = board;
 		this.team = team;
+		this.kingInCheck = false;
 	}
     public void AddPiece(Piece piece)
 	{
@@ -35,4 +37,5 @@ public class ChessPlayer
     public void AddToTakenPieces(Piece piece) {
         takenPieces.Add(piece);
     }
+
 }

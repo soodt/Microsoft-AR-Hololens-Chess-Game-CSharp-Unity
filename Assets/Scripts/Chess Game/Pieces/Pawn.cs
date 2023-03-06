@@ -25,12 +25,12 @@ public class Pawn : Piece, IMixedRealityPointerHandler
         Vector2Int displacement = new Vector2Int(xPos, yPos);
         displacement = coords - displacement;
         if (this.team == TeamColor.White) {
-            if ((displacement.x == 1 || displacement.x == -1) && (displacement.y == 1) && board.getPiece(coords)) {
+            if ((displacement.x == 1 || displacement.x == -1) && (displacement.y == 1) && board.getPiece(coords) && (board.getPiece(coords).getTeam() != this.getTeam())) {
                 return true;
             }
             return false;
         } else {
-            if ((displacement.x == 1 || displacement.x == -1) && (displacement.y == -1) && board.getPiece(coords)) {
+            if ((displacement.x == 1 || displacement.x == -1) && (displacement.y == -1) && board.getPiece(coords) && (board.getPiece(coords).getTeam() != this.getTeam())) {
                 return true;
             }
             return false;
@@ -43,16 +43,9 @@ public class Pawn : Piece, IMixedRealityPointerHandler
     public override void MovePiece(Vector2Int coords)
     {
         if (this.getTeam() == controller.getActivePlayer().getTeam()) {
+            Debug.Log(coords.y - this.occupiedSquare.y);
             // If it is this team's turn
-            if (this.team == TeamColor.White & ((this.occupiedSquare.y != 1 & coords.x - this.occupiedSquare.x == 0 & coords.y - this.occupiedSquare.y == 1) |
-            (this.occupiedSquare.y == 1 & coords.x - this.occupiedSquare.x == 0 & coords.y - this.occupiedSquare.y <= 2 & coords.y - this.occupiedSquare.y >= 1)) && canMoveThere(coords))
-            {
-                this.occupiedSquare = coords;
-                transform.position = this.board.CalculatePositionFromCoords(coords);
-                controller.endTurn();
-            }
-            else if (this.team == TeamColor.Black & ((this.occupiedSquare.y != 6 & coords.x - this.occupiedSquare.x == 0 & this.occupiedSquare.y - coords.y == 1) |
-                (this.occupiedSquare.y == 6 & coords.x - this.occupiedSquare.x == 0 & this.occupiedSquare.y - coords.y <= 2 & this.occupiedSquare.y - coords.y >= 1))  && canMoveThere(coords))
+            if (squareIsMoveable(coords))
             {
                 this.occupiedSquare = coords;
                 transform.position = this.board.CalculatePositionFromCoords(coords);
@@ -95,13 +88,25 @@ public class Pawn : Piece, IMixedRealityPointerHandler
         (this.occupiedSquare.y == 1 & square.x - this.occupiedSquare.x == 0 & square.y - this.occupiedSquare.y <= 2 & square.y - this.occupiedSquare.y >= 1)))
         {
             //Debug.Log("Turn Green");
-            return true;
+            if ((square.y - this.occupiedSquare.y == 2) && (!canMoveThere(new Vector2Int(this.occupiedSquare.x, this.occupiedSquare.y + 1)))) {
+                return false;
+            }
+            if (canMoveThere(square)) {
+                return true;
+            }
+            return false;
         }
         else if (this.team == TeamColor.Black & ((this.occupiedSquare.y != 6 & square.x - this.occupiedSquare.x == 0 & this.occupiedSquare.y - square.y == 1) |
             (this.occupiedSquare.y == 6 & square.x - this.occupiedSquare.x == 0 & this.occupiedSquare.y - square.y <= 2 & this.occupiedSquare.y - square.y >= 1)))
         {
            // Debug.Log("Turn Green");
-            return true;
+           if ((this.occupiedSquare.y - square.y == 2) && (!canMoveThere(new Vector2Int(this.occupiedSquare.x, this.occupiedSquare.y - 1)))) {
+                return false;
+            }
+           if (canMoveThere(square)) {
+                return true;
+            }
+            return false;
         }
         else if (canPawnTake(square)) // doesn't work for diagonal takes...
         {
