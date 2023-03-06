@@ -169,6 +169,7 @@ public class ChessGameController : MonoBehaviour
         }
         if(checkCond()) {
             activePlayer.kingInCheck = true;
+            isGameOver();
         }
         // Debug
         if (getActivePlayer() == whitePlayer) {
@@ -226,6 +227,10 @@ public class ChessGameController : MonoBehaviour
     public bool isGameOver() {
         foreach (Piece p in activePlayer.activePieces)
         {
+            p.PossibleMoves();
+            if (activePlayer.kingInCheck) {
+                p.removeMovesLeavingKingInCheck();
+            }
             if (p.avaliableMoves.Count != 0) {
                 return false;
             }
