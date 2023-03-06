@@ -168,6 +168,7 @@ public class ChessGameController : MonoBehaviour
             activePlayer = whitePlayer;
         }
         if(checkCond()) {
+            Debug.Log("Check");
             activePlayer.kingInCheck = true;
             isGameOver();
         }
@@ -214,7 +215,6 @@ public class ChessGameController : MonoBehaviour
             {
                 if (piece.avaliableMoves[z] == checkedKing.occupiedSquare)
                 {
-                    Debug.Log("Check");
                     return true;
                 }
             }
@@ -228,9 +228,7 @@ public class ChessGameController : MonoBehaviour
         foreach (Piece p in activePlayer.activePieces)
         {
             p.PossibleMoves();
-            if (activePlayer.kingInCheck) {
-                p.removeMovesLeavingKingInCheck();
-            }
+            p.removeMovesLeavingKingInCheck();
             if (p.avaliableMoves.Count != 0) {
                 return false;
             }

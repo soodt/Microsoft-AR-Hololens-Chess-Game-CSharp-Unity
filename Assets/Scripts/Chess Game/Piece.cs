@@ -78,7 +78,7 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
 
 	public void removeMovesLeavingKingInCheck() {
 		List<Vector2Int> updatedMoves = new List<Vector2Int>();
-		foreach (Vector2Int move in this.avaliableMoves) 
+		foreach (Vector2Int move in this.avaliableMoves.ToList()) 
 		{
 			Vector2Int temp = this.occupiedSquare;
 			this.occupiedSquare = move;
@@ -108,9 +108,7 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
     public void OnPointerDown(MixedRealityPointerEventData eventData)
     {
 		PossibleMoves();
-		if (getPlayerFromSameTeam().kingInCheck) {
-			removeMovesLeavingKingInCheck();
-		}
+		removeMovesLeavingKingInCheck();
         board.HightlightTiles(avaliableMoves);
        // Debug.Log("Down"); ;
     }
