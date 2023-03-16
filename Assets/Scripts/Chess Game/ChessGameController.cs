@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Microsoft.MixedReality.Toolkit.Input;
 using Microsoft.MixedReality.Toolkit.UI;
+using Unity.VisualScripting;
 
 [RequireComponent(typeof(PieceCreator))]
 public class ChessGameController : MonoBehaviour
@@ -12,6 +13,7 @@ public class ChessGameController : MonoBehaviour
     [SerializeField] private Board board;
     private PieceCreator pieceCreator;
     public Piece[] activePieces = new Piece[32];
+    public TurnIndicator turnIndicator;
     
 
     private Piece blackKing;
@@ -43,6 +45,7 @@ public class ChessGameController : MonoBehaviour
         CreatePiecesFromLayout(startingBoardLayout);
         board.SetDependencies(this);
         activePlayer = whitePlayer;
+        turnIndicator.SetDependencies(this);
     }
 
     public ChessPlayer getActivePlayer() {
@@ -164,8 +167,10 @@ public class ChessGameController : MonoBehaviour
         }
         if (getActivePlayer() == whitePlayer) {
             activePlayer = blackPlayer;
+            turnIndicator.ColourTeam();
         } else if (getActivePlayer() == blackPlayer) {
             activePlayer = whitePlayer;
+            turnIndicator.ColourTeam();
         }
         if(checkCond()) {
             Debug.Log("Check");

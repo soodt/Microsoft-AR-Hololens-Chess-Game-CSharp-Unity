@@ -20,7 +20,7 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
 	public List<Vector2Int> avaliableMoves;
 
 	public ChessGameController controller {get; set;}
-
+	public TurnIndicator turnIndicator { get; set;}
 	public abstract List<Vector2Int> SelectAvaliableSquares();
 	public abstract bool isAttackingSquare(Vector2Int coords);
 
@@ -31,6 +31,7 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
 		avaliableMoves = new List<Vector2Int>();
 		materialSetter = GetComponent<MaterialSetter>();
 		hasMoved = false;
+		turnIndicator = GetComponent<TurnIndicator>();
 	}
 
 	public TeamColor getTeam() {
