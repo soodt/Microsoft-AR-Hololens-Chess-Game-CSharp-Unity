@@ -99,13 +99,21 @@ public class Board : MonoBehaviour
     //to highlight the tiles that can be taken
     public void HightlightTiles(List<Vector2Int> selection)
     {
-        Dictionary<Vector3, bool> squaresInfo= new Dictionary<Vector3, bool>();
+        Dictionary<Vector3, bool> squaresInfo = new Dictionary<Vector3, bool>();
         for (int i = 0; i < selection.Count; i++)
         {
             Vector3 position = CalculatePositionFromCoords(selection[i]);// counts through all available place - (at the moment everything is set to true)
-            squaresInfo.Add(position, true); // eventually true can be free places and false can be places with opponents on
+            if (getPiece(selection[i]) != null)
+            {
+                squaresInfo.Add(position, false);
+            }
+            else
+            {
+                squaresInfo.Add(position, true); // eventually true can be free places and false can be places with opponents on
+            }
         }
         squareSelector.ShowSelection(squaresInfo);
     }
+
 
 }
