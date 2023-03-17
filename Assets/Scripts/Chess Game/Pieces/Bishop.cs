@@ -75,48 +75,57 @@ public class Bishop : Piece
 
     public override void MovePiece(Vector2Int coords)
     {
-        if (this.getTeam() == controller.getActivePlayer().getTeam() && this.avaliableMoves.Contains(coords))
+        if (!taken)
         {
-            Vector2Int displacement = coords - this.occupiedSquare;
-            
-
-            if (coords != this.occupiedSquare && System.Math.Abs(displacement.x) == System.Math.Abs(displacement.y) && canMoveThere(coords))
+            if (this.getTeam() == controller.getActivePlayer().getTeam() && this.avaliableMoves.Contains(coords))
             {
-                Piece pieceCheck = board.getPiece(coords);
-                if (pieceCheck)
+                Vector2Int displacement = coords - this.occupiedSquare;
+
+
+                if (coords != this.occupiedSquare && System.Math.Abs(displacement.x) == System.Math.Abs(displacement.y) && canMoveThere(coords))
                 {
-                    board.takePiece(this, coords);
+                    Piece pieceCheck = board.getPiece(coords);
+                    if (pieceCheck)
+                    {
+                        board.takePiece(this, coords);
+                    }
+                    this.occupiedSquare = coords;
+                    transform.position = this.board.CalculatePositionFromCoords(coords);
+                    controller.endTurn();
+                    //moved = true;
                 }
-                this.occupiedSquare = coords;
-                transform.position = this.board.CalculatePositionFromCoords(coords);
-                controller.endTurn();
-                //moved = true;
-            }
-            else
+                else
+                {
+                    transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
+                }
+            } else
             {
+                // If not this team's turn, snap back to occupied square
                 transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
+                Debug.Log("NoMoving!");
             }
-        } else
-        {
-            // If not this team's turn, snap back to occupied square
-            transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
-            Debug.Log("NoMoving!");
         }
-
+         else
+        {
+            transform.position = finalCoords;
+        }
     }
 
     public override void PossibleMoves()
     {
         avaliableMoves.Clear();
-        for (int i = 0; i < 8; i++)
+        if (!taken)
         {
-            for (int j = 0; j < 8; j++)
+            for (int i = 0; i < 8; i++)
             {
-                Vector2Int square = new Vector2Int(i, j);
-                Vector2Int displacementToSquare = square - this.occupiedSquare; // this is to go through all the squares checking which are safe to move to
-                if (square != this.occupiedSquare && squareIsMoveable(displacementToSquare) && canMoveThere(square)) // this should be implemented when the obj is picked up to highlight the possible squares. 
+                for (int j = 0; j < 8; j++)
                 {
-                    avaliableMoves.Add(square);
+                    Vector2Int square = new Vector2Int(i, j);
+                    Vector2Int displacementToSquare = square - this.occupiedSquare; // this is to go through all the squares checking which are safe to move to
+                    if (square != this.occupiedSquare && squareIsMoveable(displacementToSquare) && canMoveThere(square)) // this should be implemented when the obj is picked up to highlight the possible squares. 
+                    {
+                        avaliableMoves.Add(square);
+                    }
                 }
             }
         }
