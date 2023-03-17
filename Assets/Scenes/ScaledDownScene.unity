@@ -479,11 +479,11 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 812341824}
     m_Modifications:
     - target: {fileID: 2390080603544102585, guid: c0108fb40c8ef5c469ae27d7538e6f8d, type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2390080603544102585, guid: c0108fb40c8ef5c469ae27d7538e6f8d, type: 3}
       propertyPath: m_LocalScale.x
@@ -499,15 +499,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2390080603544102585, guid: c0108fb40c8ef5c469ae27d7538e6f8d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.981
+      value: 0.4425494
       objectReference: {fileID: 0}
     - target: {fileID: 2390080603544102585, guid: c0108fb40c8ef5c469ae27d7538e6f8d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.464
+      value: 1.0232934
       objectReference: {fileID: 0}
     - target: {fileID: 2390080603544102585, guid: c0108fb40c8ef5c469ae27d7538e6f8d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.636
+      value: -2.2296395
       objectReference: {fileID: 0}
     - target: {fileID: 2390080603544102585, guid: c0108fb40c8ef5c469ae27d7538e6f8d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -543,6 +543,38 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c0108fb40c8ef5c469ae27d7538e6f8d, type: 3}
+--- !u!1 &812341823
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 812341824}
+  m_Layer: 0
+  m_Name: Team indication object
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &812341824
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 812341823}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.4235494, y: -1.4872934, z: 3.8656394}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 704355977}
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
