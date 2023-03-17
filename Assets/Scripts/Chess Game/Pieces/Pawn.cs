@@ -42,39 +42,56 @@ public class Pawn : Piece, IMixedRealityPointerHandler
     }
     public override void MovePiece(Vector2Int coords)
     {
-        if (this.getTeam() == controller.getActivePlayer().getTeam() && this.avaliableMoves.Contains(coords)) {
-            // If it is this team's turn
-            if (squareIsMoveable(coords))
+        if (!taken)
+        {
+            if (this.getTeam() == controller.getActivePlayer().getTeam() && this.avaliableMoves.Contains(coords))
             {
-                this.occupiedSquare = coords;
-                transform.position = this.board.CalculatePositionFromCoords(coords);
-                controller.endTurn();
-            } else if (canPawnTake(coords)){
-                board.takePiece(this, coords);
-                this.occupiedSquare = coords;
-                transform.position = this.board.CalculatePositionFromCoords(coords);
-                controller.endTurn();
-            } else
+                // If it is this team's turn
+                if (squareIsMoveable(coords))
+                {
+                    this.occupiedSquare = coords;
+                    transform.position = this.board.CalculatePositionFromCoords(coords);
+                    controller.endTurn();
+                }
+                else if (canPawnTake(coords))
+                {
+                    board.takePiece(this, coords);
+                    this.occupiedSquare = coords;
+                    transform.position = this.board.CalculatePositionFromCoords(coords);
+                    controller.endTurn();
+                }
+                else
+                {
+                    transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
+                }
+            }
+            else
             {
+                // If not this team's turn, snap back to occupied square
                 transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
             }
-        } else {
-            // If not this team's turn, snap back to occupied square
-            transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
+        }
+        else
+        {
+            transform.position = finalCoords;
         }
     }
+
 
     public override void PossibleMoves()
     {
         avaliableMoves.Clear();
-        for (int i = 0; i < 8; i++)
+        if (!taken)
         {
-            for (int j = 0; j < 8; j++)
+            for (int i = 0; i < 8; i++)
             {
-                Vector2Int square = new Vector2Int(i, j); // this is to go through all the squares checking which are safe to move to
-                if (squareIsMoveable(square) || canPawnTake(square)) // this should be implemented when the obj is picked up to highlight the possible squares. 
+                for (int j = 0; j < 8; j++)
                 {
-                    avaliableMoves.Add(square);
+                    Vector2Int square = new Vector2Int(i, j); // this is to go through all the squares checking which are safe to move to
+                    if (squareIsMoveable(square) || canPawnTake(square)) // this should be implemented when the obj is picked up to highlight the possible squares. 
+                    {
+                        avaliableMoves.Add(square);
+                    }
                 }
             }
         }

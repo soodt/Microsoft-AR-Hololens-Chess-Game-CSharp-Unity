@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Microsoft.MixedReality.Toolkit.Input;
 using Microsoft.MixedReality.Toolkit.UI;
+using TMPro;
 
 [RequireComponent(typeof(PieceCreator))]
 public class ChessGameController : MonoBehaviour
@@ -13,7 +14,7 @@ public class ChessGameController : MonoBehaviour
     private PieceCreator pieceCreator;
     public Piece[] activePieces = new Piece[32];
     public TurnIndicator turnIndicator;
-    
+
     private Piece blackKing;
     private Piece whiteKing;
     private Piece checkedKing;
