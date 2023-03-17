@@ -13,6 +13,7 @@ public class ChessGameController : MonoBehaviour
     [SerializeField] private Board board;
     private PieceCreator pieceCreator;
     public Piece[] activePieces = new Piece[32];
+    public TurnIndicator turnIndicator;
 
     private Piece blackKing;
     private Piece whiteKing;
@@ -43,6 +44,7 @@ public class ChessGameController : MonoBehaviour
         CreatePiecesFromLayout(startingBoardLayout);
         board.SetDependencies(this);
         activePlayer = whitePlayer;
+        turnIndicator.SetDependencies(this);
     }
 
     public ChessPlayer getActivePlayer() {
@@ -164,8 +166,10 @@ public class ChessGameController : MonoBehaviour
         }
         if (getActivePlayer() == whitePlayer) {
             activePlayer = blackPlayer;
+            turnIndicator.ColourTeam();
         } else if (getActivePlayer() == blackPlayer) {
             activePlayer = whitePlayer;
+            turnIndicator.ColourTeam();
         }
         if(checkCond()) {
             Debug.Log("Check");
