@@ -62,7 +62,7 @@ public class Pawn : Piece, IMixedRealityPointerHandler
                 {
                     this.occupiedSquare = coords;
                     transform.position = this.board.CalculatePositionFromCoords(coords);
-                    if (this.occupiedSquare.y == 7)
+                    if (this.occupiedSquare.y == 7 || this.occupiedSquare.y == 0)
                     {
                         Debug.Log("Queening");
                         //Debug.Log("" + pQueenName);
@@ -77,7 +77,7 @@ public class Pawn : Piece, IMixedRealityPointerHandler
                     board.takePiece(this, coords);
                     this.occupiedSquare = coords;
                     transform.position = this.board.CalculatePositionFromCoords(coords);
-                    if (this.occupiedSquare.y == 7)
+                    if (this.occupiedSquare.y == 7 || this.occupiedSquare.y == 0)
                     {
                         Debug.Log("Queening");
                         Debug.Log("" + pQueenName);
