@@ -6,6 +6,17 @@ using UnityEngine;
 
 public class Pawn : Piece, IMixedRealityPointerHandler
 {
+    Piece promotionQueen;
+    string pQueenName;
+    Type pQueenType;
+
+    private void start()
+    {
+        promotionQueen = board.getPiece(new Vector2Int(3, 0));
+        pQueenName = promotionQueen.typeName;
+        pQueenType = Type.GetType(pQueenName);
+    }
+
     public override List<Vector2Int> SelectAvaliableSquares()
     {
         throw new NotImplementedException();
@@ -51,6 +62,14 @@ public class Pawn : Piece, IMixedRealityPointerHandler
                 {
                     this.occupiedSquare = coords;
                     transform.position = this.board.CalculatePositionFromCoords(coords);
+                    if (this.occupiedSquare.y == 7)
+                    {
+                        Debug.Log("Queening");
+                        //Debug.Log("" + pQueenName);
+                        Type type = Type.GetType("Queen");
+                        controller.CreatePieceAndInitialize(this.occupiedSquare, this.team, type);
+                        Destroy(this.gameObject);
+                    }
                     controller.endTurn();
                 }
                 else if (canPawnTake(coords))
@@ -58,12 +77,21 @@ public class Pawn : Piece, IMixedRealityPointerHandler
                     board.takePiece(this, coords);
                     this.occupiedSquare = coords;
                     transform.position = this.board.CalculatePositionFromCoords(coords);
+                    if (this.occupiedSquare.y == 7)
+                    {
+                        Debug.Log("Queening");
+                        Debug.Log("" + pQueenName);
+                        Type type = Type.GetType("Queen");
+                        controller.CreatePieceAndInitialize(this.occupiedSquare, this.team, type);
+                        Destroy(this.gameObject);
+                    }
                     controller.endTurn();
                 }
                 else
                 {
                     transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
                 }
+                
             }
             else
             {
