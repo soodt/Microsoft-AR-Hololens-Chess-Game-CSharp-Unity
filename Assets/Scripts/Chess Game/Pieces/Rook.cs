@@ -183,4 +183,9 @@ public class Rook : Piece
         king.hasMoved = true;
         controller.endTurn();
     }
+
+    public override bool hasMovedTwoSquares()
+    {
+        return false;
+    }
 }

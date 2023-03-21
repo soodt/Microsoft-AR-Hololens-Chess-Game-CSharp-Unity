@@ -6,6 +6,12 @@ using UnityEngine;
 
 public class Pawn : Piece, IMixedRealityPointerHandler
 {
+
+    public bool movedTwoSquares = false; // bool to track if pawn has moved two squares on the last turn and is vulnerable to en passant
+
+    public override bool hasMovedTwoSquares() {
+        return movedTwoSquares;
+    }
     public override List<Vector2Int> SelectAvaliableSquares()
     {
         throw new NotImplementedException();
@@ -37,6 +43,38 @@ public class Pawn : Piece, IMixedRealityPointerHandler
         }
     }
 
+    public bool canTakeEnPassant(Vector2Int coords){
+        Vector2Int displacement = new Vector2Int(this.occupiedSquare.x, this.occupiedSquare.y);
+        displacement = coords - displacement;   
+        if (this.team == TeamColor.White) {
+            Vector2Int passedSquare = new Vector2Int(coords.x, coords.y - 1);
+
+            if ((displacement.x == 1 || displacement.x == -1) && (displacement.y == 1) &&  board.getPiece(passedSquare)) {
+                if ((board.getPiece(passedSquare).getTeam() != this.getTeam()) && (board.getPiece(passedSquare).typeName == "Pawn")) {
+                    if (board.getPiece(passedSquare).hasMovedTwoSquares()) {
+                        return true;
+                    }
+                }
+                    
+            }
+            return false;
+        } else {
+            Vector2Int passedSquare = new Vector2Int(coords.x, coords.y + 1);
+
+            if ((displacement.x == 1 || displacement.x == -1) && (displacement.y == -1) && board.getPiece(passedSquare)) {
+                if ((board.getPiece(passedSquare).getTeam() != this.getTeam()) && (board.getPiece(passedSquare).typeName == "Pawn"))
+                {
+                    if (board.getPiece(passedSquare).hasMovedTwoSquares())
+                    {
+                        return true;
+                    }
+                }
+
+            }
+            return false;
+        }
+    }
+
     public override bool isAttackingSquare(Vector2Int coords) {
         return canPawnTake(coords);
     }
@@ -46,15 +84,35 @@ public class Pawn : Piece, IMixedRealityPointerHandler
             // If it is this team's turn
             if (squareIsMoveable(coords))
             {
+                if (this.occupiedSquare.y - coords.y == 2 || this.occupiedSquare.y - coords.y == -2)
+                {
+                    this.movedTwoSquares = true;
+                }
+                else
+                {
+                    this.movedTwoSquares = false;
+                }
                 this.occupiedSquare = coords;
                 transform.position = this.board.CalculatePositionFromCoords(coords);
                 controller.endTurn();
             } else if (canPawnTake(coords)){
+                this.movedTwoSquares = false;
                 board.takePiece(this, coords);
                 this.occupiedSquare = coords;
                 transform.position = this.board.CalculatePositionFromCoords(coords);
                 controller.endTurn();
-            } else
+            } else if (canTakeEnPassant(coords)) {
+                if (this.getTeam() == TeamColor.White) { 
+                    Vector2Int passedSquare = new Vector2Int(coords.x, coords.y - 1);
+                    board.takePiece(this, passedSquare);
+                } else {
+                    Vector2Int passedSquare = new Vector2Int(coords.x, coords.y + 1);
+                    board.takePiece(this, passedSquare);
+                }
+                this.occupiedSquare = coords;
+                transform.position = this.board.CalculatePositionFromCoords(coords);
+                controller.endTurn();
+            }
             {
                 transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
             }
@@ -72,7 +130,7 @@ public class Pawn : Piece, IMixedRealityPointerHandler
             for (int j = 0; j < 8; j++)
             {
                 Vector2Int square = new Vector2Int(i, j); // this is to go through all the squares checking which are safe to move to
-                if (squareIsMoveable(square) || canPawnTake(square)) // this should be implemented when the obj is picked up to highlight the possible squares. 
+                if (squareIsMoveable(square) || canPawnTake(square) || canTakeEnPassant(square)) // this should be implemented when the obj is picked up to highlight the possible squares. 
                 {
                     avaliableMoves.Add(square);
                 }

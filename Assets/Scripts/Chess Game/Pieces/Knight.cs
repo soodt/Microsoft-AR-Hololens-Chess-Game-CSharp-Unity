@@ -102,4 +102,8 @@ public class Knight : Piece
 
         return false;
     }
+    public override bool hasMovedTwoSquares()
+    {
+        return false;
+    }
 }

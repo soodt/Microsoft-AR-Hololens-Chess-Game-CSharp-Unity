@@ -133,4 +133,8 @@ public class Bishop : Piece
         
         return false;
     }
+    public override bool hasMovedTwoSquares()
+    {
+        return false;
+    }
 }
