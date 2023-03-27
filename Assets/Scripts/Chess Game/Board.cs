@@ -57,7 +57,39 @@ public class Board : MonoBehaviour
             {
                 controller.recordPieceRemoval(pieceTaken);               // adds taken piece to takenPieces list of player who took the piece and removes the taken piece from the activePieces list of the other player
                 controller.activePieces[i] = null;
-                pieceTaken.GetComponent<MeshRenderer>().enabled = false; // turns piece invisible instead of destroying it
+                // Making it so after being taken pieces appear beside the table
+                if (pieceTaken.getTeam() == TeamColor.White)
+                {
+                    //pieceTaken.setOut(pieceTaken);
+                    double zOffset = -1 + (0.20 * (15 - controller.whitePlayer.activePieces.Count));
+                    double xOffset = -1;
+                    if (controller.whitePlayer.activePieces.Count<=8)
+                    {
+                        zOffset = -1 + (0.20 * (8 - controller.whitePlayer.activePieces.Count));
+                        xOffset = -1.30;
+                    }
+                    Vector3 finalCoord = new Vector3((float)xOffset, 0, (float)zOffset);
+                    pieceTaken.transform.position = finalCoord;
+                    pieceTaken.finalCoords = finalCoord;
+                    //  pieceTaken.GetComponent<NearInteractionGrabbable>().enabled = false;
+                    pieceTaken.taken = true;
+                }
+                else
+                {
+                    double zOffset = 0.1890001 - (0.20 * (15 - controller.blackPlayer.activePieces.Count));
+                    double xOffset = 0.8;
+                    if (controller.blackPlayer.activePieces.Count <= 8)
+                    {
+                        zOffset = 0.1890001 - (0.20 * (8 - controller.blackPlayer.activePieces.Count));
+                        xOffset = 1.1;
+                    }
+                    Vector3 finalCoord = new Vector3((float)xOffset, 0, (float)zOffset);
+                    pieceTaken.transform.position = finalCoord;
+                    pieceTaken.finalCoords = finalCoord;
+                    //  pieceTaken.GetComponent<NearInteractionGrabbable>().enabled = false;
+                    pieceTaken.taken = true;
+                }
+                // pieceTaken.GetComponent<MeshRenderer>().enabled = false; // turns piece invisible instead of destroying it
                 //Destroy(pieceTaken.gameObject);
                 break;
             }
@@ -67,13 +99,21 @@ public class Board : MonoBehaviour
     //to highlight the tiles that can be taken
     public void HightlightTiles(List<Vector2Int> selection)
     {
-        Dictionary<Vector3, bool> squaresInfo= new Dictionary<Vector3, bool>();
+        Dictionary<Vector3, bool> squaresInfo = new Dictionary<Vector3, bool>();
         for (int i = 0; i < selection.Count; i++)
         {
             Vector3 position = CalculatePositionFromCoords(selection[i]);// counts through all available place - (at the moment everything is set to true)
-            squaresInfo.Add(position, true); // eventually true can be free places and false can be places with opponents on
+            if (getPiece(selection[i]) != null)
+            {
+                squaresInfo.Add(position, false);
+            }
+            else
+            {
+                squaresInfo.Add(position, true); // eventually true can be free places and false can be places with opponents on
+            }
         }
         squareSelector.ShowSelection(squaresInfo);
     }
+
 
 }

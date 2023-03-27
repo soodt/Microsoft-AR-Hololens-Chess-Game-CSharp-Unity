@@ -27,54 +27,71 @@ public class King : Piece
 
     public override void MovePiece(Vector2Int coords)
     {
-        if (this.getTeam() == controller.getActivePlayer().getTeam() && this.avaliableMoves.Contains(coords))
+        if (!taken)
         {
-            if ((coords.x - this.occupiedSquare.x <= 1 & coords.x - this.occupiedSquare.x >= -1 &
-             coords.y - this.occupiedSquare.y <= 1 & coords.y - this.occupiedSquare.y >= -1) && canMoveThere(coords) && coords != this.occupiedSquare)
+            if (this.getTeam() == controller.getActivePlayer().getTeam() && this.avaliableMoves.Contains(coords))
             {
-                Piece pieceCheck = board.getPiece(coords);
-                if (pieceCheck)
+                if ((coords.x - this.occupiedSquare.x <= 1 & coords.x - this.occupiedSquare.x >= -1 &
+                 coords.y - this.occupiedSquare.y <= 1 & coords.y - this.occupiedSquare.y >= -1) && canMoveThere(coords) && coords != this.occupiedSquare)
                 {
-                    board.takePiece(this, coords);
+                    Piece pieceCheck = board.getPiece(coords);
+                    if (pieceCheck)
+                    {
+                        board.takePiece(this, coords);
+                    }
+                    this.occupiedSquare = coords;
+                    transform.position = this.board.CalculatePositionFromCoords(coords);
+                    if (this.hasMoved == false)
+                    {
+                        this.hasMoved = true;
+                    }
+                    controller.endTurn();
                 }
-                this.occupiedSquare = coords;
-                transform.position = this.board.CalculatePositionFromCoords(coords);
-                if (this.hasMoved == false) {
-                    this.hasMoved = true;
+                else
+                {
+                    Piece pieceCheck = board.getPiece(coords);
+                    if (pieceCheck && pieceCheck.typeName == "Rook" && pieceCheck.getTeam() == this.getTeam() && canCastle(pieceCheck))
+                    {
+                        castleMove(pieceCheck);
+                    }
+                    else
+                    {
+                        transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
+                    }
                 }
-                controller.endTurn();
             }
             else
             {
-                Piece pieceCheck = board.getPiece(coords);
-                if (pieceCheck && pieceCheck.typeName == "Rook" && pieceCheck.getTeam() == this.getTeam() && canCastle(pieceCheck)) {
-                    castleMove(pieceCheck);
-                } else {
-                    transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
-                }
+                // If not this team's turn, snap back to occupied square
+                transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
+                Debug.Log("NoMoving!");
             }
-        } else
+        }
+        else
         {
-            // If not this team's turn, snap back to occupied square
-            transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
-            Debug.Log("NoMoving!");
+            transform.position = finalCoords;
         }
     }
 
     public override void PossibleMoves()
     {
         avaliableMoves.Clear();
-        for (int i = 0; i < 8; i++)
+        if (!taken)
         {
-            for (int j = 0; j < 8; j++)
+            for (int i = 0; i < 8; i++)
             {
-                Vector2Int square = new Vector2Int(i, j); // this is to go through all the squares checking which are safe to move to
-                Piece pieceCheck = board.getPiece(square);
-                if (squareIsMoveable(square) && canMoveThere(square) && square != this.occupiedSquare) // this should be implemented when the obj is picked up to highlight the possible squares. 
+                for (int j = 0; j < 8; j++)
                 {
-                    avaliableMoves.Add(square);
-                } else if (pieceCheck && pieceCheck.typeName == "Rook" && pieceCheck.getTeam() == this.getTeam() && canCastle(pieceCheck)){
-                    avaliableMoves.Add(square); // add castling move if available
+                    Vector2Int square = new Vector2Int(i, j); // this is to go through all the squares checking which are safe to move to
+                    Piece pieceCheck = board.getPiece(square);
+                    if (squareIsMoveable(square) && canMoveThere(square) && square != this.occupiedSquare) // this should be implemented when the obj is picked up to highlight the possible squares. 
+                    {
+                        avaliableMoves.Add(square);
+                    }
+                    else if (pieceCheck && pieceCheck.typeName == "Rook" && pieceCheck.getTeam() == this.getTeam() && canCastle(pieceCheck))
+                    {
+                        avaliableMoves.Add(square); // add castling move if available
+                    }
                 }
             }
         }
