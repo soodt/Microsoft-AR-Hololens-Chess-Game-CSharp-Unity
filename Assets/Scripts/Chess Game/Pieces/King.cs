@@ -162,4 +162,9 @@ public class King : Piece
         controller.endTurn();
     }
 
+    public override bool hasMovedTwoSquares()
+    {
+        return false;
+    }
+
 }

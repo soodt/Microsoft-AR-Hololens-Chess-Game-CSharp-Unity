@@ -25,10 +25,10 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
 	public TurnIndicator turnIndicator { get; set;}
 	public abstract List<Vector2Int> SelectAvaliableSquares();
 	public abstract bool isAttackingSquare(Vector2Int coords);
-
 	public String typeName {get; set;}
+    public abstract bool hasMovedTwoSquares();
 
-	private void Awake()
+    private void Awake()
 	{
 		avaliableMoves = new List<Vector2Int>();
 		materialSetter = GetComponent<MaterialSetter>();
@@ -60,7 +60,7 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
 		return team == piece.team;
 	}
 
-	public bool CanMoveTo(Vector2Int coords)
+    public bool CanMoveTo(Vector2Int coords)
 	{
 		return avaliableMoves.Contains(coords);
 	}

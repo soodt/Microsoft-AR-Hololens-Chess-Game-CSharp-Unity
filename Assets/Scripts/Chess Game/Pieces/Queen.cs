@@ -170,5 +170,9 @@ public class Queen : Piece
         }
         return false;
     }
+    public override bool hasMovedTwoSquares()
+    {
+        return false;
+    }
 
 }
