@@ -16,7 +16,7 @@ public class Knight : Piece
 		new Vector2Int(-1, 2),
 		new Vector2Int(-1, -2),
 	};
-	public override List<Vector2Int> SelectAvaliableSquares()
+	public override List<Vector2Int> SelectAvailableSquares()
 	{
 		throw new System.NotImplementedException();
 	}
@@ -40,7 +40,7 @@ public class Knight : Piece
 	{
 		Vector2Int displacement = coords - this.occupiedSquare;
 		bool moved = false;
-		if (this.getTeam() == controller.getActivePlayer().getTeam() && this.avaliableMoves.Contains(coords))
+		if (this.getTeam() == controller.getActivePlayer().getTeam() && this.availableMoves.Contains(coords))
 		{
 			for (int i = 0; i < offsets.Length; i++)
 			{
@@ -73,7 +73,7 @@ public class Knight : Piece
 
     public override void PossibleMoves()
     {
-        avaliableMoves.Clear();
+        availableMoves.Clear();
         for (int i = 0; i < 8; i++)
         {
             for (int j = 0; j < 8; j++)
@@ -82,7 +82,7 @@ public class Knight : Piece
                 Vector2Int displacementToSquare = square - this.occupiedSquare; // this is to go through all the squares checking which are safe to move to
                 if (squareIsMoveable(displacementToSquare) && canMoveThere(square)) // this should be implemented when the obj is picked up to highlight the possible squares. 
                 {
-                    avaliableMoves.Add(square);
+                    availableMoves.Add(square);
                 }
             }
         }

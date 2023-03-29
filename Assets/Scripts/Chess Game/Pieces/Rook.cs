@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Rook : Piece
 {
-    public override List<Vector2Int> SelectAvaliableSquares()
+    public override List<Vector2Int> SelectAvailableSquares()
     {
         throw new System.NotImplementedException();
     }
@@ -67,7 +67,7 @@ public class Rook : Piece
 
     public override void MovePiece(Vector2Int coords)
 	{
-        if (this.getTeam() == controller.getActivePlayer().getTeam() && this.avaliableMoves.Contains(coords))
+        if (this.getTeam() == controller.getActivePlayer().getTeam() && this.availableMoves.Contains(coords))
         {
             if ((coords.x - this.occupiedSquare.x == 0 | coords.y - this.occupiedSquare.y == 0) && canMoveThere(coords))
             {
@@ -103,7 +103,7 @@ public class Rook : Piece
 
     public override void PossibleMoves()
     {
-        avaliableMoves.Clear();
+        availableMoves.Clear();
         for (int i = 0; i < 8; i++)
         {
             for (int j = 0; j < 8; j++)
@@ -112,9 +112,9 @@ public class Rook : Piece
                 Piece pieceCheck = board.getPiece(square);
                 if (squareIsMoveable(square) && canMoveThere(square)) // this should be implemented when the obj is picked up to highlight the possible squares. 
                 {
-                    avaliableMoves.Add(square);
+                    availableMoves.Add(square);
                 } else if (pieceCheck && pieceCheck.typeName == "King" && pieceCheck.getTeam() == this.getTeam() && canCastle(pieceCheck)){
-                    avaliableMoves.Add(square); // add castling move if available
+                    availableMoves.Add(square); // add castling move if available
                 }
             }
         }

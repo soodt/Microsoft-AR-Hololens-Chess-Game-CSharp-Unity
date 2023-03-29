@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class King : Piece
 {
-    public override List<Vector2Int> SelectAvaliableSquares()
+    public override List<Vector2Int> SelectAvailableSquares()
     {
         throw new NotImplementedException();
     }
@@ -27,7 +27,7 @@ public class King : Piece
 
     public override void MovePiece(Vector2Int coords)
     {
-        if (this.getTeam() == controller.getActivePlayer().getTeam() && this.avaliableMoves.Contains(coords))
+        if (this.getTeam() == controller.getActivePlayer().getTeam() && this.availableMoves.Contains(coords))
         {
             if ((coords.x - this.occupiedSquare.x <= 1 & coords.x - this.occupiedSquare.x >= -1 &
              coords.y - this.occupiedSquare.y <= 1 & coords.y - this.occupiedSquare.y >= -1) && canMoveThere(coords) && coords != this.occupiedSquare)
@@ -63,7 +63,7 @@ public class King : Piece
 
     public override void PossibleMoves()
     {
-        avaliableMoves.Clear();
+        availableMoves.Clear();
         for (int i = 0; i < 8; i++)
         {
             for (int j = 0; j < 8; j++)
@@ -72,9 +72,9 @@ public class King : Piece
                 Piece pieceCheck = board.getPiece(square);
                 if (squareIsMoveable(square) && canMoveThere(square) && square != this.occupiedSquare) // this should be implemented when the obj is picked up to highlight the possible squares. 
                 {
-                    avaliableMoves.Add(square);
+                    availableMoves.Add(square);
                 } else if (pieceCheck && pieceCheck.typeName == "Rook" && pieceCheck.getTeam() == this.getTeam() && canCastle(pieceCheck)){
-                    avaliableMoves.Add(square); // add castling move if available
+                    availableMoves.Add(square); // add castling move if available
                 }
             }
         }

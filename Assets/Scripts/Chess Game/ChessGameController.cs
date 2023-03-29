@@ -12,11 +12,12 @@ public class ChessGameController : MonoBehaviour
     [SerializeField] private Board board;
     private PieceCreator pieceCreator;
     public Piece[] activePieces = new Piece[32];
-    
+
 
     private Piece blackKing;
     private Piece whiteKing;
     private Piece checkedKing;
+    public Piece currentKing;
     public ChessPlayer whitePlayer{get; set;}
     public ChessPlayer blackPlayer{get; set;}
     private ChessPlayer activePlayer{get; set;}    
@@ -172,6 +173,10 @@ public class ChessGameController : MonoBehaviour
             activePlayer.kingInCheck = true;
             isGameOver();
         }
+        if (checkStaleMate())
+        {
+            isGameOver();
+        }
         // Debug
         if (getActivePlayer() == whitePlayer) {
             Debug.Log("White");
@@ -211,9 +216,9 @@ public class ChessGameController : MonoBehaviour
         {
             Piece piece = otherPlayer.activePieces[i];
             piece.PossibleMoves();
-            for (int z = 0; z < piece.avaliableMoves.Count; z++)
+            for (int z = 0; z < piece.availableMoves.Count; z++)
             {
-                if (piece.avaliableMoves[z] == checkedKing.occupiedSquare)
+                if (piece.availableMoves[z] == checkedKing.occupiedSquare)
                 {
                     return true;
                 }
@@ -224,20 +229,73 @@ public class ChessGameController : MonoBehaviour
         return false;
     }
 
+    public bool checkStaleMate()                                                // evaluates stalemate condition return true if so else false
+    {
+        ChessPlayer otherPlayer;
+        whiteKing = activePieces[4];
+        blackKing = activePieces[20];
+        if (activePlayer == whitePlayer)
+        {
+            currentKing = whiteKing;
+            otherPlayer = blackPlayer;
+        }
+        else
+        {
+            currentKing = blackKing;
+            otherPlayer = whitePlayer;
+        }
+        for(int x =0; x< activePlayer.activePieces.Count; x++)                  // if pieces other than king have available moves, return 
+        {                                                                       // false, stalemate condition not satisfied
+            if (activePlayer.activePieces[x] != currentKing)
+            {
+                activePlayer.activePieces[x].PossibleMoves();
+                if (activePlayer.activePieces[x].availableMoves.Count != 0)
+                {
+                    return false;
+                }
+            }
+        }
+        for(int i =0; i < otherPlayer.activePieces.Count; i++)                  // if any move of King is available (without running into check condition)
+        {
+            
+            Piece piece = otherPlayer.activePieces[i];
+            piece.PossibleMoves();
+            currentKing.PossibleMoves();
+            for (int j = 0; j < currentKing.availableMoves.Count; j++)     
+            {
+                bool notOccupied = true;
+                for (int k = 0; k < piece.availableMoves.Count; k++)
+                {
+                    if (currentKing.availableMoves[j] == piece.availableMoves[k])
+                    {
+                        notOccupied = false;
+                    }
+                }
+                if (notOccupied) return false;
+            }
+            
+        }
+        return true;
+    }
+
     public bool isGameOver() {
+        if (checkStaleMate())
+        {
+            Debug.Log("Stalemate");
+            Debug.Log("Draw");
+            return true;
+        }
         foreach (Piece p in activePlayer.activePieces)
         {
             p.PossibleMoves();
             p.removeMovesLeavingKingInCheck();
-            if (p.avaliableMoves.Count != 0) {
+            if (p.availableMoves.Count != 0) {
                 return false;
             }
         }
         if (activePlayer.kingInCheck) {
             Debug.Log("Checkmate");
-        } else {
-            Debug.Log("Stalemate");
-        }
+        } 
         return true;
     }
 

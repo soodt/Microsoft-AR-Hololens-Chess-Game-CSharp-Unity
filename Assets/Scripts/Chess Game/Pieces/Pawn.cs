@@ -12,7 +12,7 @@ public class Pawn : Piece, IMixedRealityPointerHandler
     public override bool hasMovedTwoSquares() {
         return movedTwoSquares;
     }
-    public override List<Vector2Int> SelectAvaliableSquares()
+    public override List<Vector2Int> SelectAvailableSquares()
     {
         throw new NotImplementedException();
     }
@@ -80,7 +80,7 @@ public class Pawn : Piece, IMixedRealityPointerHandler
     }
     public override void MovePiece(Vector2Int coords)
     {
-        if (this.getTeam() == controller.getActivePlayer().getTeam() && this.avaliableMoves.Contains(coords)) {
+        if (this.getTeam() == controller.getActivePlayer().getTeam() && this.availableMoves.Contains(coords)) {
             // If it is this team's turn
             if (squareIsMoveable(coords))
             {
@@ -124,7 +124,7 @@ public class Pawn : Piece, IMixedRealityPointerHandler
 
     public override void PossibleMoves()
     {
-        avaliableMoves.Clear();
+        availableMoves.Clear();
         for (int i = 0; i < 8; i++)
         {
             for (int j = 0; j < 8; j++)
@@ -132,7 +132,7 @@ public class Pawn : Piece, IMixedRealityPointerHandler
                 Vector2Int square = new Vector2Int(i, j); // this is to go through all the squares checking which are safe to move to
                 if (squareIsMoveable(square) || canPawnTake(square) || canTakeEnPassant(square)) // this should be implemented when the obj is picked up to highlight the possible squares. 
                 {
-                    avaliableMoves.Add(square);
+                    availableMoves.Add(square);
                 }
             }
         }
@@ -174,7 +174,7 @@ public class Pawn : Piece, IMixedRealityPointerHandler
     public void OnPointerDown(MixedRealityPointerEventData eventData)
     {
         PossibleMoves();
-        board.HightlightTiles(avaliableMoves);
+        board.HightlightTiles(availableMoves);
         Debug.Log("Down"); ;
     }
 
@@ -185,8 +185,8 @@ public class Pawn : Piece, IMixedRealityPointerHandler
 
     public void OnPointerUp(MixedRealityPointerEventData eventData)
     {
-        avaliableMoves.Clear();
-        board.HightlightTiles(avaliableMoves);
+        availableMoves.Clear();
+        board.HightlightTiles(availableMoves);
         Debug.Log("up");
     }
 
