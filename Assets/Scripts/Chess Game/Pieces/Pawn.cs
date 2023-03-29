@@ -122,6 +122,7 @@ public class Pawn : Piece, IMixedRealityPointerHandler
         }
     }
 
+
     public override void PossibleMoves()
     {
         avaliableMoves.Clear();

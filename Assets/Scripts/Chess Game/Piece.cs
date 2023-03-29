@@ -19,8 +19,10 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
 	public bool hasMoved { get; set; }
 	public List<Vector2Int> avaliableMoves;
 
+	public bool taken = false;
+	public Vector3 finalCoords; // specify the pos of the piece after being taken
 	public ChessGameController controller {get; set;}
-
+	public TurnIndicator turnIndicator { get; set;}
 	public abstract List<Vector2Int> SelectAvaliableSquares();
 	public abstract bool isAttackingSquare(Vector2Int coords);
 	public String typeName {get; set;}
@@ -31,6 +33,7 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
 		avaliableMoves = new List<Vector2Int>();
 		materialSetter = GetComponent<MaterialSetter>();
 		hasMoved = false;
+		turnIndicator = GetComponent<TurnIndicator>();
 	}
 
 	public TeamColor getTeam() {
@@ -73,7 +76,10 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
 
     protected void TryToAddMove(Vector2Int coords)
 	{
-		avaliableMoves.Add(coords);
+		if (!taken)
+		{
+			avaliableMoves.Add(coords);
+		}
 	}
 
 	public void removeMovesLeavingKingInCheck() {
