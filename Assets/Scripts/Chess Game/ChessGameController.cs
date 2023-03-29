@@ -73,13 +73,13 @@ public class ChessGameController : MonoBehaviour
             Vector2Int squareCoords = layout.GetSquareCoordsAtIndex(i);
             TeamColor team = layout.GetSquareTeamColorAtIndex(i);
             string typeName = layout.GetSquarePieceNameAtIndex(i);
-            Debug.Log(""+typeName);
+
             Type type = Type.GetType(typeName);
             CreatePieceAndInitialize(squareCoords, team, type);
         }
     }
 
-    public void CreatePieceAndInitialize(Vector2Int squareCoords, TeamColor team, Type type)
+    private void CreatePieceAndInitialize(Vector2Int squareCoords, TeamColor team, Type type)
     {
         
         Piece newPiece = pieceCreator.CreatePiece(type).GetComponent<Piece>();
