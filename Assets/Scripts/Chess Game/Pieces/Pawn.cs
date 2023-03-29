@@ -84,14 +84,49 @@ public class Pawn : Piece, IMixedRealityPointerHandler
             // If it is this team's turn
             if (squareIsMoveable(coords))
             {
+
+                // If it is this team's turn
+                if (squareIsMoveable(coords))
+                {
+                    this.occupiedSquare = coords;
+                    transform.position = this.board.CalculatePositionFromCoords(coords);
+                    if (this.occupiedSquare.y == 7 || this.occupiedSquare.y == 0)
+                    {
+                        Debug.Log("Queening");
+                        //Debug.Log("" + pQueenName);
+                        Type type = Type.GetType("Queen");
+                        controller.CreatePieceAndInitialize(this.occupiedSquare, this.team, type);
+                        Destroy(this.gameObject);
+                    }
+                    controller.endTurn();
+                }
+                else if (canPawnTake(coords))
+                {
+                    board.takePiece(this, coords);
+                    this.occupiedSquare = coords;
+                    transform.position = this.board.CalculatePositionFromCoords(coords);
+                    if (this.occupiedSquare.y == 7 || this.occupiedSquare.y == 0)
+                    {
+                        Debug.Log("Queening");
+                        Debug.Log("" + pQueenName);
+                        Type type = Type.GetType("Queen");
+                        controller.CreatePieceAndInitialize(this.occupiedSquare, this.team, type);
+                        Destroy(this.gameObject);
+                    }
+                    controller.endTurn();
+
                 if (this.occupiedSquare.y - coords.y == 2 || this.occupiedSquare.y - coords.y == -2)
                 {
                     this.movedTwoSquares = true;
+
                 }
                 else
                 {
                     this.movedTwoSquares = false;
                 }
+
+                
+
                 this.occupiedSquare = coords;
                 transform.position = this.board.CalculatePositionFromCoords(coords);
                 controller.endTurn();
