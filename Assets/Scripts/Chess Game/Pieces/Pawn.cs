@@ -94,12 +94,14 @@ public class Pawn : Piece, IMixedRealityPointerHandler
                 }
                 this.occupiedSquare = coords;
                 transform.position = this.board.CalculatePositionFromCoords(coords);
+                this.hasMoved = true;
                 controller.endTurn();
             } else if (canPawnTake(coords)){
                 this.movedTwoSquares = false;
                 board.takePiece(this, coords);
                 this.occupiedSquare = coords;
                 transform.position = this.board.CalculatePositionFromCoords(coords);
+                this.hasMoved = true;
                 controller.endTurn();
             } else if (canTakeEnPassant(coords)) {
                 if (this.getTeam() == TeamColor.White) { 
@@ -111,6 +113,7 @@ public class Pawn : Piece, IMixedRealityPointerHandler
                 }
                 this.occupiedSquare = coords;
                 transform.position = this.board.CalculatePositionFromCoords(coords);
+                this.hasMoved = true;
                 controller.endTurn();
             }
             {

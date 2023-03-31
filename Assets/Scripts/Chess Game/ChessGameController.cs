@@ -188,10 +188,20 @@ public class ChessGameController : MonoBehaviour
         if (getActivePlayer() == whitePlayer)
         {
             activePlayer = blackPlayer;
+            foreach (Pawn p in blackPlayer.activePieces) {
+                if (p.movedTwoSquares) {
+                    p.movedTwoSquares = false;
+                }
+            }
         }
         else if (getActivePlayer() == blackPlayer)
         {
             activePlayer = whitePlayer;
+            foreach (Pawn p in whitePlayer.activePieces) {
+                if (p.movedTwoSquares) {
+                    p.movedTwoSquares = false;
+                }
+            }
         }
     }
 
