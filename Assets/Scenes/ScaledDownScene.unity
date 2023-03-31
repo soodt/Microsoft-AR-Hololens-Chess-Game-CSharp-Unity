@@ -155,6 +155,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startingBoardLayout: {fileID: 11400000, guid: 6cfba3c73eb853c47a7d336987e0fc43, type: 2}
   board: {fileID: 119872357}
+  red: {fileID: 2100000, guid: 0d01ec64241ec35489d9e8030e6a42d1, type: 2}
   activePieces:
   - {fileID: 0}
   - {fileID: 0}
@@ -339,7 +340,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   freeSquareMaterial: {fileID: 2100000, guid: a319da9ce2632db40842dad69da7a343, type: 2}
-  enemySquareMaterial: {fileID: 2100000, guid: 0d01ec64241ec35489d9e8030e6a42d1, type: 2}
+  enemySquareMaterial: {fileID: 2100000, guid: 8f2743e6dce3dce48b6f9fc9eccf3d03, type: 2}
   selectorPrefab: {fileID: 2912707483993903054, guid: ca9f2642268fecb498f8084d6cc88ec0, type: 3}
 --- !u!1 &416698248
 GameObject:
