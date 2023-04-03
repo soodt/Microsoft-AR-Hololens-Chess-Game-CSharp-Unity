@@ -117,8 +117,6 @@ jobs:
       username: '$(unity.username)'
       password: '$(unity.password)'
       serial: '$(unity.serialkey)'
-      unityEditorsPathMode: 'unityHub'
-      unityProjectPath: '$(unity.projectPath)'
 
   # Build the project with Unity using the script defined in unity.executeMethod:
   - task: UnityBuildTask@3
@@ -128,7 +126,6 @@ jobs:
       buildScriptType: existing
       scriptExecuteMethod: '$(unity.executeMethod)'
       buildTarget: '$(unity.targetBuild)'
-      unityProjectPath: '$(unity.projectPath)'
       outputPath: '$(Build.BinariesDirectory)'
 
   # Publish the Solution folder:
