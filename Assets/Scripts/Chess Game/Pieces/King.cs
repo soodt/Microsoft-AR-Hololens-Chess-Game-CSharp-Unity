@@ -166,5 +166,9 @@ public class King : Piece
     {
         return false;
     }
+    public virtual String AlgebraicNotation(Vector2Int coords, Vector2Int prevCoords, bool capture, bool pawnPromote, bool enPassant, bool castle, bool checkmate)
+    {
+        return "";
+    }
 
 }

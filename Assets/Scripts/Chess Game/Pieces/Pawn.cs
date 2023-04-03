@@ -82,6 +82,10 @@ public class Pawn : Piece, IMixedRealityPointerHandler
     {
         if (this.getTeam() == controller.getActivePlayer().getTeam() && this.avaliableMoves.Contains(coords)) {
             // If it is this team's turn
+            Vector2Int prevCoords = new Vector2Int(this.occupiedSquare.x, this.occupiedSquare.y);
+            bool capture = false;
+            bool enPassant = false;
+            bool promoted = false;
             if (squareIsMoveable(coords))
             {
                 if (this.occupiedSquare.y - coords.y == 2 || this.occupiedSquare.y - coords.y == -2)
@@ -96,12 +100,15 @@ public class Pawn : Piece, IMixedRealityPointerHandler
                 transform.position = this.board.CalculatePositionFromCoords(coords);
                 controller.endTurn();
             } else if (canPawnTake(coords)){
+                capture = true;
                 this.movedTwoSquares = false;
                 board.takePiece(this, coords);
                 this.occupiedSquare = coords;
                 transform.position = this.board.CalculatePositionFromCoords(coords);
                 controller.endTurn();
             } else if (canTakeEnPassant(coords)) {
+                enPassant= true;
+                capture = true;
                 if (this.getTeam() == TeamColor.White) { 
                     Vector2Int passedSquare = new Vector2Int(coords.x, coords.y - 1);
                     board.takePiece(this, passedSquare);
@@ -116,6 +123,7 @@ public class Pawn : Piece, IMixedRealityPointerHandler
             {
                 transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
             }
+            print(AlgebraicNotation(coords, prevCoords, capture, promoted, enPassant, false, false));
         } else {
             // If not this team's turn, snap back to occupied square
             transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
@@ -170,6 +178,36 @@ public class Pawn : Piece, IMixedRealityPointerHandler
         {
             return false;
         }
+    }
+    public override String AlgebraicNotation(Vector2Int coords, Vector2Int prevCoords, bool capture, bool pawnPromote, bool enPassant, bool castle, bool checkmate)
+    {
+        String s = "";
+
+        if (capture)
+        {
+            if (prevCoords.x == 0) s += "a";
+            if (prevCoords.x == 1) s += "b";
+            if (prevCoords.x == 2) s += "c";
+            if (prevCoords.x == 3) s += "d";
+            if (prevCoords.x == 4) s += "e";
+            if (prevCoords.x == 5) s += "f";
+            if (prevCoords.x == 6) s += "g";
+            if (prevCoords.x == 7) s += "e";
+            s += "x";
+        }
+        if (coords.x == 0) s += "a";
+        if (coords.x == 1) s += "b";
+        if (coords.x == 2) s += "c";
+        if (coords.x == 3) s += "d";
+        if (coords.x == 4) s += "e";
+        if (coords.x == 5) s += "f";
+        if (coords.x == 6) s += "g";
+        if (coords.x == 7) s += "e";
+        s += coords.y + 1;
+        if (enPassant) s += " e.p.";
+        if (pawnPromote) s += "Q";
+        if(controller.checkCond()) s += "+";
+        return s;
     }
     /*
     public void OnPointerDown(MixedRealityPointerEventData eventData)

@@ -80,7 +80,7 @@ public class Bishop : Piece
             if (this.getTeam() == controller.getActivePlayer().getTeam() && this.avaliableMoves.Contains(coords))
             {
                 Vector2Int displacement = coords - this.occupiedSquare;
-
+                bool capture = false;
 
                 if (coords != this.occupiedSquare && System.Math.Abs(displacement.x) == System.Math.Abs(displacement.y) && canMoveThere(coords))
                 {
@@ -88,6 +88,7 @@ public class Bishop : Piece
                     if (pieceCheck)
                     {
                         board.takePiece(this, coords);
+                        capture = true;
                     }
                     this.occupiedSquare = coords;
                     transform.position = this.board.CalculatePositionFromCoords(coords);
@@ -98,6 +99,7 @@ public class Bishop : Piece
                 {
                     transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
                 }
+                print(AlgebraicNotation(coords, coords, capture, false, false, false, false));
             } else
             {
                 // If not this team's turn, snap back to occupied square
@@ -145,5 +147,22 @@ public class Bishop : Piece
     public override bool hasMovedTwoSquares()
     {
         return false;
+    }
+    public override String AlgebraicNotation(Vector2Int coords, Vector2Int prevCoords, bool capture, bool pawnPromote, bool enPassant, bool castle, bool checkmate)
+    {
+        String s = "B";
+
+        if (capture) s += "x";
+        if (coords.x == 0) s += "a";
+        if (coords.x == 1) s += "b";
+        if (coords.x == 2) s += "c";
+        if (coords.x == 3) s += "d";
+        if (coords.x == 4) s += "e";
+        if (coords.x == 5) s += "f";
+        if (coords.x == 6) s += "g";
+        if (coords.x == 7) s += "e";
+        s += coords.y + 1;
+        if (controller.checkCond()) s += "+";
+        return s;
     }
 }

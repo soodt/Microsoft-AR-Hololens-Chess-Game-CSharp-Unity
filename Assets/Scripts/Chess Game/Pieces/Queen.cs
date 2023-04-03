@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -173,6 +174,10 @@ public class Queen : Piece
     public override bool hasMovedTwoSquares()
     {
         return false;
+    }
+    public String AlgebraicNotation(Vector2Int coords, Vector2Int prevCoords, bool capture, bool pawnPromote, bool enPassant, bool castle, bool checkmate)
+    {
+        return "";
     }
 
 }

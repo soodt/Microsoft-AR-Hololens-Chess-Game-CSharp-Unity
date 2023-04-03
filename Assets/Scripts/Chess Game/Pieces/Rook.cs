@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 public class Rook : Piece
@@ -71,12 +72,17 @@ public class Rook : Piece
         {
             if (this.getTeam() == controller.getActivePlayer().getTeam() && this.avaliableMoves.Contains(coords))
             {
+                bool capture = false;
+                bool castle = false;
+                Vector2Int prevCoords = new Vector2Int(this.occupiedSquare.x, this.occupiedSquare.y);
+
                 if ((coords.x - this.occupiedSquare.x == 0 | coords.y - this.occupiedSquare.y == 0) && canMoveThere(coords))
                 {
                     Piece pieceCheck = board.getPiece(coords);
                     if (pieceCheck)
                     {
                         board.takePiece(this, coords);
+                        capture = true;
                     }
                     this.occupiedSquare = coords;
                     transform.position = this.board.CalculatePositionFromCoords(coords);
@@ -92,12 +98,14 @@ public class Rook : Piece
                     if (pieceCheck && pieceCheck.typeName == "King" && pieceCheck.getTeam() == this.getTeam() && canCastle(pieceCheck))
                     {
                         castleMove(pieceCheck);
+                        castle = true;
                     }
                     else
                     {
                         transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
                     }
                 }
+                print(AlgebraicNotation(coords, prevCoords, capture, false, false, castle, false));
             }
             else
             {
@@ -203,5 +211,36 @@ public class Rook : Piece
     public override bool hasMovedTwoSquares()
     {
         return false;
+    }
+    public override String AlgebraicNotation(Vector2Int coords, Vector2Int prevCoords, bool capture, bool pawnPromote, bool enPassant, bool castle, bool checkmate)
+    {
+        String s = "N";
+
+        if (capture) s += "x";
+        if (coords.x == 0) s += "a";
+        if (coords.x == 1) s += "b";
+        if (coords.x == 2) s += "c";
+        if (coords.x == 3) s += "d";
+        if (coords.x == 4) s += "e";
+        if (coords.x == 5) s += "f";
+        if (coords.x == 6) s += "g";
+        if (coords.x == 7) s += "e";
+        s += coords.y + 1;
+        if (controller.checkCond()) s += "+";
+
+        if (castle)
+        {
+            if (this.getTeam() == TeamColor.White)
+            {
+                if (prevCoords[0] == 0) s = "0-0-0";
+                else s = "0-0";
+            }
+            else
+            {
+                if (prevCoords[0] == 0) s = "0-0-0";
+                else s = "0-0";
+            }
+        }
+        return s;
     }
 }
