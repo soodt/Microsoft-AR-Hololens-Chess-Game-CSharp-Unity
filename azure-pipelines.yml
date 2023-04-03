@@ -114,9 +114,9 @@ jobs:
   - task: UnityActivateLicenseTask@1
     displayName: Calling UnityActivateLicenseTask@1 from unity-azure-pipelines-tasks extension
     inputs:
-      username: '$(unity.username)'
-      password: '$(unity.password)'
-      serial: '$(unity.serialkey)'
+      username: $(unity.username)
+      password: $(unity.password)
+      serial: $(unity.serialkey)
 
   # Build the project with Unity using the script defined in unity.executeMethod:
   - task: UnityBuildTask@3
