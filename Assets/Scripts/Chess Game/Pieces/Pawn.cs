@@ -75,6 +75,19 @@ public class Pawn : Piece, IMixedRealityPointerHandler
         }
     }
 
+    public void queening()
+    {
+        if (this.occupiedSquare.y == 7 || this.occupiedSquare.y == 0)
+        {
+            Debug.Log("Queening");
+            //Debug.Log("" + pQueenName);
+            Type type = Type.GetType("Queen");
+            controller.CreatePieceAndInitialize(this.occupiedSquare, this.team, type);
+            Destroy(this.gameObject);
+        }
+        return;
+    }
+
     public override bool isAttackingSquare(Vector2Int coords) {
         return canPawnTake(coords);
     }
@@ -94,12 +107,14 @@ public class Pawn : Piece, IMixedRealityPointerHandler
                 }
                 this.occupiedSquare = coords;
                 transform.position = this.board.CalculatePositionFromCoords(coords);
+                queening();
                 controller.endTurn();
             } else if (canPawnTake(coords)){
                 this.movedTwoSquares = false;
                 board.takePiece(this, coords);
                 this.occupiedSquare = coords;
                 transform.position = this.board.CalculatePositionFromCoords(coords);
+                queening();
                 controller.endTurn();
             } else if (canTakeEnPassant(coords)) {
                 if (this.getTeam() == TeamColor.White) { 
@@ -111,6 +126,7 @@ public class Pawn : Piece, IMixedRealityPointerHandler
                 }
                 this.occupiedSquare = coords;
                 transform.position = this.board.CalculatePositionFromCoords(coords);
+                queening();
                 controller.endTurn();
             }
             {
