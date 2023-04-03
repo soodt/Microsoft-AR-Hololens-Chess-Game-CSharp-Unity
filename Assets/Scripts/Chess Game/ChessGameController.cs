@@ -188,28 +188,29 @@ public class ChessGameController : MonoBehaviour
         if (getActivePlayer() == whitePlayer)
         {
             activePlayer = blackPlayer;
-            foreach (Pawn p in blackPlayer.activePieces) {
-                if (p.movedTwoSquares) {
-                    p.movedTwoSquares = false;
-                }
-            }
         }
         else if (getActivePlayer() == blackPlayer)
         {
             activePlayer = whitePlayer;
-            foreach (Pawn p in whitePlayer.activePieces) {
-                if (p.movedTwoSquares) {
-                    p.movedTwoSquares = false;
-                }
-            }
         }
+        
     }
 
     public bool checkCond()                     // Evaluates check condition return true if checked else false
     {
         ChessPlayer otherPlayer;
-        whiteKing = activePieces[4];
-        blackKing = activePieces[20];
+        whiteKing = null;
+        blackKing = null;
+        foreach (Piece p in whitePlayer.activePieces) {
+            if (p.typeName == "King") {
+                whiteKing = p;
+            }
+        }
+        foreach (Piece p in blackPlayer.activePieces) {
+            if (p.typeName == "King") {
+                blackKing = p;
+            }
+        }
         if (activePlayer == whitePlayer)
         {
             checkedKing = whiteKing;
