@@ -166,9 +166,21 @@ public class ChessGameController : MonoBehaviour
         }
         if (getActivePlayer() == whitePlayer) {
             activePlayer = blackPlayer;
+            foreach (Piece p in blackPlayer.activePieces) {
+                if (p.typeName == "Pawn") {
+                    Pawn pawnref = (Pawn) p;
+                    pawnref.movedTwoSquares = false;
+                }
+            }
             turnIndicator.ColourTeam();
         } else if (getActivePlayer() == blackPlayer) {
             activePlayer = whitePlayer;
+            foreach (Piece p in whitePlayer.activePieces) {
+                if (p.typeName == "Pawn") {
+                    Pawn pawnref = (Pawn) p;
+                    pawnref.movedTwoSquares = false;
+                }
+            }
             turnIndicator.ColourTeam();
         }
         if(checkCond()) {
