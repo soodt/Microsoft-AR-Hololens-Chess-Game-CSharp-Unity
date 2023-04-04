@@ -39,8 +39,8 @@ variables:
 
   # I would not expect you to have to change the rest of these unless you had a special reason:
   unity.targetBuild:        'WindowsStoreApps'
-  #unity.outputPath:         '/Builds/WSAPlayer'
-  unity.outputPath:        'Pipeline.Workspace'
+  unity.outputPath:         '/Builds/WSAPlayer'
+  #unity.outputPath:        'Pipeline.Workspace'
   unity.editorPath:         '/Editor/Unity.exe'
   vs.packagePath:           '/AppPackages'
 
@@ -133,7 +133,7 @@ jobs:
       outputPath: '$(Build.BinariesDirectory)'
 
   # Publish the Solution folder:
-  - task: PublishPipelineArtifact@0
+  - task: PublishPipelineArtifact@1
     displayName: 'Publish Pipeline Artifact'
     inputs:
       artifactName: 'sln'
