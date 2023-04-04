@@ -39,7 +39,8 @@ variables:
 
   # I would not expect you to have to change the rest of these unless you had a special reason:
   unity.targetBuild:        'WindowsStoreApps'
-  unity.outputPath:         '/Builds/WSAPlayer'
+  #unity.outputPath:         '/Builds/WSAPlayer'
+  unity.outputPath:        'Logs/*.log'
   unity.editorPath:         '/Editor/Unity.exe'
   vs.packagePath:           '/AppPackages'
 
