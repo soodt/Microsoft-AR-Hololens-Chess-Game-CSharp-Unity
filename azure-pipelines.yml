@@ -200,7 +200,7 @@ jobs:
   - task: MSBuild@1
     displayName: 'Build solution'
     inputs:
-      solution: '**/*.sln'
+      solution: '$(unity.projectPath)$(unity.outputPath)'
       configuration: Release
       msbuildArguments: '/p:AppxBundle=Always /p:AppxBundlePlatforms="$(vs.appxPlatforms)"'
 
