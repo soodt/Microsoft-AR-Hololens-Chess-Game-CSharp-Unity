@@ -200,7 +200,7 @@ jobs:
   - task: MSBuild@1
     displayName: 'Build solution'
     inputs:
-      solution: '$(unity.projectPath)$(unity.outputPath)'
+      solution: '$(Pipeline.Workspace)'
       configuration: Release
       msbuildArguments: '/p:AppxBundle=Always /p:AppxBundlePlatforms="$(vs.appxPlatforms)"'
 
