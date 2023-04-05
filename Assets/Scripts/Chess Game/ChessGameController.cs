@@ -178,9 +178,9 @@ public class ChessGameController : MonoBehaviour
         }
         // Debug
         if (getActivePlayer() == whitePlayer) {
-            Debug.Log("White");
+            //Debug.Log("White");
         } else {
-            Debug.Log("Black");
+            //Debug.Log("Black");
         }
     }
     public void ChangeTeam() // to make cleaner
@@ -245,4 +245,21 @@ public class ChessGameController : MonoBehaviour
         return true;
     }
 
+    public bool checkmate()
+    {
+        foreach (Piece p in activePlayer.activePieces)
+        {
+            p.PossibleMoves();
+            p.removeMovesLeavingKingInCheck();
+            if (p.avaliableMoves.Count != 0)
+            {
+                return false;
+            }
+        }
+        if (activePlayer.kingInCheck)
+        {
+            return true;
+        }
+        else return false;
+    }
 }

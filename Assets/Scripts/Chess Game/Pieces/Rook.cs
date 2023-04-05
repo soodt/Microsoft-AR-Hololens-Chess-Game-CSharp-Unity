@@ -73,7 +73,6 @@ public class Rook : Piece
             if (this.getTeam() == controller.getActivePlayer().getTeam() && this.avaliableMoves.Contains(coords))
             {
                 bool capture = false;
-                bool castle = false;
                 Vector2Int prevCoords = new Vector2Int(this.occupiedSquare.x, this.occupiedSquare.y);
 
                 if ((coords.x - this.occupiedSquare.x == 0 | coords.y - this.occupiedSquare.y == 0) && canMoveThere(coords))
@@ -90,6 +89,7 @@ public class Rook : Piece
                     {
                         this.hasMoved = true;
                     }
+                    print(AlgebraicNotation(coords, prevCoords, capture, false, false, false));
                     controller.endTurn();
                 }
                 else
@@ -97,15 +97,14 @@ public class Rook : Piece
                     Piece pieceCheck = board.getPiece(coords);
                     if (pieceCheck && pieceCheck.typeName == "King" && pieceCheck.getTeam() == this.getTeam() && canCastle(pieceCheck))
                     {
+                        print(AlgebraicNotation(coords, prevCoords, capture, false, false, true));
                         castleMove(pieceCheck);
-                        castle = true;
                     }
                     else
                     {
                         transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
                     }
                 }
-                print(AlgebraicNotation(coords, prevCoords, capture, false, false, castle, false));
             }
             else
             {
@@ -212,9 +211,37 @@ public class Rook : Piece
     {
         return false;
     }
-    public override String AlgebraicNotation(Vector2Int coords, Vector2Int prevCoords, bool capture, bool pawnPromote, bool enPassant, bool castle, bool checkmate)
+    public override String AlgebraicNotation(Vector2Int coords, Vector2Int prevCoords, bool capture, bool pawnPromote, bool enPassant, bool castle)
     {
-        String s = "N";
+        String s = "R";
+
+        foreach (Piece p in controller.getActivePlayer().activePieces)
+        {
+            if (!p.taken)
+            {
+                if (p.typeName == "Rook" && p != this)
+                {
+                    if (p.CanMoveTo(coords))
+                    {
+                        if (prevCoords.x != p.occupiedSquare.x)
+                        {
+                            if (prevCoords.x == 0) s += "a";
+                            if (prevCoords.x == 1) s += "b";
+                            if (prevCoords.x == 2) s += "c";
+                            if (prevCoords.x == 3) s += "d";
+                            if (prevCoords.x == 4) s += "e";
+                            if (prevCoords.x == 5) s += "f";
+                            if (prevCoords.x == 6) s += "g";
+                            if (prevCoords.x == 7) s += "h";
+                        }
+                        else
+                        {
+                            s += prevCoords.y + 1;
+                        }
+                    }
+                }
+            }
+        }
 
         if (capture) s += "x";
         if (coords.x == 0) s += "a";
@@ -224,10 +251,8 @@ public class Rook : Piece
         if (coords.x == 4) s += "e";
         if (coords.x == 5) s += "f";
         if (coords.x == 6) s += "g";
-        if (coords.x == 7) s += "e";
+        if (coords.x == 7) s += "h";
         s += coords.y + 1;
-        if (controller.checkCond()) s += "+";
-
         if (castle)
         {
             if (this.getTeam() == TeamColor.White)
@@ -241,6 +266,8 @@ public class Rook : Piece
                 else s = "0-0";
             }
         }
+        if (controller.checkmate()) s += "#";
+        else if (controller.checkCond()) s += "+";
         return s;
     }
 }

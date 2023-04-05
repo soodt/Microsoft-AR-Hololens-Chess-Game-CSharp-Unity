@@ -92,6 +92,7 @@ public class Bishop : Piece
                     }
                     this.occupiedSquare = coords;
                     transform.position = this.board.CalculatePositionFromCoords(coords);
+                    print(AlgebraicNotation(coords, coords, capture, false, false, false));
                     controller.endTurn();
                     //moved = true;
                 }
@@ -99,7 +100,6 @@ public class Bishop : Piece
                 {
                     transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
                 }
-                print(AlgebraicNotation(coords, coords, capture, false, false, false, false));
             } else
             {
                 // If not this team's turn, snap back to occupied square
@@ -148,9 +148,37 @@ public class Bishop : Piece
     {
         return false;
     }
-    public override String AlgebraicNotation(Vector2Int coords, Vector2Int prevCoords, bool capture, bool pawnPromote, bool enPassant, bool castle, bool checkmate)
+    public override String AlgebraicNotation(Vector2Int coords, Vector2Int prevCoords, bool capture, bool pawnPromote, bool enPassant, bool castle)
     {
         String s = "B";
+
+        foreach (Piece p in controller.getActivePlayer().activePieces)
+        {
+            if (!p.taken)
+            {
+                if (p.typeName == "Bishop" && p != this)
+                {
+                    if (p.CanMoveTo(coords))
+                    {
+                        if (prevCoords.x != p.occupiedSquare.x)
+                        {
+                            if (prevCoords.x == 0) s += "a";
+                            if (prevCoords.x == 1) s += "b";
+                            if (prevCoords.x == 2) s += "c";
+                            if (prevCoords.x == 3) s += "d";
+                            if (prevCoords.x == 4) s += "e";
+                            if (prevCoords.x == 5) s += "f";
+                            if (prevCoords.x == 6) s += "g";
+                            if (prevCoords.x == 7) s += "h";
+                        }
+                        else
+                        {
+                            s += prevCoords.y + 1;
+                        }
+                    }
+                }
+            }
+        }
 
         if (capture) s += "x";
         if (coords.x == 0) s += "a";
@@ -160,9 +188,10 @@ public class Bishop : Piece
         if (coords.x == 4) s += "e";
         if (coords.x == 5) s += "f";
         if (coords.x == 6) s += "g";
-        if (coords.x == 7) s += "e";
+        if (coords.x == 7) s += "h";
         s += coords.y + 1;
-        if (controller.checkCond()) s += "+";
+        if (controller.checkmate()) s += "#";
+        else if (controller.checkCond()) s += "+";
         return s;
     }
 }

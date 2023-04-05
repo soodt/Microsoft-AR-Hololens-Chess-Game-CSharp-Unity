@@ -74,7 +74,7 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
 
 	}
 
-	public virtual String AlgebraicNotation(Vector2Int coords, Vector2Int prevCoords, bool capture, bool pawnPromote, bool enPassant, bool castle, bool checkmate)
+	public virtual String AlgebraicNotation(Vector2Int coords, Vector2Int prevCoords, bool capture, bool pawnPromote, bool enPassant, bool castle)
 	{
 		return "";
 	}
