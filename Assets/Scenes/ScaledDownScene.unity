@@ -808,6 +808,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1418122950}
     m_Modifications:
+    - target: {fileID: 8502560365771216825, guid: be3ad212ea551a64a89badbca6c92cfd, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 963194227}
     - target: {fileID: 8502560365771216830, guid: be3ad212ea551a64a89badbca6c92cfd, type: 3}
       propertyPath: m_Name
       value: Board Anchor
