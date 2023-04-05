@@ -116,8 +116,9 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
 		PossibleMoves();
 		removeMovesLeavingKingInCheck();
         board.HightlightTiles(avaliableMoves);
-       // Debug.Log("Down"); ;
-    }
+		AudioManager.instance.Play("move");
+		// Debug.Log("Down"); ;
+	}
 
     public void OnPointerDragged(MixedRealityPointerEventData eventData)
     {
