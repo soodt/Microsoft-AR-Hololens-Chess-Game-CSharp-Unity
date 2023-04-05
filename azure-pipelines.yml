@@ -155,7 +155,8 @@ jobs:
     displayName: 'Download Pipeline Artifacts'
     inputs:
       artifactName: 'sln'
-      targetPath: $(Build.SourcesDirectory)# TODO: This is the start of code that is repeated from the unity job, and ought to be done via a seperate file template.
+      targetPath: $(Build.SourcesDirectory)
+  # TODO: This is the start of code that is repeated from the unity job, and ought to be done via a seperate file template.
   # Do we have that Unity installation cached? If so, install from cache:
   # (Note: The key is the hashed contents of the ProjectVersion.txt file)
   # What is this? See https://docs.microsoft.com/en-us/azure/devops/pipelines/caching/index?view=azure-devops
