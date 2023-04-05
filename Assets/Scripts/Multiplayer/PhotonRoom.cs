@@ -2,15 +2,13 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
-namespace MRTK.Tutorials.MultiUserCapabilities
+namespace ChessRoom
 {
     public class PhotonRoom : MonoBehaviourPunCallbacks, IInRoomCallbacks
     {
         public static PhotonRoom Room;
 
-        [SerializeField] private GameObject photonUserPrefab = default;
-        [SerializeField] private GameObject roverExplorerPrefab = default;
-        [SerializeField] private Transform roverExplorerLocation = default;
+        [SerializeField] private GameObject photonUserPrefab;
 
         // private PhotonView pv;
         private Player[] photonPlayers;
@@ -63,8 +61,6 @@ namespace MRTK.Tutorials.MultiUserCapabilities
             if (PhotonNetwork.PrefabPool is DefaultPool pool)
             {
                 if (photonUserPrefab != null) pool.ResourceCache.Add(photonUserPrefab.name, photonUserPrefab);
-
-                if (roverExplorerPrefab != null) pool.ResourceCache.Add(roverExplorerPrefab.name, roverExplorerPrefab);
             }
         }
 
@@ -82,18 +78,19 @@ namespace MRTK.Tutorials.MultiUserCapabilities
 
         private void StartGame()
         {
-            CreatPlayer();
+            CreatePlayer();
 
             if (!PhotonNetwork.IsMasterClient) return;
 
-            if (TableAnchor.Instance != null) CreateInteractableObjects();
         }
 
-        private void CreatPlayer()
+
+        private void CreatePlayer()
         {
             var player = PhotonNetwork.Instantiate(photonUserPrefab.name, Vector3.zero, Quaternion.identity);
         }
 
+        /**
         private void CreateInteractableObjects()
         {
             var position = roverExplorerLocation.position;
@@ -103,6 +100,7 @@ namespace MRTK.Tutorials.MultiUserCapabilities
             var go = PhotonNetwork.Instantiate(roverExplorerPrefab.name, positionOnTopOfSurface,
                 roverExplorerLocation.rotation);
         }
+         */
 
         // private void CreateMainLunarModule()
         // {

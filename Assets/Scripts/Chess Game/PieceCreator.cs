@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using Microsoft.MixedReality.Toolkit.Input;
 using Microsoft.MixedReality.Toolkit.UI;
+using Photon.Pun;
+using Photon.Realtime;
 
 public class PieceCreator : MonoBehaviour
 {
-     [SerializeField] private GameObject[] piecesPrefabs;
+    [SerializeField] private GameObject[] piecesPrefabs;
     [SerializeField] private Material blackMaterial;
     [SerializeField] private Material whiteMaterial;
     private Dictionary<string, GameObject> nameToPieceDict = new Dictionary<string, GameObject>();
