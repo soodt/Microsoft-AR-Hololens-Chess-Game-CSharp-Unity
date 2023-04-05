@@ -196,7 +196,7 @@ jobs:
   - task: MSBuild@1
     displayName: 'Build solution'
     inputs:
-      solution: '$(unity.projectPath)$(unity.outputPath)' # Change to '$(unity.projectPath)$(unity.outputPath)' to resume two jobs
+      solution: '**.*.sln'
       configuration: Release
       msbuildArguments: '/p:AppxBundle=Always /p:AppxBundlePlatforms="$(vs.appxPlatforms)"'
 
