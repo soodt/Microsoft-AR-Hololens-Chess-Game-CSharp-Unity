@@ -136,7 +136,6 @@ jobs:
     displayName: 'Publish Pipeline Artifact'
     inputs:
       artifactName: 'sln'
-      targetPath: '$(unity.projectPath)$(unity.outputPath)'
 
 
 #Until we have a Unity serial key management system, the unity and slnbuild jobs can be merged for speed.
