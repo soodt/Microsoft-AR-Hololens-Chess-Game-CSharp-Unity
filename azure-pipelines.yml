@@ -135,55 +135,51 @@ jobs:
       artifactName: 'sln'
 
 
-# Until we have a Unity serial key management system, the unity and slnbuild jobs can be merged for speed.
-# # Build the Visual Studio solution generated from the previous job and create a package.
-# - job: slnbuild
-#   displayName: Build Visual Studio project
-#   dependsOn: unity
-#   condition: succeeded()
-#   variables:
-#     installCached: false
-#     unityversion: $[ dependencies.unity.outputs['unitygetprojectversion.projectVersion'] ]
-#   steps:
-#   # Skip checking out repository
-#   - checkout: none 
-
-#   # Download artifacts from last job
-#   - task: DownloadPipelineArtifact@2
-#     displayName: 'Download Pipeline Artifacts'
-#     inputs:
-#       artifactName: 'sln'
-#       targetPath: $(Build.SourcesDirectory)
-
-# # TODO: This is the start of code that is repeated from the unity job, and ought to be done via a seperate file template.
-#   # Do we have that Unity installation cached? If so, install from cache:
-#   # (Note: The key is the hashed contents of the ProjectVersion.txt file)
-#   # What is this? See https://docs.microsoft.com/en-us/azure/devops/pipelines/caching/index?view=azure-devops
-#   - task: CacheBeta@0
-#     displayName: Check if Unity installation is cached
-#     inputs:
-#       key: $(Agent.OS) | "$(unityversion)" | "$(unity.installComponents)"
-#       path: "$(unity.installFolder)$(unityversion)"
-#       cacheHitVar: installCached
-
-#   # Install the Unity setup module (if we aren't cached):
-#   - task: PowerShell@2  
-#     displayName: Install Unity
-#     condition: and(succeeded(), ne(variables['installCached'], true))
-#     inputs:
-#       targetType: 'inline'
-#       script: |
-#         Install-Module -Name UnitySetup -AllowPrerelease -Force -AcceptLicense
-
-#   # Download and run the installer for Unity Components defined in unity.installComponents:
-#   - task: PowerShell@2
-#     displayName: Installing Unity Components '$(unity.installComponents)'
-#     condition: and(succeeded(), ne(variables['installCached'], true))
-#     inputs:
-#       targetType: 'inline'
-#       script: |   
-#         Install-UnitySetupInstance -Installers (Find-UnitySetupInstaller -Version '$(unityversion)' -Components $(unity.installComponents)) -Verbose
-# # TODO: This is the end of code that is repeated from the unity job, and ought to be done via a seperate file template.
+ Until we have a Unity serial key management system, the unity and slnbuild jobs can be merged for speed.
+ # Build the Visual Studio solution generated from the previous job and create a package.
+ - job: slnbuild
+   displayName: Build Visual Studio project
+   dependsOn: unity
+   condition: succeeded()
+   variables:
+     installCached: false
+     unityversion: $[ dependencies.unity.outputs['unitygetprojectversion.projectVersion'] ]
+   steps:
+   # Skip checking out repository
+   - checkout: none 
+   # Download artifacts from last job
+   - task: DownloadPipelineArtifact@2
+     displayName: 'Download Pipeline Artifacts'
+     inputs:
+       artifactName: 'sln'
+       targetPath: $(Build.SourcesDirectory)
+ # TODO: This is the start of code that is repeated from the unity job, and ought to be done via a seperate file template.
+   # Do we have that Unity installation cached? If so, install from cache:
+   # (Note: The key is the hashed contents of the ProjectVersion.txt file)
+   # What is this? See https://docs.microsoft.com/en-us/azure/devops/pipelines/caching/index?view=azure-devops
+   - task: CacheBeta@0
+     displayName: Check if Unity installation is cached
+     inputs:
+       key: $(Agent.OS) | "$(unityversion)" | "$(unity.installComponents)"
+       path: "$(unity.installFolder)$(unityversion)"
+       cacheHitVar: installCached
+   # Install the Unity setup module (if we aren't cached):
+   - task: PowerShell@2  
+     displayName: Install Unity
+     condition: and(succeeded(), ne(variables['installCached'], true))
+     inputs:
+       targetType: 'inline'
+       script: |
+         Install-Module -Name UnitySetup -AllowPrerelease -Force -AcceptLicense
+   # Download and run the installer for Unity Components defined in unity.installComponents:
+   - task: PowerShell@2
+     displayName: Installing Unity Components '$(unity.installComponents)'
+     condition: and(succeeded(), ne(variables['installCached'], true))
+     inputs:
+       targetType: 'inline'
+       script: |   
+         Install-UnitySetupInstance -Installers (Find-UnitySetupInstaller -Version '$(unityversion)' -Components $(unity.installComponents)) -Verbose
+ # TODO: This is the end of code that is repeated from the unity job, and ought to be done via a seperate file template.
 # Uncomment the above, and change '$(unity.projectPath)$(unity.outputPath)' below to '$(Build.SourcesDirectory)' to resume two seperate jobs
 
   # Find, download, and cache NuGet:
@@ -194,13 +190,13 @@ jobs:
   - task: NuGetCommand@2
     displayName: 'NuGet restore'
     inputs:
-      restoreSolution: '$(unity.projectPath)$(unity.outputPath)/*.sln' # Change to '$(unity.projectPath)$(unity.outputPath)/*.sln' to resume two jobs
+      restoreSolution: '$(Build.SourcesDirectory)/*.sln' # Change to '$(unity.projectPath)$(unity.outputPath)/*.sln' to resume two jobs
 
   # Build the solution with Visual Studio to make an .appx:
   - task: MSBuild@1
     displayName: 'Build solution'
     inputs:
-      solution: '**/*.sln.'
+      solution: '$(Build.SourcesDirectory)'
       configuration: Release
       msbuildArguments: '/p:AppxBundle=Always /p:AppxBundlePlatforms="$(vs.appxPlatforms)"'
 
@@ -209,7 +205,7 @@ jobs:
     displayName: 'Publish Pipeline Artifact'
     inputs:
       artifactName: 'apppackages'
-      targetPath: '$(unity.projectPath)$(unity.outputPath)$(vs.packagePath)'  # Change to '$(unity.projectPath)$(unity.outputPath)$(vs.packagePath)' to resume two jobs
+      targetPath: '$(Build.SourcesDirectory)$(vs.packagePath)'  # Change to '$(unity.projectPath)$(unity.outputPath)$(vs.packagePath)' to resume two jobs
 
 
 # Build the Visual Studio solution generated from the previous job and create a package.
