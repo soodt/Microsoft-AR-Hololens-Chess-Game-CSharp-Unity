@@ -179,7 +179,7 @@ jobs:
       targetType: 'inline'
       script: |   
         Install-UnitySetupInstance -Installers (Find-UnitySetupInstaller -Version '$(unityversion)' -Components $(unity.installComponents)) -Verbose
-# TODO: This is the end of code that is repeated from the unity job, and ought to be done via a seperate file template.
+ # TODO: This is the end of code that is repeated from the unity job, and ought to be done via a seperate file template.
  #Uncomment the above, and change '$(unity.projectPath)$(unity.outputPath)' below to '$(Build.SourcesDirectory)' to resume two seperate jobs
  # Find, download, and cache NuGet:
  - task: NuGetToolInstaller@1
