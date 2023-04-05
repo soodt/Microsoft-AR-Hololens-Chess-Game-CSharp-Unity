@@ -135,7 +135,7 @@ jobs:
       artifactName: 'sln'
 
 
- Until we have a Unity serial key management system, the unity and slnbuild jobs can be merged for speed.
+ #Until we have a Unity serial key management system, the unity and slnbuild jobs can be merged for speed.
  # Build the Visual Studio solution generated from the previous job and create a package.
  - job: slnbuild
    displayName: Build Visual Studio project
