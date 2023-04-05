@@ -135,7 +135,9 @@ PlayerSettings:
     16:9: 1
     Others: 1
   bundleVersion: 0.1
-  preloadedAssets: []
+  preloadedAssets:
+  - {fileID: -8032293452726962208, guid: 1d932bb9cc57e49429f61314d806d66f, type: 2}
+  - {fileID: 8095123122024473984, guid: 4bf7a4f12ad7b2e45b07857056df6063, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -653,11 +655,11 @@ PlayerSettings:
   m_MobileRenderingPath: 1
   metroPackageName: ChessMR
   metroPackageVersion: 1.0.0.0
-  metroCertificatePath: 
+  metroCertificatePath: Assets\WSATestCertificate.pfx
   metroCertificatePassword: 
-  metroCertificateSubject: 
-  metroCertificateIssuer: 
-  metroCertificateNotAfter: 0000000000000000
+  metroCertificateSubject: DefaultCompany
+  metroCertificateIssuer: DefaultCompany
+  metroCertificateNotAfter: 0061877bc586da01
   metroApplicationDescription: Template_3D
   wsaImages: {}
   metroTileShortName: Chess

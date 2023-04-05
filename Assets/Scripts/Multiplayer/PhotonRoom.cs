@@ -1,6 +1,7 @@
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace ChessRoom
 {
@@ -9,6 +10,7 @@ namespace ChessRoom
         public static PhotonRoom Room;
 
         [SerializeField] private GameObject photonUserPrefab;
+        private ChessGameController chessGameController;
 
         // private PhotonView pv;
         private Player[] photonPlayers;
@@ -81,13 +83,24 @@ namespace ChessRoom
             CreatePlayer();
 
             if (!PhotonNetwork.IsMasterClient) return;
-
+            if (BoardAnchor.instance != null) NetworkInstantiateObjects();
         }
 
 
         private void CreatePlayer()
         {
             var player = PhotonNetwork.Instantiate(photonUserPrefab.name, Vector3.zero, Quaternion.identity);
+        }
+
+        private void NetworkInstantiateObjects()
+        {
+            foreach (Piece piece in chessGameController.activePieces)
+            {
+                var position = piece.occupiedSquare;
+
+                var positionOnTopOfSurface = new Vector3(position.x, position.y + piece.transform.localScale.y / 2, 0);
+                PhotonNetwork.Instantiate(piece.name, positionOnTopOfSurface, piece.transform.rotation);
+            }
         }
 
         /**
