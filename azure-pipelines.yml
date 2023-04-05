@@ -196,7 +196,7 @@ jobs:
   - task: MSBuild@1
     displayName: 'Build solution'
     inputs:
-      solution: '**.*.sln'
+      solution: '$(Build.SourcesDirectory).sln'
       configuration: Release
       msbuildArguments: '/p:AppxBundle=Always /p:AppxBundlePlatforms="$(vs.appxPlatforms)"'
 
