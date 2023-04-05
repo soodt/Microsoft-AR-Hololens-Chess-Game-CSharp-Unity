@@ -11,6 +11,9 @@ public class ChessGameController : MonoBehaviour
 {
     [SerializeField] private BoardLayout startingBoardLayout;
     [SerializeField] private Board board;
+    [SerializeField] private Material red;
+    //[SerializeField] private Material black;
+    //[SerializeField] private Material white;
     private PieceCreator pieceCreator;
     public Piece[] activePieces = new Piece[32];
     public TurnIndicator turnIndicator;
@@ -162,6 +165,8 @@ public class ChessGameController : MonoBehaviour
             // player managed to get themselves out of check
             Debug.Log("Succesfully moved out of check");
             getActivePlayer().kingInCheck = false;
+            Material teamMaterial = pieceCreator.GetTeamMaterial(activePlayer.team);
+            checkedKing.SetMaterial(teamMaterial);
             checkedKing = null;
         }
         if (getActivePlayer() == whitePlayer) {
@@ -174,6 +179,7 @@ public class ChessGameController : MonoBehaviour
         if(checkCond()) {
             Debug.Log("Check");
             activePlayer.kingInCheck = true;
+            checkedKing.SetMaterial(red);
             isGameOver();
         }
         // Debug
@@ -182,6 +188,17 @@ public class ChessGameController : MonoBehaviour
         } else {
             Debug.Log("Black");
         }
+        /*
+        if(activePlayer.kingInCheck == true)
+        {
+            checkedKing.SetMaterial(red);
+        }
+        else
+        {
+            Material teamMaterial = pieceCreator.GetTeamMaterial(activePlayer.team);
+            checkedKing.SetMaterial(teamMaterial);
+        }
+        */
     }
     public void ChangeTeam() // to make cleaner
     {
