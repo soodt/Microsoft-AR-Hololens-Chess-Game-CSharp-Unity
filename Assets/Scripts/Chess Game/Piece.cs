@@ -91,10 +91,13 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
 				Piece tempPiece = board.getPiece(move);
 				ChessPlayer pl = tempPiece.getPlayerFromSameTeam();
 				pl.activePieces.Remove(tempPiece);
+				Vector2Int temp = this.occupiedSquare;
+				this.occupiedSquare = move;
 				if (!controller.checkCond()) {
 					updatedMoves.Add(move);
 				}
 				pl.activePieces.Add(tempPiece);
+				this.occupiedSquare = temp;
 			} else {
 				Vector2Int temp = this.occupiedSquare;
 				this.occupiedSquare = move;
