@@ -171,7 +171,10 @@ public class ChessGameController : MonoBehaviour
         if (getActivePlayer() == whitePlayer) {
             activePlayer = blackPlayer;
             turnIndicator.ColourTeam();
-            if (isSinglePlayer) ai.getComputerMove("h6", activePieces);
+            if (isSinglePlayer)
+            {
+                ai.getComputerMove("h6", activePieces);
+            }
         } else if (getActivePlayer() == blackPlayer) {
             activePlayer = whitePlayer;
             turnIndicator.ColourTeam();
