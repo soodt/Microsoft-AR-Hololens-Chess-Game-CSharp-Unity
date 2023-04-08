@@ -20,7 +20,7 @@ public class ChessGameController : MonoBehaviour
     private Piece blackKing;
     private Piece whiteKing;
     private Piece checkedKing;
-    public bool isSinglePlayer = true;
+    public bool isSinglePlayer = true; //triggers on and off single player mode
     public ChessPlayer whitePlayer{get; set;}
     public ChessPlayer blackPlayer{get; set;}
     private ChessPlayer activePlayer{get; set;}    
@@ -171,7 +171,7 @@ public class ChessGameController : MonoBehaviour
         if (getActivePlayer() == whitePlayer) {
             activePlayer = blackPlayer;
             turnIndicator.ColourTeam();
-            if (isSinglePlayer)
+            if (isSinglePlayer) // if true allows single player moves to take place. AI is always blackPlayer
             {
                 ai.getComputerMove("h6", activePieces);
             }

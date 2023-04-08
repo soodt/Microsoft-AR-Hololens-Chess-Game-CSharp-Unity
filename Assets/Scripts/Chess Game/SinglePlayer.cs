@@ -8,7 +8,7 @@ public class SinglePlayer
 {
     public ChessGameController controller;
     ChessPlayer computerPlayer;
-    public void getComputerMove(string notation, Piece[] activePieces)
+    public void getComputerMove(string notation, Piece[] activePieces)// reads the moves and checks who can make them
     {
         char[] notationChars = notation.ToCharArray();
         Piece[] specificPiece = splitUpActivePieces(notationChars, activePieces);
@@ -30,7 +30,7 @@ public class SinglePlayer
         }
     }
 
-    private Piece[] splitUpActivePieces(char[] chars, Piece[] activePieces)
+    private Piece[] splitUpActivePieces(char[] chars, Piece[] activePieces) // creates a piece array with only the eligible pieces.
     {
         List<Piece> pieces = new List<Piece>(activePieces);
         List<Piece> specificPiece = new List<Piece>();
@@ -72,7 +72,7 @@ public class SinglePlayer
         return specificPiece.ToArray();
     }
 
-    public Vector2Int convertNotationToVector(char[] chars)
+    public Vector2Int convertNotationToVector(char[] chars) // converts the final 2 letters/ numbers to vectors on the board
     {
         int x = -1;
         int y = -1;
