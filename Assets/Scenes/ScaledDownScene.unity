@@ -189,6 +189,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   turnIndicator: {fileID: 704355973}
+  ai: {fileID: 0}
 --- !u!114 &119498245
 MonoBehaviour:
   m_ObjectHideFlags: 0
