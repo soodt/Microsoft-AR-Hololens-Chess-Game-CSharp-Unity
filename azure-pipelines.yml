@@ -9,7 +9,7 @@ pool:
   vmImage: 'vs2017-win2016' 
 
 variables:
-  unityProjectPath: '.'
+  unityProjectPath: '$(System.DefaultWorkingDirectory)/'
 
 steps:
 - task: UnityGetProjectVersionTask@1
@@ -40,14 +40,14 @@ steps:
     unityEditorsPathMode: 'unityHub'
     unityProjectPath: '$(unityProjectPath)'
 
-- task: UnityBuildTask@2
+- task: UnityBuildTask@3
   displayName: 'Unity Build WindowsStoreApps'
   name: 'unityBuild'
   inputs:
     buildTarget: 'WindowsStoreApps'
     unityEditorsPathMode: 'unityHub'
     unityProjectPath: '$(unityProjectPath)'
-    commandLineArgumentsMode: 'default'
+    #commandLineArgumentsMode: 'default'
 
 - task: NuGetToolInstaller@1
   displayName: 'Use NuGet 4.3.0'
