@@ -130,9 +130,21 @@ jobs:
       buildTarget: '$(unity.targetBuild)'
       unityProjectPath: '$(unity.projectPath)'
       outputPath: '$(Build.BinariesDirectory)'
-      # Publish the Solution folder:
-  - task: PublishPipelineArtifact@1
-    displayName: 'Publish Pipeline Artifact'
+
+ # Find, download, and cache NuGet:
+  - task: NuGetToolInstaller@1
+    displayName: 'Install NuGet'
+
+  # Restore the NuGet packages for the solution:
+  - task: NuGetCommand@2
+    displayName: 'NuGet restore'
     inputs:
-      artifactName: 'sln'
-      targetPath: '$(unity.projectPath)$(unity.outputPath)'
+      restoreSolution: '$(unity.projectPath)$(unity.outputPath)/*.sln' # Change to '$(unity.projectPath)$(unity.outputPath)/*.sln' to resume two jobs
+
+  # Build the solution with Visual Studio to make an .appx:
+  - task: MSBuild@1
+    displayName: 'Build solution'
+    inputs:
+      solution: '$(unity.projectPath)$(unity.outputPath)' # Change to '$(unity.projectPath)$(unity.outputPath)' to resume two jobs
+      configuration: Release
+      msbuildArguments: '/p:AppxBundle=Always /p:AppxBundlePlatforms="$(vs.appxPlatforms)"'
