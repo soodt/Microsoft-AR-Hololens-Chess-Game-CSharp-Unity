@@ -31,6 +31,7 @@ public class King : Piece
         {
             if (this.getTeam() == controller.getActivePlayer().getTeam() && this.avaliableMoves.Contains(coords))
             {
+                bool capture = false;
                 if ((coords.x - this.occupiedSquare.x <= 1 & coords.x - this.occupiedSquare.x >= -1 &
                  coords.y - this.occupiedSquare.y <= 1 & coords.y - this.occupiedSquare.y >= -1) && canMoveThere(coords) && coords != this.occupiedSquare)
                 {
@@ -38,6 +39,7 @@ public class King : Piece
                     if (pieceCheck)
                     {
                         board.takePiece(this, coords);
+                        capture = true;
                     }
                     this.occupiedSquare = coords;
                     transform.position = this.board.CalculatePositionFromCoords(coords);
@@ -45,6 +47,7 @@ public class King : Piece
                     {
                         this.hasMoved = true;
                     }
+                    print(AlgebraicNotation(coords, coords, capture, false, false, false));
                     controller.endTurn();
                 }
                 else
@@ -52,6 +55,7 @@ public class King : Piece
                     Piece pieceCheck = board.getPiece(coords);
                     if (pieceCheck && pieceCheck.typeName == "Rook" && pieceCheck.getTeam() == this.getTeam() && canCastle(pieceCheck))
                     {
+                        print(AlgebraicNotation(coords, coords, capture, false, false, true));
                         castleMove(pieceCheck);
                     }
                     else
@@ -64,7 +68,7 @@ public class King : Piece
             {
                 // If not this team's turn, snap back to occupied square
                 transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
-                Debug.Log("NoMoving!");
+                //Debug.Log("NoMoving!");
             }
         }
         else
@@ -165,6 +169,37 @@ public class King : Piece
     public override bool hasMovedTwoSquares()
     {
         return false;
+    }
+    public override String AlgebraicNotation(Vector2Int coords, Vector2Int prevCoords, bool capture, bool pawnPromote, bool enPassant, bool castle)
+    {
+        String s = "K";
+
+        if (capture) s += "x";
+        if (coords.x == 0) s += "a";
+        if (coords.x == 1) s += "b";
+        if (coords.x == 2) s += "c";
+        if (coords.x == 3) s += "d";
+        if (coords.x == 4) s += "e";
+        if (coords.x == 5) s += "f";
+        if (coords.x == 6) s += "g";
+        if (coords.x == 7) s += "h";
+        s += coords.y + 1;
+        if (castle)
+        {
+            if (this.getTeam() == TeamColor.White)
+            {
+                if (coords[0] == 2) s = "0-0-0";
+                else s = "0-0";
+            }
+            else
+            {
+                if (coords[0] == 2) s = "0-0-0";
+                else s = "0-0";
+            }
+        }
+        if (controller.checkmate()) s += "#";
+        else if (controller.checkCond()) s += "+";
+        return s;
     }
 
 }

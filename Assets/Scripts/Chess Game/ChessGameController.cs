@@ -5,6 +5,7 @@ using UnityEngine;
 using Microsoft.MixedReality.Toolkit.Input;
 using Microsoft.MixedReality.Toolkit.UI;
 using TMPro;
+using UnityEngine.InputSystem.XR;
 
 [RequireComponent(typeof(PieceCreator))]
 public class ChessGameController : MonoBehaviour
@@ -17,10 +18,12 @@ public class ChessGameController : MonoBehaviour
     private PieceCreator pieceCreator;
     public Piece[] activePieces = new Piece[32];
     public TurnIndicator turnIndicator;
+    public SinglePlayer ai;
 
     private Piece blackKing;
     private Piece whiteKing;
     private Piece checkedKing;
+    public bool isSinglePlayer = true; //triggers on and off single player mode
     public ChessPlayer whitePlayer{get; set;}
     public ChessPlayer blackPlayer{get; set;}
     private ChessPlayer activePlayer{get; set;}    
@@ -48,6 +51,7 @@ public class ChessGameController : MonoBehaviour
         board.SetDependencies(this);
         activePlayer = whitePlayer;
         turnIndicator.SetDependencies(this);
+        ai = new SinglePlayer();
     }
 
     public ChessPlayer getActivePlayer() {
@@ -172,6 +176,10 @@ public class ChessGameController : MonoBehaviour
         if (getActivePlayer() == whitePlayer) {
             activePlayer = blackPlayer;
             turnIndicator.ColourTeam();
+            if (isSinglePlayer) // if true allows single player moves to take place. AI is always blackPlayer
+            {
+                ai.getComputerMove("h6", activePieces);
+            }
         } else if (getActivePlayer() == blackPlayer) {
             activePlayer = whitePlayer;
             turnIndicator.ColourTeam();
@@ -184,9 +192,9 @@ public class ChessGameController : MonoBehaviour
         }
         // Debug
         if (getActivePlayer() == whitePlayer) {
-            Debug.Log("White");
+            //Debug.Log("White");
         } else {
-            Debug.Log("Black");
+            //Debug.Log("Black");
         }
         /*
         if(activePlayer.kingInCheck == true)
@@ -262,4 +270,21 @@ public class ChessGameController : MonoBehaviour
         return true;
     }
 
+    public bool checkmate()
+    {
+        foreach (Piece p in activePlayer.activePieces)
+        {
+            p.PossibleMoves();
+            p.removeMovesLeavingKingInCheck();
+            if (p.avaliableMoves.Count != 0)
+            {
+                return false;
+            }
+        }
+        if (activePlayer.kingInCheck)
+        {
+            return true;
+        }
+        else return false;
+    }
 }
