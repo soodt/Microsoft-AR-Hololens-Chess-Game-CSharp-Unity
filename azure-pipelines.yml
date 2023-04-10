@@ -130,3 +130,9 @@ jobs:
       buildTarget: '$(unity.targetBuild)'
       unityProjectPath: '$(unity.projectPath)'
       outputPath: '$(Build.BinariesDirectory)'
+      # Publish the Solution folder:
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Pipeline Artifact'
+    inputs:
+      artifactName: 'sln'
+      targetPath: '$(unity.projectPath)$(unity.outputPath)'
