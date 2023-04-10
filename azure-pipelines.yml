@@ -1,83 +1,121 @@
-# Copyright (c) 2019 SakaIT
-# Released under the MIT license
-# https://gist.github.com/SakaITa/f56d3fa36f567205f21f7816489b82a7
+# This build pipeline is designed for ARM UWP projects, running Unity 2019.x or later, with MRTK Foundation 
+# If using 2018.x or earlier: Change unity.installComponents to 'Windows, UWP_IL2CPP'
+# If not using MRTK Foundation: Change unity.executeMethod to your build method (We recommend basing off the one in MRTK Foundation)
+# If you want to build x86 UWP builds: In theory should just be able to change vs.appxPlatforms, but it's a TODO
 
-trigger:
-- master
+# This pipeline depends on secret variables that you must define within your Azure DevOps!
+#   unity.username  = <Your Unity account username / email>
+#   unity.password  = <Your Unity account password>
+#   unity.serialkey = <The serial key for your Unity pro licence>
+# Without all three, this pipeline will fail to run!
 
+# Unity will be licensed, used, and then unlicensed during the unity and unitytests jobs in this pipeline.
+# A Pro license works on 2 machines, and in theory this pipeline will only use one licence at a time.
+# However, should there be unexpected errors and deactivation doesn't complete properly, you may need to log into your Unity account and deactivate all.
 
+# Variables predefined for this build process:
 variables:
-  unityProjectPath: '$(System.DefaultWorkingDirectory)/'
 
-steps:
-- task: UnityGetProjectVersionTask@1
-  displayName: 'Unity Get Project Version'
-  name: unityGetProjectVersion
-  inputs:
-    unityProjectPath: '$(unityProjectPath)'
+  # If true, will run tests, otherwise skip them. If you do not have tests, set to false to increase build speed.
+  runTests: false
 
-- task: PowerShell@2
-  displayName: 'Install UnitySetup.PowerShell module'
-  inputs:
-    targetType: 'inline'
-    script: 'Install-Module -Name UnitySetup -AllowPrerelease -Scope CurrentUser -Force'
-    failOnStderr: true
+  # The path to the folder which contains the Assets folder of the project.
+  # If your Unity project is located in a subfolder of your repo, make sure it is reflected in this.
+  unity.projectPath:        '$(System.DefaultWorkingDirectory)/'
 
-- task: PowerShell@2
-  displayName: 'Install Unity Editor'
-  inputs:
-    targetType: 'inline'
-    script: 'Install-UnitySetupInstance -Installers (Find-UnitySetupInstaller -Version ''$(unitygetprojectversion.projectVersion)'' -Components Windows,UWP,UWP_IL2CPP) -Verbose'
+  # If you are using Unity 2019 or later, leave this alone!
+  unity.installComponents:  'Windows, UWP'
+  # If you are using Unity 2018 or earlier, comment out the above and uncomment below:
+  #  unity.installComponents:  'Windows, UWP_IL2CPP'
+  # Explanation: In Unity 2019 and later, .NET scripting was removed. You no longer need to specify 'UWP_IL2CPP', it's now simply 'UWP'!
 
-- task: UnityActivateLicenseTask@1
-  displayName: 'Unity Activate License'
-  inputs:
-    username: '$(unityLicense.userName)'
-    password: '$(unityLicense.password)'
-    serial: '$(unityLicense.serial)'
-    unityEditorsPathMode: 'unityHub'
-    unityProjectPath: '$(unityProjectPath)'
+  # The build method of the Unity project. This assumes you have MRTK in your project, and uses its build script.
+  # If you want to customize your build script, change the method name here:
+  unity.executeMethod:      'Microsoft.MixedReality.Toolkit.Build.Editor.UnityPlayerBuildTools.StartCommandLineBuild'
 
-- task: UnityBuildTask@3
-  displayName: 'Unity Build WindowsStoreApps'
-  name: 'unityBuild'
-  inputs:
-    buildTarget: 'WindowsStoreApps'
-    unityEditorsPathMode: 'unityHub'
-    unityProjectPath: '$(unityProjectPath)'
-    #commandLineArgumentsMode: 'default'
+  # Are we buolding an .appx for x86 or ARM?
+  # TODO: Theoretically, could expect to use 'x86|ARM' to build for both HL1 and 2, but yet to get that to work.
+  vs.appxPlatforms:         'ARM'
 
-- task: NuGetToolInstaller@1
-  displayName: 'Use NuGet 4.3.0'
-  inputs:
-    versionSpec: '4.3.0'
+  # I would not expect you to have to change the rest of these unless you had a special reason:
+  unity.targetBuild:        'WindowsStoreApps'
+  unity.outputPath:         '/Builds/WSAPlayer'
+  #unity.outputPath:        'Pipeline.Workspace'
+  unity.editorPath:         '/Editor/Unity.exe'
+  vs.packagePath:           '/AppPackages'
 
-- task: NuGetCommand@2
-  displayName: 'NuGet restore'
-  inputs:
-    command: 'restore'
-    restoreSolution: '$(unityBuild.buildOutputPath)\*.sln'
-    feedsToUse: 'select'
+  # This also needs to be passed to the install template, along with unity.projectPath
+  unity.installFolder:      'C:/Program Files/Unity/Hub/Editor/'
+  
+# What causes us to build? A push to master or a feature branch causes us to build...
+trigger:
+  batch: true
+  branches:
+    include:
+    - master
+    - feature/*
 
-- task: VSBuild@1
-  displayName: 'Build solution $(unityBuild.buildOutputPath)\*.sln'
-  inputs:
-    solution: '$(unityBuild.buildOutputPath)\*.sln'
-    vsVersion: '15.0'
-    msbuildArgs: '/p:AppxBundle=Always;AppxBundlePlatforms="x86"'
-    platform: 'x86'
-    configuration: 'release'
+# Windows machine with Visual Studio 2019:
+pool:
+  vmImage: 'windows-2019'
 
-- task: CopyFiles@2
-  displayName: 'Copy AppPackages'
-  inputs:
-    SourceFolder: '$(unityBuild.buildOutputPath)'
-    Contents: '**\AppPackages\**'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact: drop'
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
+# Two jobs in this pipeline:
+# - Build the Unity
+# - Run Unity tests
+# Note: The build job can be uncommented and broken up into two jobs, for when that makes sense.
+jobs:
+
+# Install Unity (from cache or download) then create Visual Studio project from Unity
+- job: unity
+  displayName: Unity Build
+  variables:
+    installCached: false
+  # Try to ensure that we have the right secrets set up to continue, otherwise fail the job:
+  condition: or( not(variables['unity.username']), not(variables['unity.password']), not(variables['unity.serialKey']) )
+  steps:
+  # What version of Unity does the project say that it wants?:
+  - task: UnityGetProjectVersionTask@1
+    name: unitygetprojectversion
+    displayName: Calling UnityGetProjectVersionV1 from unity-azure-pipelines-tasks extension
+    inputs:
+      unityProjectPath: '$(unity.projectPath)'
+
+# TODO: This is the start of code that is repeated in other jobs, and ought to be done via a seperate file template.
+  # Do we have that Unity installation cached? If so, install from cache:
+  # (Note: The key is the hashed contents of the ProjectVersion.txt file)
+  # What is this? See https://docs.microsoft.com/en-us/azure/devops/pipelines/caching/index?view=azure-devops
+  - task: CacheBeta@0
+    displayName: Check if Unity installation is cached
+    inputs:
+      key: $(Agent.OS) | "$(unitygetprojectversion.projectVersion)" | "$(unity.installComponents)"
+      path: "$(unity.installFolder)$(unitygetprojectversion.projectVersion)"
+      cacheHitVar: installCached
+
+  # Install the Unity setup module (if we aren't cached):
+  - task: PowerShell@2  
+    displayName: Install Unity
+    condition: and(succeeded(), ne(variables['installCached'], true))
+    inputs:
+      targetType: 'inline'
+      script: |
+        Install-Module -Name UnitySetup -AllowPrerelease -Force -AcceptLicense
+  # Download and run the installer for Unity Components defined in unity.installComponents:
+  - task: PowerShell@2
+    displayName: Installing Unity Components '$(unity.installComponents)'
+    condition: and(succeeded(), ne(variables['installCached'], true))
+    inputs:
+      targetType: 'inline'
+      script: |   
+        Install-UnitySetupInstance -Installers (Find-UnitySetupInstaller -Version '$(unitygetprojectversion.projectVersion)' -Components $(unity.installComponents)) -Verbose
+# TODO: This is the end of code that is repeated in other jobs, and ought to be done via a seperate file template.
+
+  # Activate the Unity license (In theory, should deactivate the licence after use!):
+  - task: UnityActivateLicenseTask@1
+    displayName: Calling UnityActivateLicenseTask@1 from unity-azure-pipelines-tasks extension
+    inputs:
+      username: '$(unity.username)'
+      password: '$(unity.password)'
+      serial: '$(unity.serialkey)'
+      unityEditorsPathMode: 'unityHub'
+      unityProjectPath: '$(unity.projectPath)'
