@@ -119,3 +119,14 @@ jobs:
       serial: '$(unity.serialkey)'
       unityEditorsPathMode: 'unityHub'
       unityProjectPath: '$(unity.projectPath)'
+
+        # Build the project with Unity using the script defined in unity.executeMethod:
+  - task: UnityBuildTask@3
+    displayName: Calling UnityBuildTask@3 from unity-azure-pipelines-tasks extension
+    name: runbuild
+    inputs:
+      buildScriptType: existing
+      scriptExecuteMethod: '$(unity.executeMethod)'
+      buildTarget: '$(unity.targetBuild)'
+      unityProjectPath: '$(unity.projectPath)'
+      outputPath: '$(Build.BinariesDirectory)'
