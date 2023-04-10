@@ -40,7 +40,6 @@ variables:
   # I would not expect you to have to change the rest of these unless you had a special reason:
   unity.targetBuild:        'WindowsStoreApps'
   unity.outputPath:         '/Builds/WSAPlayer'
-  #unity.outputPath:        'Pipeline.Workspace'
   unity.editorPath:         '/Editor/Unity.exe'
   vs.packagePath:           '/AppPackages'
 
@@ -120,7 +119,7 @@ jobs:
       unityEditorsPathMode: 'unityHub'
       unityProjectPath: '$(unity.projectPath)'
 
-        # Build the project with Unity using the script defined in unity.executeMethod:
+  # Build the project with Unity using the script defined in unity.executeMethod:
   - task: UnityBuildTask@3
     displayName: Calling UnityBuildTask@3 from unity-azure-pipelines-tasks extension
     name: runbuild
@@ -130,11 +129,3 @@ jobs:
       buildTarget: '$(unity.targetBuild)'
       unityProjectPath: '$(unity.projectPath)'
       outputPath: '$(Build.BinariesDirectory)'
-
-# Publish the Solution folder:
-  - task: PublishPipelineArtifact@1
-    displayName: 'Publish Pipeline Artifact'
-    inputs:
-      artifactName: 'sln'
-      targetPath: '$(unity.projectPath)$(unity.outputPath)'
- 
