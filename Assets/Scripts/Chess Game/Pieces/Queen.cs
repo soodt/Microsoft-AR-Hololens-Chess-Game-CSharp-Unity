@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -90,56 +91,68 @@ public class Queen : Piece
 
     public override void MovePiece(Vector2Int coords)
     {
-        Vector2Int displacement = coords - this.occupiedSquare;
-        bool available = false;
-        if (this.getTeam() == controller.getActivePlayer().getTeam() && this.availableMoves.Contains(coords))
+        if (!taken)
         {
-            foreach (var direction in directions)
+            Vector2Int displacement = coords - this.occupiedSquare;
+            bool available = false;
+            if (this.getTeam() == controller.getActivePlayer().getTeam() && this.avaliableMoves.Contains(coords))
             {
-                for (int i = 1; i < 20; i++)
-                //for(int i = 1;i<board.size;i++)
+                bool capture = false;
+                foreach (var direction in directions)
                 {
-                    if ((coords == this.occupiedSquare + direction * i) && canMoveThere(coords))
+                    for (int i = 1; i < 20; i++)
+                    //for(int i = 1;i<board.size;i++)
                     {
-                        Piece pieceCheck = board.getPiece(coords);
-                        if (pieceCheck)
+                        if ((coords == this.occupiedSquare + direction * i) && canMoveThere(coords))
                         {
-                            board.takePiece(this, coords);
+                            Piece pieceCheck = board.getPiece(coords);
+                            if (pieceCheck)
+                            {
+                                board.takePiece(this, coords);
+                                capture = true;
+                            }
+                            this.occupiedSquare = coords;
+                            transform.position = this.board.CalculatePositionFromCoords(coords);
+                            available = true;
+                            print(AlgebraicNotation(coords, coords, capture, false, false, false));
+                            controller.endTurn();
+                            break;
                         }
-                        this.occupiedSquare = coords;
-                        transform.position = this.board.CalculatePositionFromCoords(coords);
-                        available = true;
-                        controller.endTurn();
-                        break;
                     }
+                    if (available) break;
                 }
-                if (available) break;
-            }
-            if (!available)
+                if (!available)
+                {
+                    transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
+                }
+            } else
             {
+                // If not this team's turn, snap back to occupied square
                 transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
+                //Debug.Log("NoMoving!");
             }
-        } else
-        {
-            // If not this team's turn, snap back to occupied square
-            transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
-            Debug.Log("NoMoving!");
         }
-  
-    
+        else
+            {
+                transform.position = finalCoords;
+            }
+
     }
 
     public override void PossibleMoves()
     {
-        availableMoves.Clear();
-        for (int i = 0; i < 8; i++)
+        avaliableMoves.Clear();
+        if (!taken)
         {
-            for (int j = 0; j < 8; j++)
+            for (int i = 0; i < 8; i++)
             {
-                Vector2Int square = new Vector2Int(i, j); // this is to go through all the squares checking which are safe to move to
-                if (squareIsMoveable(square) && canMoveThere(square)) // this should be implemented when the obj is picked up to highlight the possible squares. 
+                for (int j = 0; j < 8; j++)
                 {
-                    availableMoves.Add(square);
+                    Vector2Int square = new Vector2Int(i, j); // this is to go through all the squares checking which are safe to move to
+                    if (squareIsMoveable(square) && canMoveThere(square)) // this should be implemented when the obj is picked up to highlight the possible squares. 
+                    {
+                        avaliableMoves.Add(square);
+                    }
                 }
             }
         }
@@ -164,6 +177,52 @@ public class Queen : Piece
     public override bool hasMovedTwoSquares()
     {
         return false;
+    }
+    public override String AlgebraicNotation(Vector2Int coords, Vector2Int prevCoords, bool capture, bool pawnPromote, bool enPassant, bool castle)
+    {
+        String s = "Q";
+
+        foreach (Piece p in controller.getActivePlayer().activePieces)
+        {
+            if (!p.taken)
+            {
+                if (p.typeName == "Queen" && p != this)
+                {
+                    if (p.CanMoveTo(coords))
+                    {
+                        if (prevCoords.x != p.occupiedSquare.x)
+                        {
+                            if (prevCoords.x == 0) s += "a";
+                            if (prevCoords.x == 1) s += "b";
+                            if (prevCoords.x == 2) s += "c";
+                            if (prevCoords.x == 3) s += "d";
+                            if (prevCoords.x == 4) s += "e";
+                            if (prevCoords.x == 5) s += "f";
+                            if (prevCoords.x == 6) s += "g";
+                            if (prevCoords.x == 7) s += "h";
+                        }
+                        else
+                        {
+                            s += prevCoords.y + 1;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (capture) s += "x";
+        if (coords.x == 0) s += "a";
+        if (coords.x == 1) s += "b";
+        if (coords.x == 2) s += "c";
+        if (coords.x == 3) s += "d";
+        if (coords.x == 4) s += "e";
+        if (coords.x == 5) s += "f";
+        if (coords.x == 6) s += "g";
+        if (coords.x == 7) s += "h";
+        s += coords.y + 1;
+        if (controller.checkmate()) s += "#";
+        else if (controller.checkCond()) s += "+";
+        return s;
     }
 
 }
