@@ -6,6 +6,7 @@ using UnityEngine.TestTools;
 
 public class PlayModeTests
 {
+    
     // A Test behaves as an ordinary method
     [Test]
     public void PlayModeTestsSimplePasses()

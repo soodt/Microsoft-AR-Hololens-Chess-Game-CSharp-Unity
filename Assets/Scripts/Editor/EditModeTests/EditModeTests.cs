@@ -6,13 +6,17 @@ using UnityEngine.TestTools;
 
 public class EditModeTests
 {
-    // A Test behaves as an ordinary method
-    [Test]
-    public void EditModeTestsSimplePasses()
-    {
-        // Use the Assert class to test conditions
-    }
 
+    
+// A Test behaves as an ordinary method
+[Test]
+    public void checkBoardInitialisation()
+    {
+        GameObject ChessBoard = GameObject.Find("Board");
+        Assert.IsNotNull(ChessBoard);
+        
+    }
+  
     // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
     // `yield return null;` to skip a frame.
     [UnityTest]
