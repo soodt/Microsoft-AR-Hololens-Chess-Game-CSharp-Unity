@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -96,6 +97,7 @@ public class Queen : Piece
             bool available = false;
             if (this.getTeam() == controller.getActivePlayer().getTeam() && this.avaliableMoves.Contains(coords))
             {
+                bool capture = false;
                 foreach (var direction in directions)
                 {
                     for (int i = 1; i < 20; i++)
@@ -107,10 +109,12 @@ public class Queen : Piece
                             if (pieceCheck)
                             {
                                 board.takePiece(this, coords);
+                                capture = true;
                             }
                             this.occupiedSquare = coords;
                             transform.position = this.board.CalculatePositionFromCoords(coords);
                             available = true;
+                            print(AlgebraicNotation(coords, coords, capture, false, false, false));
                             controller.endTurn();
                             break;
                         }
@@ -125,7 +129,7 @@ public class Queen : Piece
             {
                 // If not this team's turn, snap back to occupied square
                 transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
-                Debug.Log("NoMoving!");
+                //Debug.Log("NoMoving!");
             }
         }
         else
@@ -173,6 +177,52 @@ public class Queen : Piece
     public override bool hasMovedTwoSquares()
     {
         return false;
+    }
+    public override String AlgebraicNotation(Vector2Int coords, Vector2Int prevCoords, bool capture, bool pawnPromote, bool enPassant, bool castle)
+    {
+        String s = "Q";
+
+        foreach (Piece p in controller.getActivePlayer().activePieces)
+        {
+            if (!p.taken)
+            {
+                if (p.typeName == "Queen" && p != this)
+                {
+                    if (p.CanMoveTo(coords))
+                    {
+                        if (prevCoords.x != p.occupiedSquare.x)
+                        {
+                            if (prevCoords.x == 0) s += "a";
+                            if (prevCoords.x == 1) s += "b";
+                            if (prevCoords.x == 2) s += "c";
+                            if (prevCoords.x == 3) s += "d";
+                            if (prevCoords.x == 4) s += "e";
+                            if (prevCoords.x == 5) s += "f";
+                            if (prevCoords.x == 6) s += "g";
+                            if (prevCoords.x == 7) s += "h";
+                        }
+                        else
+                        {
+                            s += prevCoords.y + 1;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (capture) s += "x";
+        if (coords.x == 0) s += "a";
+        if (coords.x == 1) s += "b";
+        if (coords.x == 2) s += "c";
+        if (coords.x == 3) s += "d";
+        if (coords.x == 4) s += "e";
+        if (coords.x == 5) s += "f";
+        if (coords.x == 6) s += "g";
+        if (coords.x == 7) s += "h";
+        s += coords.y + 1;
+        if (controller.checkmate()) s += "#";
+        else if (controller.checkCond()) s += "+";
+        return s;
     }
 
 }
