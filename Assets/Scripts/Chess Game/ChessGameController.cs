@@ -175,6 +175,12 @@ public class ChessGameController : MonoBehaviour
         }
         if (getActivePlayer() == whitePlayer) {
             activePlayer = blackPlayer;
+            foreach (Piece p in blackPlayer.activePieces) {
+                if (p.typeName == "Pawn") {
+                    Pawn pawnref = (Pawn) p;
+                    pawnref.movedTwoSquares = false;
+                }
+            }
             turnIndicator.ColourTeam();
             if (isSinglePlayer) // if true allows single player moves to take place. AI is always blackPlayer
             {
@@ -182,6 +188,12 @@ public class ChessGameController : MonoBehaviour
             }
         } else if (getActivePlayer() == blackPlayer) {
             activePlayer = whitePlayer;
+            foreach (Piece p in whitePlayer.activePieces) {
+                if (p.typeName == "Pawn") {
+                    Pawn pawnref = (Pawn) p;
+                    pawnref.movedTwoSquares = false;
+                }
+            }
             turnIndicator.ColourTeam();
         }
         if(checkCond()) {
@@ -218,13 +230,24 @@ public class ChessGameController : MonoBehaviour
         {
             activePlayer = whitePlayer;
         }
+        
     }
 
     public bool checkCond()                     // Evaluates check condition return true if checked else false
     {
         ChessPlayer otherPlayer;
-        whiteKing = activePieces[4];
-        blackKing = activePieces[20];
+        whiteKing = null;
+        blackKing = null;
+        foreach (Piece p in whitePlayer.activePieces) {
+            if (p.typeName == "King") {
+                whiteKing = p;
+            }
+        }
+        foreach (Piece p in blackPlayer.activePieces) {
+            if (p.typeName == "King") {
+                blackKing = p;
+            }
+        }
         if (activePlayer == whitePlayer)
         {
             checkedKing = whiteKing;

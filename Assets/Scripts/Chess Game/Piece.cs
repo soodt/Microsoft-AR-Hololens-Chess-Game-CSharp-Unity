@@ -91,12 +91,26 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
 		List<Vector2Int> updatedMoves = new List<Vector2Int>();
 		foreach (Vector2Int move in this.avaliableMoves.ToList()) 
 		{
-			Vector2Int temp = this.occupiedSquare;
-			this.occupiedSquare = move;
-			if (!controller.checkCond()) {
-				updatedMoves.Add(move);
+			
+			if (board.getPiece(move) && !IsFromSameTeam(board.getPiece(move))) {
+				Piece tempPiece = board.getPiece(move);
+				ChessPlayer pl = tempPiece.getPlayerFromSameTeam();
+				pl.activePieces.Remove(tempPiece);
+				Vector2Int temp = this.occupiedSquare;
+				this.occupiedSquare = move;
+				if (!controller.checkCond()) {
+					updatedMoves.Add(move);
+				}
+				pl.activePieces.Add(tempPiece);
+				this.occupiedSquare = temp;
+			} else {
+				Vector2Int temp = this.occupiedSquare;
+				this.occupiedSquare = move;
+				if (!controller.checkCond()) {
+					updatedMoves.Add(move);
+				}
+				this.occupiedSquare = temp;
 			}
-			this.occupiedSquare = temp;
 		}
 		this.avaliableMoves.Clear();
 		foreach (Vector2Int move in updatedMoves)

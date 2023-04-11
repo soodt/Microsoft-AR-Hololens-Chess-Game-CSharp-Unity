@@ -111,6 +111,7 @@ public class Pawn : Piece, IMixedRealityPointerHandler
                 }
                 this.occupiedSquare = coords;
                 transform.position = this.board.CalculatePositionFromCoords(coords);
+                this.hasMoved = true;
                 queening();
                 controller.endTurn();
             } else if (canPawnTake(coords)){
@@ -119,6 +120,7 @@ public class Pawn : Piece, IMixedRealityPointerHandler
                 board.takePiece(this, coords);
                 this.occupiedSquare = coords;
                 transform.position = this.board.CalculatePositionFromCoords(coords);
+                this.hasMoved = true;
                 queening();
                 controller.endTurn();
             } else if (canTakeEnPassant(coords)) {
@@ -133,6 +135,7 @@ public class Pawn : Piece, IMixedRealityPointerHandler
                 }
                 this.occupiedSquare = coords;
                 transform.position = this.board.CalculatePositionFromCoords(coords);
+                this.hasMoved = true;
                 queening();
                 controller.endTurn();
             }
