@@ -65,6 +65,7 @@ pool:
 # Note: The build job can be uncommented and broken up into two jobs, for when that makes sense.
 jobs:
 
+
 # Install Unity (from cache or download) then create Visual Studio project from Unity
 - job: unity
   displayName: Unity Build
@@ -118,14 +119,24 @@ jobs:
       serial: '$(unity.serialkey)'
       unityEditorsPathMode: 'unityHub'
       unityProjectPath: '$(unity.projectPath)'
+    
+- job: buildUnity
+  steps:
+    - template: Pipelines/unitybuild.yml
+      parameters:
+      Arch: 'arm64'
+      Platform: 'UWP'
+      PackagingDir: 'ARM64'  
+      UnityVersion: ${{ unitygetprojectversion.projectVersion }}
+      PublishArtifacts: false
 
-  # Build the project with Unity using the script defined in unity.executeMethod:
-  - task: UnityBuildTask@3
-    displayName: Calling UnityBuildTask@3 from unity-azure-pipelines-tasks extension
-    name: runbuild
-    inputs:
-      buildScriptType: existing
-      scriptExecuteMethod: '$(unity.executeMethod)'
-      buildTarget: '$(unity.targetBuild)'
-      unityProjectPath: '$(unity.projectPath)'
-      outputPath: '$(Build.BinariesDirectory)'
+#  # Build the project with Unity using the script defined in unity.executeMethod:
+#  - task: UnityBuildTask@3
+#    displayName: Calling UnityBuildTask@3 from unity-azure-pipelines-tasks extension
+#    name: runbuild
+#    inputs:
+#      buildScriptType: existing
+#      scriptExecuteMethod: '$(unity.executeMethod)'
+#      buildTarget: '$(unity.targetBuild)'
+#      unityProjectPath: '$(unity.projectPath)'
+#      outputPath: '$(Build.BinariesDirectory)'
