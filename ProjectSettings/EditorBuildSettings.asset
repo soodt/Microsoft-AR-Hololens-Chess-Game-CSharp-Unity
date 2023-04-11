@@ -4,7 +4,9 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes: [- enabled: 1
+    path: Assets/Scenes/ScaledDownScene.unity
+    guid: a4d5c140a5a16d44998674808dfbe5b2]
   m_configObjects:
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 1d932bb9cc57e49429f61314d806d66f, type: 2}
     com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 4bf7a4f12ad7b2e45b07857056df6063, type: 2}
