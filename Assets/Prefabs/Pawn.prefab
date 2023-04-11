@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6701676752716192486}
   - component: {fileID: 1471572428901048382}
   - component: {fileID: -716862206126040696}
-  - component: {fileID: 3764739105986603404}
+  - component: {fileID: -526830983355888460}
   m_Layer: 0
   m_Name: Pawn
   m_TagString: Untagged
@@ -126,7 +126,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   materialSetter: {fileID: 0}
   avaliableMoves: []
---- !u!114 &3764739105986603404
+--- !u!114 &-526830983355888460
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -135,6 +135,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 104878}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b971eefda1255f4989312d7e147e5e9, type: 3}
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0

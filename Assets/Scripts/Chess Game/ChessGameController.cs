@@ -25,6 +25,7 @@ public class ChessGameController : MonoBehaviour
     {
         SetDependencies();
         CreatePlayers();
+
     }
 
     private void SetDependencies()
@@ -35,10 +36,10 @@ public class ChessGameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartNewGame();
+        //StartNewGame();
     }
 
-     private void StartNewGame()
+    public void StartNewGame()
     {
         CreatePiecesFromLayout(startingBoardLayout);
         board.SetDependencies(this);
@@ -79,12 +80,14 @@ public class ChessGameController : MonoBehaviour
 
     private void CreatePieceAndInitialize(Vector2Int squareCoords, TeamColor team, Type type)
     {
-        
-        Piece newPiece = pieceCreator.CreatePiece(type).GetComponent<Piece>();
+        Piece newPiece = pieceCreator.CreateNetworkPiece(type).GetComponent<Piece>();
+        //Piece newPiece = pieceCreator.CreatePiece(type).GetComponent<Piece>();
         //make each piece interactable with AR
         newPiece.gameObject.AddComponent<BoxCollider>();
         newPiece.gameObject.AddComponent<NearInteractionGrabbable>();
         newPiece.gameObject.AddComponent<ObjectManipulator>();
+        //make each piece have the board anchor as parent.
+        newPiece.gameObject.AddComponent<BoardAnchorAsParent>();
 
         // add snapping to each piece
         newPiece.GetComponent<ObjectManipulator>().OnManipulationEnded.AddListener ( delegate 

@@ -36,6 +36,24 @@ public class PieceCreator : MonoBehaviour
         return null;
     }
 
+    public GameObject[] GetPrefabs()
+    {
+        return piecesPrefabs;
+    }
+
+    public GameObject CreateNetworkPiece(Type type)
+    {
+        GameObject prefab = nameToPieceDict[type.ToString()];
+        if (prefab)
+        {
+            GameObject newPiece = PhotonNetwork.Instantiate(prefab.name, new Vector3(0f, 0f, 0f), prefab.transform.rotation);
+            Vector3 scaleChange = new Vector3(-0.9f, -0.9f, -0.9f);
+            newPiece.transform.localScale += scaleChange;
+            return newPiece;
+        }
+        return null;
+    }
+
     public Material GetTeamMaterial(TeamColor team)
     {
         return team == TeamColor.White ? whiteMaterial : blackMaterial;

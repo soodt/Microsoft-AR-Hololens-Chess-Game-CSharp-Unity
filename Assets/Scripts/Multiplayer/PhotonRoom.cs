@@ -9,8 +9,8 @@ namespace ChessRoom
     {
         public static PhotonRoom Room;
 
+        [SerializeField] private GameObject gameMaster;
         [SerializeField] private GameObject photonUserPrefab;
-        private ChessGameController chessGameController;
 
         // private PhotonView pv;
         private Player[] photonPlayers;
@@ -74,33 +74,29 @@ namespace ChessRoom
             playersInRoom = photonPlayers.Length;
             myNumberInRoom = playersInRoom;
             PhotonNetwork.NickName = myNumberInRoom.ToString();
-
+            CreatePlayer();
+            if (!PhotonNetwork.IsMasterClient) return;
+            //if (playersInRoom == 2)
             StartGame();
         }
 
         private void StartGame()
         {
-            CreatePlayer();
-
-            if (!PhotonNetwork.IsMasterClient) return;
-            if (BoardAnchor.instance != null) NetworkInstantiateObjects();
+            DefaultPool pool = PhotonNetwork.PrefabPool as DefaultPool;
+            if (pool != null && gameMaster.GetComponent<PieceCreator>().GetPrefabs() != null)
+            {
+                foreach (GameObject prefab in gameMaster.GetComponent<PieceCreator>().GetPrefabs())
+                {
+                    pool.ResourceCache.Add(prefab.name, prefab);
+                }
+            }
+            gameMaster.GetComponent<ChessGameController>().StartNewGame();
         }
 
 
         private void CreatePlayer()
         {
             var player = PhotonNetwork.Instantiate(photonUserPrefab.name, Vector3.zero, Quaternion.identity);
-        }
-
-        private void NetworkInstantiateObjects()
-        {
-            foreach (Piece piece in chessGameController.activePieces)
-            {
-                var position = piece.occupiedSquare;
-
-                var positionOnTopOfSurface = new Vector3(position.x, position.y + piece.transform.localScale.y / 2, 0);
-                PhotonNetwork.Instantiate(piece.name, positionOnTopOfSurface, piece.transform.rotation);
-            }
         }
 
         /**
