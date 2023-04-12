@@ -12,12 +12,12 @@ public class AddComponents : MonoBehaviour, IPunInstantiateMagicCallback
     public TeamColor team { get; set; }
     public ChessGameController controller { get; set; }
     public Piece piece { get; set; }
-
+    private PhotonView photonView;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        photonView = GetComponent<PhotonView>();
     }
 
     // Update is called once per frame
@@ -30,6 +30,7 @@ public class AddComponents : MonoBehaviour, IPunInstantiateMagicCallback
 
     public void OnPhotonInstantiate(PhotonMessageInfo info)
     {
+        if (this.gameObject.GetComponent<BoxCollider>() != null) return;
         //make each piece interactable with AR
         this.gameObject.AddComponent<BoxCollider>();
         this.gameObject.AddComponent<NearInteractionGrabbable>();
