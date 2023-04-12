@@ -30,7 +30,7 @@ public class AddComponents : MonoBehaviour, IPunInstantiateMagicCallback
         //make each piece have the board anchor as parent.
         this.gameObject.AddComponent<BoardAnchorAsParent>();
 
-        
+        /**
         // add snapping to each piece
         this.GetComponent<ObjectManipulator>().OnManipulationEnded.AddListener(delegate
         {
@@ -60,6 +60,7 @@ public class AddComponents : MonoBehaviour, IPunInstantiateMagicCallback
             }
         }
         );
+        */
         
     }
     
