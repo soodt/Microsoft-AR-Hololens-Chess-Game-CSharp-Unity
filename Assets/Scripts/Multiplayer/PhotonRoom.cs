@@ -66,6 +66,8 @@ namespace ChessRoom
                 if (photonUserPrefab != null) pool.ResourceCache.Add(photonUserPrefab.name, photonUserPrefab);
                 foreach (GameObject prefab in gameMaster.GetComponent<PieceCreator>().GetPrefabs())
                 {
+                    //Vector3 scaleChange = new Vector3(-0.9f, -0.9f, -0.9f);
+                    prefab.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
                     pool.ResourceCache.Add(prefab.name, prefab);
                 }
             }
