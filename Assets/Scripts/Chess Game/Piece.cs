@@ -17,20 +17,20 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
 	public Vector2Int occupiedSquare { get; set; }
 	public TeamColor team { get; set; }
 	public bool hasMoved { get; set; }
-	public List<Vector2Int> avaliableMoves;
+	public List<Vector2Int> availableMoves;
 
 	public bool taken = false;
 	public Vector3 finalCoords; // specify the pos of the piece after being taken
 	public ChessGameController controller {get; set;}
 	public TurnIndicator turnIndicator { get; set;}
-	public abstract List<Vector2Int> SelectAvaliableSquares();
+	public abstract List<Vector2Int> SelectAvailableSquares();
 	public abstract bool isAttackingSquare(Vector2Int coords);
 	public String typeName {get; set;}
     public abstract bool hasMovedTwoSquares();
 
     private void Awake()
 	{
-		avaliableMoves = new List<Vector2Int>();
+		availableMoves = new List<Vector2Int>();
 		materialSetter = GetComponent<MaterialSetter>();
 		hasMoved = false;
 		turnIndicator = GetComponent<TurnIndicator>();
@@ -62,7 +62,7 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
 
     public bool CanMoveTo(Vector2Int coords)
 	{
-		return avaliableMoves.Contains(coords);
+		return availableMoves.Contains(coords);
 	}
 
 	public virtual void MovePiece(Vector2Int coords)
@@ -83,13 +83,13 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
 	{
 		if (!taken)
 		{
-			avaliableMoves.Add(coords);
+			availableMoves.Add(coords);
 		}
 	}
 
 	public void removeMovesLeavingKingInCheck() {
 		List<Vector2Int> updatedMoves = new List<Vector2Int>();
-		foreach (Vector2Int move in this.avaliableMoves.ToList()) 
+		foreach (Vector2Int move in this.availableMoves.ToList()) 
 		{
 			Vector2Int temp = this.occupiedSquare;
 			this.occupiedSquare = move;
@@ -98,10 +98,10 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
 			}
 			this.occupiedSquare = temp;
 		}
-		this.avaliableMoves.Clear();
+		this.availableMoves.Clear();
 		foreach (Vector2Int move in updatedMoves)
 		{
-			this.avaliableMoves.Add(move);
+			this.availableMoves.Add(move);
 		}
 	}
 
@@ -120,7 +120,7 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
     {
 		PossibleMoves();
 		removeMovesLeavingKingInCheck();
-        board.HightlightTiles(avaliableMoves);
+        board.HightlightTiles(availableMoves);
        // Debug.Log("Down"); ;
     }
 
@@ -131,10 +131,10 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
 
     public void OnPointerUp(MixedRealityPointerEventData eventData)
     {
-		List<Vector2Int> temp = new List<Vector2Int>(avaliableMoves); // creates temporary copy
-        avaliableMoves.Clear();
-        board.HightlightTiles(avaliableMoves);	// destroys highlights
-		avaliableMoves = new List<Vector2Int>(temp); // resets available moves
+		List<Vector2Int> temp = new List<Vector2Int>(availableMoves); // creates temporary copy
+        availableMoves.Clear();
+        board.HightlightTiles(availableMoves);	// destroys highlights
+		availableMoves = new List<Vector2Int>(temp); // resets available moves
        // Debug.Log("up");
     }
 
