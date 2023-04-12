@@ -7,17 +7,9 @@ using Microsoft.MixedReality.Toolkit.UI;
 
 public class AddComponents : MonoBehaviour, IPunInstantiateMagicCallback
 {
-    public Board board { protected get; set; }
-    public Vector2Int occupiedSquare { get; set; }
-    public TeamColor team { get; set; }
-    public ChessGameController controller { get; set; }
-    public Piece piece { get; set; }
-    private PhotonView photonView;
-
     // Start is called before the first frame update
     void Start()
     {
-        photonView = GetComponent<PhotonView>();
     }
 
     // Update is called once per frame
@@ -27,7 +19,7 @@ public class AddComponents : MonoBehaviour, IPunInstantiateMagicCallback
     }
 
 
-
+    
     public void OnPhotonInstantiate(PhotonMessageInfo info)
     {
         if (this.gameObject.GetComponent<BoxCollider>() != null) return;
@@ -38,17 +30,19 @@ public class AddComponents : MonoBehaviour, IPunInstantiateMagicCallback
         //make each piece have the board anchor as parent.
         this.gameObject.AddComponent<BoardAnchorAsParent>();
 
+        
         // add snapping to each piece
         this.GetComponent<ObjectManipulator>().OnManipulationEnded.AddListener(delegate
         {
-            float distance = board.squareSize * 4;
+            float distance = this.gameObject.GetComponent<Board>().squareSize * 4;
             Vector2Int newCoords = new Vector2Int(-1, -1);
             for (int i = 0; i < 8; i++)
             {
+                
                 for (int j = 0; j < 8; j++)
                 {
                     Vector2Int nextSquare = new Vector2Int(i, j);
-                    float newDistance = Vector3.Distance(this.transform.position, board.CalculatePositionFromCoords(nextSquare));
+                    float newDistance = Vector3.Distance(this.transform.position, this.gameObject.GetComponent<Board>().CalculatePositionFromCoords(nextSquare));
                     if (newDistance < distance)
                     {
                         distance = newDistance;
@@ -56,15 +50,17 @@ public class AddComponents : MonoBehaviour, IPunInstantiateMagicCallback
                     }
                 }
             }
-            if (distance < board.squareSize * 1.5)
+            if (distance < this.gameObject.GetComponent<Board>().squareSize * 1.5)
             {
-                this.piece.MovePiece(newCoords);
+                this.gameObject.GetComponent<Piece>().MovePiece(newCoords);
             }
             else
             {
-                this.piece.MovePiece(this.occupiedSquare);
+                this.gameObject.GetComponent<Piece>().MovePiece(this.gameObject.GetComponent<Piece>().occupiedSquare);
             }
         }
         );
+        
     }
+    
 }
