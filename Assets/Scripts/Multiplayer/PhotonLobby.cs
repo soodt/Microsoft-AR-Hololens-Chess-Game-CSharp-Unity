@@ -2,8 +2,10 @@
 using Photon.Realtime;
 using UnityEngine;
 
-namespace MRTK.Tutorials.MultiUserCapabilities
+namespace ChessRoom
 {
+    // Modified file from MRTK.Tutorials.MultiUserCapabilities.
+
     public class PhotonLobby : MonoBehaviourPunCallbacks
     {
         public static PhotonLobby Lobby;
