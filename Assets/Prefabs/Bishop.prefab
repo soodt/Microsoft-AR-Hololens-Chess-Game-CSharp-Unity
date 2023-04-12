@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 2703718536225263083}
   - component: {fileID: 4778741133227886482}
   - component: {fileID: -4232068924219411824}
+  - component: {fileID: -8315442701319759525}
   m_Layer: 0
   m_Name: Bishop
   m_TagString: Untagged
@@ -144,7 +145,7 @@ MonoBehaviour:
   prefixField: -1
   Synchronization: 3
   OwnershipTransfer: 0
-  observableSearch: 2
+  observableSearch: 0
   ObservedComponents:
   - {fileID: -4232068924219411824}
   sceneViewId: 0
@@ -166,3 +167,15 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 0
+--- !u!114 &-8315442701319759525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 190264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 833f466b726a51e4bbc3c4de8a2f8665, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
