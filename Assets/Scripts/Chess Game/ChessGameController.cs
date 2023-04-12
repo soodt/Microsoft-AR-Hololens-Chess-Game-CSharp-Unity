@@ -173,7 +173,7 @@ public class ChessGameController : MonoBehaviour
             turnIndicator.ColourTeam();
             if (isSinglePlayer) // if true allows single player moves to take place. AI is always blackPlayer
             {
-                ai.getComputerMove("h6", activePieces);
+                ai.getComputerMove("Nh6", activePieces);
             }
         } else if (getActivePlayer() == blackPlayer) {
             activePlayer = whitePlayer;
