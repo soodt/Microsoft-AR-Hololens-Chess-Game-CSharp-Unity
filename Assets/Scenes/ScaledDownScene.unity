@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.1802834, g: 0.22571361, b: 0.30692232, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -155,6 +155,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startingBoardLayout: {fileID: 11400000, guid: 6cfba3c73eb853c47a7d336987e0fc43, type: 2}
   board: {fileID: 119872357}
+  red: {fileID: 2100000, guid: 0d01ec64241ec35489d9e8030e6a42d1, type: 2}
   activePieces:
   - {fileID: 0}
   - {fileID: 0}
@@ -189,6 +190,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   turnIndicator: {fileID: 704355973}
+  ai: {fileID: 0}
 --- !u!114 &119498245
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -339,7 +341,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   freeSquareMaterial: {fileID: 2100000, guid: a319da9ce2632db40842dad69da7a343, type: 2}
-  enemySquareMaterial: {fileID: 2100000, guid: 0d01ec64241ec35489d9e8030e6a42d1, type: 2}
+  enemySquareMaterial: {fileID: 2100000, guid: 8f2743e6dce3dce48b6f9fc9eccf3d03, type: 2}
   selectorPrefab: {fileID: 2912707483993903054, guid: ca9f2642268fecb498f8084d6cc88ec0, type: 3}
 --- !u!1 &416698248
 GameObject:

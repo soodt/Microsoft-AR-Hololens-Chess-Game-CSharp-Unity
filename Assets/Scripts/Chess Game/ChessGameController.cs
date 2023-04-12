@@ -5,19 +5,27 @@ using UnityEngine;
 using Microsoft.MixedReality.Toolkit.Input;
 using Microsoft.MixedReality.Toolkit.UI;
 using TMPro;
+using UnityEngine.InputSystem.XR;
 
 [RequireComponent(typeof(PieceCreator))]
 public class ChessGameController : MonoBehaviour
 {
     [SerializeField] private BoardLayout startingBoardLayout;
     [SerializeField] private Board board;
+    [SerializeField] private Material red;
+    //[SerializeField] private Material black;
+    //[SerializeField] private Material white;
     private PieceCreator pieceCreator;
     public Piece[] activePieces = new Piece[32];
     public TurnIndicator turnIndicator;
+    public SinglePlayer ai;
+
 
     private Piece blackKing;
     private Piece whiteKing;
     private Piece checkedKing;
+    public Piece currentKing;
+    public bool isSinglePlayer = true; //triggers on and off single player mode
     public ChessPlayer whitePlayer{get; set;}
     public ChessPlayer blackPlayer{get; set;}
     private ChessPlayer activePlayer{get; set;}    
@@ -45,6 +53,7 @@ public class ChessGameController : MonoBehaviour
         board.SetDependencies(this);
         activePlayer = whitePlayer;
         turnIndicator.SetDependencies(this);
+        ai = new SinglePlayer();
     }
 
     public ChessPlayer getActivePlayer() {
@@ -79,7 +88,7 @@ public class ChessGameController : MonoBehaviour
         }
     }
 
-    private void CreatePieceAndInitialize(Vector2Int squareCoords, TeamColor team, Type type)
+    public void CreatePieceAndInitialize(Vector2Int squareCoords, TeamColor team, Type type)
     {
         
         Piece newPiece = pieceCreator.CreatePiece(type).GetComponent<Piece>();
@@ -162,26 +171,60 @@ public class ChessGameController : MonoBehaviour
             // player managed to get themselves out of check
             Debug.Log("Succesfully moved out of check");
             getActivePlayer().kingInCheck = false;
+            Material teamMaterial = pieceCreator.GetTeamMaterial(activePlayer.team);
+            checkedKing.SetMaterial(teamMaterial);
             checkedKing = null;
         }
         if (getActivePlayer() == whitePlayer) {
             activePlayer = blackPlayer;
+            foreach (Piece p in blackPlayer.activePieces) {
+                if (p.typeName == "Pawn") {
+                    Pawn pawnref = (Pawn) p;
+                    pawnref.movedTwoSquares = false;
+                }
+            }
             turnIndicator.ColourTeam();
+            if (isSinglePlayer) // if true allows single player moves to take place. AI is always blackPlayer
+            {
+                ai.getComputerMove("h6", activePieces);
+            }
         } else if (getActivePlayer() == blackPlayer) {
             activePlayer = whitePlayer;
+            foreach (Piece p in whitePlayer.activePieces) {
+                if (p.typeName == "Pawn") {
+                    Pawn pawnref = (Pawn) p;
+                    pawnref.movedTwoSquares = false;
+                }
+            }
             turnIndicator.ColourTeam();
         }
         if(checkCond()) {
             Debug.Log("Check");
             activePlayer.kingInCheck = true;
+            checkedKing.SetMaterial(red);
+            isGameOver();
+        }
+        if (checkStaleMate())
+        {
             isGameOver();
         }
         // Debug
         if (getActivePlayer() == whitePlayer) {
-            Debug.Log("White");
+            //Debug.Log("White");
         } else {
-            Debug.Log("Black");
+            //Debug.Log("Black");
         }
+        /*
+        if(activePlayer.kingInCheck == true)
+        {
+            checkedKing.SetMaterial(red);
+        }
+        else
+        {
+            Material teamMaterial = pieceCreator.GetTeamMaterial(activePlayer.team);
+            checkedKing.SetMaterial(teamMaterial);
+        }
+        */
     }
     public void ChangeTeam() // to make cleaner
     {
@@ -193,13 +236,24 @@ public class ChessGameController : MonoBehaviour
         {
             activePlayer = whitePlayer;
         }
+        
     }
 
     public bool checkCond()                     // Evaluates check condition return true if checked else false
     {
         ChessPlayer otherPlayer;
-        whiteKing = activePieces[4];
-        blackKing = activePieces[20];
+        whiteKing = null;
+        blackKing = null;
+        foreach (Piece p in whitePlayer.activePieces) {
+            if (p.typeName == "King") {
+                whiteKing = p;
+            }
+        }
+        foreach (Piece p in blackPlayer.activePieces) {
+            if (p.typeName == "King") {
+                blackKing = p;
+            }
+        }
         if (activePlayer == whitePlayer)
         {
             checkedKing = whiteKing;
@@ -215,9 +269,9 @@ public class ChessGameController : MonoBehaviour
         {
             Piece piece = otherPlayer.activePieces[i];
             piece.PossibleMoves();
-            for (int z = 0; z < piece.avaliableMoves.Count; z++)
+            for (int z = 0; z < piece.availableMoves.Count; z++)
             {
-                if (piece.avaliableMoves[z] == checkedKing.occupiedSquare)
+                if (piece.availableMoves[z] == checkedKing.occupiedSquare)
                 {
                     return true;
                 }
@@ -228,21 +282,91 @@ public class ChessGameController : MonoBehaviour
         return false;
     }
 
+    public bool checkStaleMate()                                                // evaluates stalemate condition return true if so else false
+    {
+        ChessPlayer otherPlayer;
+        whiteKing = activePieces[4];
+        blackKing = activePieces[20];
+        if (activePlayer == whitePlayer)
+        {
+            currentKing = whiteKing;
+            otherPlayer = blackPlayer;
+        }
+        else
+        {
+            currentKing = blackKing;
+            otherPlayer = whitePlayer;
+        }
+        for(int x =0; x< activePlayer.activePieces.Count; x++)                  // if pieces other than king have available moves, return 
+        {                                                                       // false, stalemate condition not satisfied
+            if (activePlayer.activePieces[x] != currentKing)
+            {
+                activePlayer.activePieces[x].PossibleMoves();
+                if (activePlayer.activePieces[x].availableMoves.Count != 0)
+                {
+                    return false;
+                }
+            }
+        }
+        for(int i =0; i < otherPlayer.activePieces.Count; i++)                  // if any move of King is available (without running into check condition)
+        {
+            
+            Piece piece = otherPlayer.activePieces[i];
+            piece.PossibleMoves();
+            currentKing.PossibleMoves();
+            for (int j = 0; j < currentKing.availableMoves.Count; j++)     
+            {
+                bool notOccupied = true;
+                for (int k = 0; k < piece.availableMoves.Count; k++)
+                {
+                    if (currentKing.availableMoves[j] == piece.availableMoves[k])
+                    {
+                        notOccupied = false;
+                    }
+                }
+                if (notOccupied) return false;
+            }
+            
+        }
+        return true;
+    }
+
     public bool isGameOver() {
+        if (checkStaleMate())
+        {
+            Debug.Log("Stalemate");
+            Debug.Log("Draw");
+            return true;
+        }
         foreach (Piece p in activePlayer.activePieces)
         {
             p.PossibleMoves();
             p.removeMovesLeavingKingInCheck();
-            if (p.avaliableMoves.Count != 0) {
+            if (p.availableMoves.Count != 0) {
                 return false;
             }
         }
         if (activePlayer.kingInCheck) {
             Debug.Log("Checkmate");
-        } else {
-            Debug.Log("Stalemate");
-        }
+        } 
         return true;
     }
 
+    public bool checkmate()
+    {
+        foreach (Piece p in activePlayer.activePieces)
+        {
+            p.PossibleMoves();
+            p.removeMovesLeavingKingInCheck();
+            if (p.avaliableMoves.Count != 0)
+            {
+                return false;
+            }
+        }
+        if (activePlayer.kingInCheck)
+        {
+            return true;
+        }
+        else return false;
+    }
 }
