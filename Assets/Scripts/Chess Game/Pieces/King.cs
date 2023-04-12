@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class King : Piece
 {
-    public override List<Vector2Int> SelectAvaliableSquares()
+    public override List<Vector2Int> SelectAvailableSquares()
     {
         throw new NotImplementedException();
     }
@@ -86,6 +86,7 @@ public class King : Piece
             {
                 for (int j = 0; j < 8; j++)
                 {
+
                     Vector2Int square = new Vector2Int(i, j); // this is to go through all the squares checking which are safe to move to
                     Piece pieceCheck = board.getPiece(square);
                     if (squareIsMoveable(square) && canMoveThere(square) && square != this.occupiedSquare) // this should be implemented when the obj is picked up to highlight the possible squares. 

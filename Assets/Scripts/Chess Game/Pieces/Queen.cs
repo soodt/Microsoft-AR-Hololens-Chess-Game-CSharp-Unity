@@ -17,7 +17,7 @@ public class Queen : Piece
         new Vector2Int(-1,0),
         new Vector2Int(0,-1),
     };
-    public override List<Vector2Int> SelectAvaliableSquares()
+    public override List<Vector2Int> SelectAvailableSquares()
     {
         throw new System.NotImplementedException();
     }

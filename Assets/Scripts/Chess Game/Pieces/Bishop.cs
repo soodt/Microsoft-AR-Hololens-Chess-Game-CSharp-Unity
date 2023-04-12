@@ -23,7 +23,7 @@ public class Bishop : Piece
         onGrabStarted.Invoke();
     }
     */
-    public override List<Vector2Int> SelectAvaliableSquares()
+    public override List<Vector2Int> SelectAvailableSquares()
     {
         throw new NotImplementedException();
     }
