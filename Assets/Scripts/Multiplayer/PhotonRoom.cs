@@ -5,6 +5,7 @@ using UnityEngine.UIElements;
 
 namespace ChessRoom
 {
+    // Modified file from MRTK.Tutorials.MultiUserCapabilities.
     public class PhotonRoom : MonoBehaviourPunCallbacks, IInRoomCallbacks
     {
         public static PhotonRoom Room;
