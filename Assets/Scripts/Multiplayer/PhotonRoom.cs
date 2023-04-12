@@ -63,6 +63,10 @@ namespace ChessRoom
             if (PhotonNetwork.PrefabPool is DefaultPool pool)
             {
                 if (photonUserPrefab != null) pool.ResourceCache.Add(photonUserPrefab.name, photonUserPrefab);
+                foreach (GameObject prefab in gameMaster.GetComponent<PieceCreator>().GetPrefabs())
+                {
+                    pool.ResourceCache.Add(prefab.name, prefab);
+                }
             }
         }
 
@@ -82,14 +86,6 @@ namespace ChessRoom
 
         private void StartGame()
         {
-            DefaultPool pool = PhotonNetwork.PrefabPool as DefaultPool;
-            if (pool != null && gameMaster.GetComponent<PieceCreator>().GetPrefabs() != null)
-            {
-                foreach (GameObject prefab in gameMaster.GetComponent<PieceCreator>().GetPrefabs())
-                {
-                    pool.ResourceCache.Add(prefab.name, prefab);
-                }
-            }
             gameMaster.GetComponent<ChessGameController>().StartNewGame();
         }
 
