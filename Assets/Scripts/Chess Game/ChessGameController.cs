@@ -25,7 +25,7 @@ public class ChessGameController : MonoBehaviour
     private Piece whiteKing;
     private Piece checkedKing;
     public Piece currentKing;
-    public bool isSinglePlayer = true; //triggers on and off single player mode
+    public bool isSinglePlayer = false; //triggers on and off single player mode
     public ChessPlayer whitePlayer{get; set;}
     public ChessPlayer blackPlayer{get; set;}
     private ChessPlayer activePlayer{get; set;}    
@@ -358,7 +358,7 @@ public class ChessGameController : MonoBehaviour
         {
             p.PossibleMoves();
             p.removeMovesLeavingKingInCheck();
-            if (p.avaliableMoves.Count != 0)
+            if (p.availableMoves.Count != 0)
             {
                 return false;
             }

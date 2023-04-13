@@ -19,9 +19,9 @@ public class SinglePlayer
             if (piece != null)
             {
                 piece.PossibleMoves();
-                for (int z = 0; z < piece.avaliableMoves.Count; z++)
+                for (int z = 0; z < piece.availableMoves.Count; z++)
                 {
-                    if (piece.avaliableMoves[z] == convertNotationToVector(notationChars))
+                    if (piece.availableMoves[z] == convertNotationToVector(notationChars))
                     {
                         piece.MovePiece(convertNotationToVector(notationChars));
                     }
