@@ -104,6 +104,7 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler, IPunOb
 		this.controller = c;
 		this.typeName = type;
 		transform.position = board.CalculatePositionFromCoords(coords);
+		//Debug.Log(controller);
 	}
 
     public void OnPointerDown(MixedRealityPointerEventData eventData)

@@ -42,13 +42,14 @@ public class ChessGameController : MonoBehaviour
     private void StartNewGame()
     {
         CreatePiecesFromLayout(startingBoardLayout);
+        board.SetDependencies(this);
         activePlayer = whitePlayer;
     }
 
     public void StartNetworkGame()
     {
         NetworkCreatePieces(startingBoardLayout);
-        activePlayer = whitePlayer;
+        
     }
 
     public ChessPlayer getActivePlayer() {
@@ -86,6 +87,7 @@ public class ChessGameController : MonoBehaviour
     public void NetworkInitialisePieces(int layoutIndex, GameObject chessPiece)
     {
         board.SetDependencies(this);
+        activePlayer = whitePlayer;
 
         Piece piece = chessPiece.GetComponent<Piece>();
         TeamColor team = startingBoardLayout.GetSquareTeamColorAtIndex(layoutIndex);
@@ -96,9 +98,12 @@ public class ChessGameController : MonoBehaviour
 
         piece.SetData(squareCoords, team, board, this, typeName);
 
-        activePieces[layoutIndex] = piece;
+        //Debug.Log(piece.controller);
 
         assignTeam(piece, team);
+
+        activePieces[layoutIndex] = piece;
+
     }
 
     private void CreatePiecesFromLayout(BoardLayout layout)
