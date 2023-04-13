@@ -11,7 +11,9 @@ namespace ChessRoom
         public static PhotonRoom Room;
 
         [SerializeField] private GameObject gameMaster;
-        [SerializeField] private GameObject photonUserPrefab;
+        [SerializeField] private GameObject playerWhite;
+        [SerializeField] private GameObject playerBlack;
+        [SerializeField] private GameObject spectator;
 
         // private PhotonView pv;
         private Player[] photonPlayers;
@@ -63,7 +65,9 @@ namespace ChessRoom
             // Allow prefabs not in a Resources folder
             if (PhotonNetwork.PrefabPool is DefaultPool pool)
             {
-                if (photonUserPrefab != null) pool.ResourceCache.Add(photonUserPrefab.name, photonUserPrefab);
+                if (playerWhite != null) pool.ResourceCache.Add(playerWhite.name, playerWhite);
+                if (playerBlack != null) pool.ResourceCache.Add(playerBlack.name, playerBlack);
+                if (spectator != null) pool.ResourceCache.Add(spectator.name, spectator);
                 foreach (GameObject prefab in gameMaster.GetComponent<PieceCreator>().GetPrefabs())
                 {
                     //Vector3 scaleChange = new Vector3(-0.9f, -0.9f, -0.9f);
@@ -94,7 +98,16 @@ namespace ChessRoom
 
         private void CreatePlayer()
         {
-            var player = PhotonNetwork.Instantiate(photonUserPrefab.name, Vector3.zero, Quaternion.identity);
+            if (playersInRoom == 1)
+            {
+                PhotonNetwork.Instantiate(playerWhite.name, Vector3.zero, Quaternion.identity);
+            }
+            if (playersInRoom == 2)
+            {
+                PhotonNetwork.Instantiate(playerBlack.name, Vector3.zero, Quaternion.identity);
+            }
+            else PhotonNetwork.Instantiate(spectator.name, Vector3.zero, Quaternion.identity);
+
         }
 
         /**
