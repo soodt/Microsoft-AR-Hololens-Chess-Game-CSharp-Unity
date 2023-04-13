@@ -4,10 +4,17 @@
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
+        "Microsoft.MixedReality.Toolkit",
+        "Microsoft.MixedReality.Toolkit.UI",
+        "Microsoft.MixedReality.Toolkit.Input",
+        "Microsoft.MixedReality.Toolkit.Utilities",
+        "UnityEngine.InputSystem.XR",
         "Scripts"
     ],
     "includePlatforms": [],
-    "excludePlatforms": [],
+    "excludePlatforms": [
+        "WSA"
+    ],
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [
