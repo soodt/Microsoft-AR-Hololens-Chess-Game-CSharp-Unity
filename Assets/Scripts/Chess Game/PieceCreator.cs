@@ -41,12 +41,14 @@ public class PieceCreator : MonoBehaviour
         return piecesPrefabs;
     }
 
-    public GameObject CreateNetworkPiece(Type type)
+    public GameObject CreateNetworkPiece(Type type, int layoutIndex)
     {
         GameObject prefab = nameToPieceDict[type.ToString()];
         if (prefab)
         {
-            GameObject newPiece = PhotonNetwork.Instantiate(prefab.name, new Vector3(0f, 0f, 0f), prefab.transform.rotation);
+            object[] InstantiationData = new object[1];
+            InstantiationData[0] = layoutIndex;
+            GameObject newPiece = PhotonNetwork.Instantiate(prefab.name, new Vector3(0f, 0f, 0f), prefab.transform.rotation, 0, InstantiationData);
             //Vector3 scaleChange = new Vector3(-0.9f, -0.9f, -0.9f);
             //newPiece.transform.localScale += scaleChange;
             return newPiece;

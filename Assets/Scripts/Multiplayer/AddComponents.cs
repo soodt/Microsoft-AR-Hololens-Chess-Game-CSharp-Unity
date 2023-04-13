@@ -7,60 +7,64 @@ using Microsoft.MixedReality.Toolkit.UI;
 
 public class AddComponents : MonoBehaviour, IPunInstantiateMagicCallback
 {
-    // Start is called before the first frame update
-    void Start()
+    private PhotonView photonView;
+    private GameObject gameMaster;
+
+    public void Start()
     {
+        photonView = this.gameObject.GetComponent<PhotonView>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-
-    
     public void OnPhotonInstantiate(PhotonMessageInfo info)
     {
-        if (this.gameObject.GetComponent<BoxCollider>() != null) return;
-        //make each piece interactable with AR
-        this.gameObject.AddComponent<BoxCollider>();
-        this.gameObject.AddComponent<NearInteractionGrabbable>();
-        this.gameObject.AddComponent<ObjectManipulator>();
-        //make each piece have the board anchor as parent.
-        this.gameObject.AddComponent<BoardAnchorAsParent>();
+        gameMaster = GameObject.Find("GameMaster");
+        object[] data = info.photonView.InstantiationData;
+        int layoutIndex = (int)data[0];
+        //Debug.Log(layoutIndex.ToString());
+        //Debug.Log(gameMaster.ToString());
+        gameMaster.GetComponent<ChessGameController>().NetworkInitialisePieces(layoutIndex, this.gameObject);
+        /**
+            if (this.gameObject.GetComponent<BoxCollider>() != null) return;
+            //make each piece interactable with AR
+            this.gameObject.AddComponent<BoxCollider>();
+            this.gameObject.AddComponent<NearInteractionGrabbable>();
+            this.gameObject.AddComponent<ObjectManipulator>();
+            //make each piece have the board anchor as parent.
+            this.gameObject.AddComponent<BoardAnchorAsParent>();
 
-        
-        // add snapping to each piece
-        this.GetComponent<ObjectManipulator>().OnManipulationEnded.AddListener(delegate
-        {
-            float distance = this.gameObject.GetComponent<Board>().squareSize * 4;
-            Vector2Int newCoords = new Vector2Int(-1, -1);
-            for (int i = 0; i < 8; i++)
+            
+            // add snapping to each piece
+            this.GetComponent<ObjectManipulator>().OnManipulationEnded.AddListener(delegate
             {
-                
-                for (int j = 0; j < 8; j++)
+                float distance = this.gameObject.GetComponent<Board>().squareSize * 4;
+                Vector2Int newCoords = new Vector2Int(-1, -1);
+                for (int i = 0; i < 8; i++)
                 {
-                    Vector2Int nextSquare = new Vector2Int(i, j);
-                    float newDistance = Vector3.Distance(this.transform.position, this.gameObject.GetComponent<Board>().CalculatePositionFromCoords(nextSquare));
-                    if (newDistance < distance)
+                    
+                    for (int j = 0; j < 8; j++)
                     {
-                        distance = newDistance;
-                        newCoords.Set(i, j);
+                        Vector2Int nextSquare = new Vector2Int(i, j);
+                        float newDistance = Vector3.Distance(this.transform.position, this.gameObject.GetComponent<Board>().CalculatePositionFromCoords(nextSquare));
+                        if (newDistance < distance)
+                        {
+                            distance = newDistance;
+                            newCoords.Set(i, j);
+                        }
                     }
                 }
+                if (distance < this.gameObject.GetComponent<Board>().squareSize * 1.5)
+                {
+                    this.gameObject.GetComponent<Piece>().MovePiece(newCoords);
+                }
+                else
+                {
+                    this.gameObject.GetComponent<Piece>().MovePiece(this.gameObject.GetComponent<Piece>().occupiedSquare);
+                }
             }
-            if (distance < this.gameObject.GetComponent<Board>().squareSize * 1.5)
-            {
-                this.gameObject.GetComponent<Piece>().MovePiece(newCoords);
-            }
-            else
-            {
-                this.gameObject.GetComponent<Piece>().MovePiece(this.gameObject.GetComponent<Piece>().occupiedSquare);
-            }
-        }
-        );
-        
+            );
+        */
+
     }
+   
     
 }

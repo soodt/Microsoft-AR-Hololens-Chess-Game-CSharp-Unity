@@ -89,7 +89,7 @@ namespace ChessRoom
 
         private void StartGame()
         {
-            gameMaster.GetComponent<ChessGameController>().StartNewGame();
+            gameMaster.GetComponent<ChessGameController>().StartNetworkGame();
         }
 
 

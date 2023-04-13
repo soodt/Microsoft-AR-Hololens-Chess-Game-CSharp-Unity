@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Microsoft.MixedReality.Toolkit.Input;
 using Microsoft.MixedReality.Toolkit.UI;
+using Photon.Pun;
 
 [RequireComponent(typeof(PieceCreator))]
 public class ChessGameController : MonoBehaviour
@@ -12,7 +13,6 @@ public class ChessGameController : MonoBehaviour
     [SerializeField] private Board board;
     private PieceCreator pieceCreator;
     public Piece[] activePieces = new Piece[32];
-    
 
     private Piece blackKing;
     private Piece whiteKing;
@@ -39,9 +39,16 @@ public class ChessGameController : MonoBehaviour
         //StartNewGame();
     }
 
-    public void StartNewGame()
+    private void StartNewGame()
     {
         CreatePiecesFromLayout(startingBoardLayout);
+        board.SetDependencies(this);
+        activePlayer = whitePlayer;
+    }
+
+    public void StartNetworkGame()
+    {
+        NetworkCreatePieces(startingBoardLayout);
         board.SetDependencies(this);
         activePlayer = whitePlayer;
     }
@@ -64,6 +71,33 @@ public class ChessGameController : MonoBehaviour
         blackPlayer = new ChessPlayer(TeamColor.Black, board);
     }
 
+    private void NetworkCreatePieces(BoardLayout layout)
+    {
+        Debug.Log(layout.GetPiecesCount().ToString());
+        for (int i = 0; i < layout.GetPiecesCount(); i++)
+        {
+            string typeName = layout.GetSquarePieceNameAtIndex(i);
+            //Debug.Log(i.ToString() + " = " + typeName);
+            Type type = Type.GetType(typeName);
+            Piece newPiece = pieceCreator.CreateNetworkPiece(type, i).GetComponent<Piece>();
+            initailzeActivePieces(newPiece);
+        }
+
+    }
+
+    public void NetworkInitialisePieces(int layoutIndex, GameObject chessPiece)
+    {
+        Piece piece = chessPiece.GetComponent<Piece>();
+        TeamColor team = startingBoardLayout.GetSquareTeamColorAtIndex(layoutIndex);
+        Vector2Int squareCoords = startingBoardLayout.GetSquareCoordsAtIndex(layoutIndex);
+        string typeName = startingBoardLayout.GetSquarePieceNameAtIndex(layoutIndex);
+
+        piece.SetData(squareCoords, team, board, this, typeName);
+
+        piece.gameObject.AddComponent<BoxCollider>();
+
+        activePieces[layoutIndex] = piece;
+    }
 
     private void CreatePiecesFromLayout(BoardLayout layout)
     {
@@ -72,6 +106,7 @@ public class ChessGameController : MonoBehaviour
             Vector2Int squareCoords = layout.GetSquareCoordsAtIndex(i);
             TeamColor team = layout.GetSquareTeamColorAtIndex(i);
             string typeName = layout.GetSquarePieceNameAtIndex(i);
+            
 
             Type type = Type.GetType(typeName);
             CreatePieceAndInitialize(squareCoords, team, type);
@@ -80,8 +115,7 @@ public class ChessGameController : MonoBehaviour
 
     private void CreatePieceAndInitialize(Vector2Int squareCoords, TeamColor team, Type type)
     {
-        Piece newPiece = pieceCreator.CreateNetworkPiece(type).GetComponent<Piece>();
-        //Piece newPiece = pieceCreator.CreatePiece(type).GetComponent<Piece>();
+        Piece newPiece = pieceCreator.CreatePiece(type).GetComponent<Piece>();
         //make each piece interactable with AR
         newPiece.gameObject.AddComponent<BoxCollider>();
         newPiece.gameObject.AddComponent<NearInteractionGrabbable>();
@@ -140,6 +174,7 @@ public class ChessGameController : MonoBehaviour
         {
             if (this.activePieces[i] == null)
                 {
+                    Debug.Log("Pieces have been set.");
                     this.activePieces[i] = piece;
                     break;
                 }
