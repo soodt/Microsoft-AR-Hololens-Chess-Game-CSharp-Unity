@@ -10,6 +10,7 @@ public class ChessPlayer
     public List<Piece> takenPieces { get; private set; } // pieces the player has taken from other team
 
 	public bool kingInCheck{get;set;}
+	
 
 	public ChessPlayer(TeamColor team, Board board)
 	{

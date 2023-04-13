@@ -75,6 +75,19 @@ public class Pawn : Piece, IMixedRealityPointerHandler
         }
     }
 
+    public void queening()
+    {
+        if (this.occupiedSquare.y == 7 || this.occupiedSquare.y == 0)
+        {
+            Debug.Log("Queening");
+            //Debug.Log("" + pQueenName);
+            Type type = Type.GetType("Queen");
+            controller.CreatePieceAndInitialize(this.occupiedSquare, this.team, type);
+            Destroy(this.gameObject);
+        }
+        return;
+    }
+
     public override bool isAttackingSquare(Vector2Int coords) {
         return canPawnTake(coords);
     }
@@ -98,6 +111,8 @@ public class Pawn : Piece, IMixedRealityPointerHandler
                 }
                 this.occupiedSquare = coords;
                 transform.position = this.board.CalculatePositionFromCoords(coords);
+                this.hasMoved = true;
+                queening();
                 controller.endTurn();
             } else if (canPawnTake(coords)){
                 capture = true;
@@ -105,6 +120,8 @@ public class Pawn : Piece, IMixedRealityPointerHandler
                 board.takePiece(this, coords);
                 this.occupiedSquare = coords;
                 transform.position = this.board.CalculatePositionFromCoords(coords);
+                this.hasMoved = true;
+                queening();
                 controller.endTurn();
             } else if (canTakeEnPassant(coords)) {
                 enPassant= true;
@@ -118,6 +135,8 @@ public class Pawn : Piece, IMixedRealityPointerHandler
                 }
                 this.occupiedSquare = coords;
                 transform.position = this.board.CalculatePositionFromCoords(coords);
+                this.hasMoved = true;
+                queening();
                 controller.endTurn();
             }
             {
@@ -215,7 +234,7 @@ public class Pawn : Piece, IMixedRealityPointerHandler
     public void OnPointerDown(MixedRealityPointerEventData eventData)
     {
         PossibleMoves();
-        board.HightlightTiles(avaliableMoves);
+        board.HightlightTiles(availableMoves);
         Debug.Log("Down"); ;
     }
 
@@ -226,8 +245,8 @@ public class Pawn : Piece, IMixedRealityPointerHandler
 
     public void OnPointerUp(MixedRealityPointerEventData eventData)
     {
-        avaliableMoves.Clear();
-        board.HightlightTiles(avaliableMoves);
+        availableMoves.Clear();
+        board.HightlightTiles(availableMoves);
         Debug.Log("up");
     }
 
