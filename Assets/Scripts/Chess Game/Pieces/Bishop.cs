@@ -77,7 +77,7 @@ public class Bishop : Piece
     {
         if (!taken)
         {
-            if (this.getTeam() == controller.getActivePlayer().getTeam() && this.avaliableMoves.Contains(coords))
+            if (this.getTeam() == controller.getActivePlayer().getTeam() && this.availableMoves.Contains(coords))
             {
                 Vector2Int displacement = coords - this.occupiedSquare;
                 bool capture = false;
@@ -115,7 +115,7 @@ public class Bishop : Piece
 
     public override void PossibleMoves()
     {
-        avaliableMoves.Clear();
+        availableMoves.Clear();
         if (!taken)
         {
             for (int i = 0; i < 8; i++)
@@ -126,7 +126,7 @@ public class Bishop : Piece
                     Vector2Int displacementToSquare = square - this.occupiedSquare; // this is to go through all the squares checking which are safe to move to
                     if (square != this.occupiedSquare && squareIsMoveable(displacementToSquare) && canMoveThere(square)) // this should be implemented when the obj is picked up to highlight the possible squares. 
                     {
-                        avaliableMoves.Add(square);
+                        availableMoves.Add(square);
                     }
                 }
             }

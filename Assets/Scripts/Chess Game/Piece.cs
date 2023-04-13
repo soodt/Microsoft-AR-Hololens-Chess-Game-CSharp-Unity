@@ -23,7 +23,7 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
 	public Vector3 finalCoords; // specify the pos of the piece after being taken
 	public ChessGameController controller {get; set;}
 	public TurnIndicator turnIndicator { get; set;}
-	public abstract List<Vector2Int> SelectAvaliableSquares();
+	public abstract List<Vector2Int> SelectAvailableSquares();
 	public abstract bool isAttackingSquare(Vector2Int coords);
 	public String typeName {get; set;}
     public abstract bool hasMovedTwoSquares();
@@ -84,7 +84,7 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
 
 		if (!taken)
 		{
-			avaliableMoves.Add(coords);
+			availableMoves.Add(coords);
 		}
 	}
 
