@@ -45,7 +45,7 @@ public class ChessGameController : MonoBehaviour
         board.SetDependencies(this);
         activePlayer = whitePlayer;
         turnIndicator.SetDependencies(this);
-        AudioManager.instance.Play("start");
+        //AudioManager.instance.Play("start");
     }
 
     public ChessPlayer getActivePlayer() {
