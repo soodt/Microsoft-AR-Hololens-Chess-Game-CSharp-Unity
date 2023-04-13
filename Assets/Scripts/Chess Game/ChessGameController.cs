@@ -265,7 +265,7 @@ public class ChessGameController : MonoBehaviour, IPunObservable
 
     private void NetworkUpdatePlayer(string activePlayerString)
     {
-        if (activePlayerString == whitePlayer.ToString())
+        if (activePlayerString.Equals("whitePlayer"))
         {
             activePlayer = whitePlayer;
         }
@@ -327,13 +327,13 @@ public class ChessGameController : MonoBehaviour, IPunObservable
         if (stream.IsWriting)
         {
             stream.SendNext(getActivePlayerString());
-            Debug.Log("Sending activePlayer = " + getActivePlayerString());
+            //Debug.Log("Sending activePlayer = " + getActivePlayerString());
         }
         else if (stream.IsReading)
         {
-            Debug.Log("Current activePlayer = " + getActivePlayerString());
+            //Debug.Log("Current activePlayer = " + getActivePlayerString());
             NetworkUpdatePlayer((string)stream.ReceiveNext());
-            Debug.Log("Updated activePlayer = " + getActivePlayerString());
+            //Debug.Log("Updated activePlayer = " + getActivePlayerString());
         }
     }
 }

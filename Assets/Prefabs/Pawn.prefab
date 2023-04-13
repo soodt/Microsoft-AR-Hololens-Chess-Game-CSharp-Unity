@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: -526830983355888460}
   - component: {fileID: -8776680898280789149}
   - component: {fileID: 8606546048687534571}
+  - component: {fileID: 5730251507288923270}
   m_Layer: 0
   m_Name: Pawn
   m_TagString: Untagged
@@ -145,9 +146,8 @@ MonoBehaviour:
   prefixField: -1
   Synchronization: 3
   OwnershipTransfer: 0
-  observableSearch: 2
+  observableSearch: 0
   ObservedComponents:
-  - {fileID: -716862206126040696}
   - {fileID: -8776680898280789149}
   sceneViewId: 0
   InstantiationId: 0
@@ -180,3 +180,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 833f466b726a51e4bbc3c4de8a2f8665, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5730251507288923270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 104878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 0
+  ObservedComponents:
+  - {fileID: -716862206126040696}
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0

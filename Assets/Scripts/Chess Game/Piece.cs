@@ -135,7 +135,20 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler, IPunOb
     }
 
 	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    {
+	{
+		if (stream.IsWriting)
+		{
+			stream.SendNext(occupiedSquare.x);
+			stream.SendNext(occupiedSquare.y);
+			//Debug.Log(occupiedSquare.x);
+			//Debug.Log(this + " moved to " + occupiedSquare.x + ", " + occupiedSquare.y);
+		}
+		else if (stream.IsReading)
+		{
 
-    }
+			occupiedSquare = new Vector2Int((int)stream.ReceiveNext(), (int)stream.ReceiveNext());
+
+			//occupiedSquare = new Vector2Int((int)x, (int)y);
+		}
+	}
 }
