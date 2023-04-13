@@ -6,6 +6,9 @@ using Microsoft.MixedReality.Toolkit.Input;
 using Microsoft.MixedReality.Toolkit.UI;
 using TMPro;
 using UnityEngine.InputSystem.XR;
+using System.Data;
+using Unity.VisualScripting;
+using Microsoft.MixedReality.Toolkit.Utilities;
 
 [RequireComponent(typeof(PieceCreator))]
 public class ChessGameController : MonoBehaviour
@@ -25,7 +28,8 @@ public class ChessGameController : MonoBehaviour
     private Piece whiteKing;
     private Piece checkedKing;
     public Piece currentKing;
-    public bool isSinglePlayer = false; //triggers on and off single player mode
+
+    public bool isSinglePlayer; //triggers on and off single player mode
     public ChessPlayer whitePlayer{get; set;}
     public ChessPlayer blackPlayer{get; set;}
     private ChessPlayer activePlayer{get; set;}    
@@ -54,6 +58,7 @@ public class ChessGameController : MonoBehaviour
         activePlayer = whitePlayer;
         turnIndicator.SetDependencies(this);
         ai = new SinglePlayer();
+        isSinglePlayer = false;
     }
 
     public ChessPlayer getActivePlayer() {
@@ -96,6 +101,8 @@ public class ChessGameController : MonoBehaviour
         newPiece.gameObject.AddComponent<BoxCollider>();
         newPiece.gameObject.AddComponent<NearInteractionGrabbable>();
         newPiece.gameObject.AddComponent<ObjectManipulator>();
+        newPiece.gameObject.AddComponent<FixedRotationToWorldConstraint>();
+
 
         // add snapping to each piece
         newPiece.GetComponent<ObjectManipulator>().OnManipulationEnded.AddListener ( delegate 
@@ -184,7 +191,7 @@ public class ChessGameController : MonoBehaviour
                 }
             }
             turnIndicator.ColourTeam();
-            if (isSinglePlayer) // if true allows single player moves to take place. AI is always blackPlayer
+            if (isSinglePlayer == true) // if true allows single player moves to take place. AI is always blackPlayer
             {
                 ai.getComputerMove("h6", activePieces);
             }
@@ -214,7 +221,7 @@ public class ChessGameController : MonoBehaviour
         } else {
             //Debug.Log("Black");
         }
-        /*
+        
         if(activePlayer.kingInCheck == true)
         {
             checkedKing.SetMaterial(red);
@@ -224,7 +231,7 @@ public class ChessGameController : MonoBehaviour
             Material teamMaterial = pieceCreator.GetTeamMaterial(activePlayer.team);
             checkedKing.SetMaterial(teamMaterial);
         }
-        */
+        
     }
     public void ChangeTeam() // to make cleaner
     {
