@@ -5,12 +5,13 @@ using System.Linq;
 using UnityEngine;
 using Microsoft.MixedReality.Toolkit.Input;
 using Microsoft.MixedReality.Toolkit.UI;
+using Photon.Pun;
 
 [RequireComponent(typeof(MaterialSetter))]
 [RequireComponent(typeof(IObjectTweener))]
 
 
-public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
+public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler, IPunObservable
 {
 	[SerializeField] private MaterialSetter materialSetter;
 	public Board board { protected get; set; }
@@ -130,5 +131,10 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
     public void OnPointerClicked(MixedRealityPointerEventData eventData)
     {
       //  Debug.Log("click");
+    }
+
+	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+
     }
 }

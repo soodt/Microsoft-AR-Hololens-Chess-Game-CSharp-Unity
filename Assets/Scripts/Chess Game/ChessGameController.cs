@@ -42,14 +42,12 @@ public class ChessGameController : MonoBehaviour
     private void StartNewGame()
     {
         CreatePiecesFromLayout(startingBoardLayout);
-        board.SetDependencies(this);
         activePlayer = whitePlayer;
     }
 
     public void StartNetworkGame()
     {
         NetworkCreatePieces(startingBoardLayout);
-        board.SetDependencies(this);
         activePlayer = whitePlayer;
     }
 
@@ -87,6 +85,8 @@ public class ChessGameController : MonoBehaviour
 
     public void NetworkInitialisePieces(int layoutIndex, GameObject chessPiece)
     {
+        board.SetDependencies(this);
+
         Piece piece = chessPiece.GetComponent<Piece>();
         TeamColor team = startingBoardLayout.GetSquareTeamColorAtIndex(layoutIndex);
         Vector2Int squareCoords = startingBoardLayout.GetSquareCoordsAtIndex(layoutIndex);
