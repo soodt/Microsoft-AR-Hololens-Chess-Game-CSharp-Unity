@@ -56,6 +56,15 @@ public class ChessGameController : MonoBehaviour, IPunObservable
         return activePlayer;
     }
 
+    public String getActivePlayerString()
+    {
+        if (activePlayer == whitePlayer)
+        {
+            return "whitePlayer";
+        }
+        else return "blackPlayer";
+    }
+
     public ChessPlayer getBlackPlayer() {
         return blackPlayer;
     }
@@ -317,11 +326,14 @@ public class ChessGameController : MonoBehaviour, IPunObservable
     {
         if (stream.IsWriting)
         {
-            stream.SendNext(getActivePlayer().ToString());
+            stream.SendNext(getActivePlayerString());
+            Debug.Log("Sending activePlayer = " + getActivePlayerString());
         }
         else if (stream.IsReading)
         {
+            Debug.Log("Current activePlayer = " + getActivePlayerString());
             NetworkUpdatePlayer((string)stream.ReceiveNext());
+            Debug.Log("Updated activePlayer = " + getActivePlayerString());
         }
     }
 }
