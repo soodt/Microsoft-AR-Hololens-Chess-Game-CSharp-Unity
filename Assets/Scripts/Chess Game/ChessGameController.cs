@@ -92,11 +92,13 @@ public class ChessGameController : MonoBehaviour
         Vector2Int squareCoords = startingBoardLayout.GetSquareCoordsAtIndex(layoutIndex);
         string typeName = startingBoardLayout.GetSquarePieceNameAtIndex(layoutIndex);
 
+        InsertComponents(piece);
+
         piece.SetData(squareCoords, team, board, this, typeName);
 
-        piece.gameObject.AddComponent<BoxCollider>();
-
         activePieces[layoutIndex] = piece;
+
+        assignTeam(piece, team);
     }
 
     private void CreatePiecesFromLayout(BoardLayout layout)
@@ -113,9 +115,22 @@ public class ChessGameController : MonoBehaviour
         }
     }
 
+
     private void CreatePieceAndInitialize(Vector2Int squareCoords, TeamColor team, Type type)
     {
         Piece newPiece = pieceCreator.CreatePiece(type).GetComponent<Piece>();
+
+        InsertComponents(newPiece);
+
+        newPiece.SetData(squareCoords, team, board, this, type.ToString());
+
+        initailzeActivePieces(newPiece);
+
+        assignTeam(newPiece, team);
+    }
+
+    private void InsertComponents(Piece newPiece)
+    {
         //make each piece interactable with AR
         newPiece.gameObject.AddComponent<BoxCollider>();
         newPiece.gameObject.AddComponent<NearInteractionGrabbable>();
@@ -124,38 +139,43 @@ public class ChessGameController : MonoBehaviour
         newPiece.gameObject.AddComponent<BoardAnchorAsParent>();
 
         // add snapping to each piece
-        newPiece.GetComponent<ObjectManipulator>().OnManipulationEnded.AddListener ( delegate 
-            { 
-                float distance = board.squareSize*4;
-                Vector2Int newCoords = new Vector2Int(-1, -1);
-                for (int i = 0; i<8; i++)
+        newPiece.GetComponent<ObjectManipulator>().OnManipulationEnded.AddListener(delegate
+        {
+            float distance = board.squareSize * 4;
+            Vector2Int newCoords = new Vector2Int(-1, -1);
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
                 {
-                    for (int j = 0; j<8; j++)
+                    Vector2Int nextSquare = new Vector2Int(i, j);
+                    float newDistance = Vector3.Distance(newPiece.transform.position, board.CalculatePositionFromCoords(nextSquare));
+                    if (newDistance < distance)
                     {
-                        Vector2Int nextSquare = new Vector2Int(i, j);
-                        float newDistance = Vector3.Distance (newPiece.transform.position, board.CalculatePositionFromCoords(nextSquare));
-                        if (newDistance < distance)
-                        {
-                            distance = newDistance;
-                            newCoords.Set(i,j);
-                        }
+                        distance = newDistance;
+                        newCoords.Set(i, j);
                     }
                 }
-                if (distance < board.squareSize*1.5)
-                {
-                    newPiece.MovePiece(newCoords);
-                } else 
-                {
-                    newPiece.MovePiece(newPiece.occupiedSquare);
-                }
             }
+            if (distance < board.squareSize * 1.5)
+            {
+                newPiece.MovePiece(newCoords);
+            }
+            else
+            {
+                newPiece.MovePiece(newPiece.occupiedSquare);
+            }
+        }
         );
-        newPiece.SetData(squareCoords, team, board, this, type.ToString());
-        initailzeActivePieces(newPiece);
+    }
 
-        if (newPiece.getTeam() == TeamColor.White) {
+    private void assignTeam(Piece newPiece, TeamColor team)
+    {
+        if (newPiece.getTeam() == TeamColor.White)
+        {
             whitePlayer.AddPiece(newPiece);
-        } else {
+        }
+        else
+        {
             blackPlayer.AddPiece(newPiece);
         }
 
