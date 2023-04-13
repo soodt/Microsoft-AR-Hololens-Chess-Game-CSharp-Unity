@@ -592,7 +592,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameMaster: {fileID: 119498243}
-  photonUserPrefab: {fileID: 3000569307421430844, guid: 001e4e27c176c9843ad9a44106523377, type: 3}
+  playerWhite: {fileID: 4933671109068926997, guid: 001e4e27c176c9843ad9a44106523377, type: 3}
+  playerBlack: {fileID: 4320171205644179619, guid: 60fbc77cb64919841b125b14413b71c2, type: 3}
+  spectator: {fileID: 8592008364612901931, guid: 89dd95b47bd4c51429dbd5f54785eddb, type: 3}
 --- !u!4 &1735106611 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8502560365771216831, guid: be3ad212ea551a64a89badbca6c92cfd, type: 3}
