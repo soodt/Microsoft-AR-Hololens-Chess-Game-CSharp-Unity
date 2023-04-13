@@ -80,6 +80,7 @@ public class Pawn : Piece, IMixedRealityPointerHandler
     }
     public override void MovePiece(Vector2Int coords)
     {
+        bool hasTaken = false;
         if (!taken)
         {
             if (this.getTeam() == controller.getActivePlayer().getTeam() && this.avaliableMoves.Contains(coords))
@@ -103,6 +104,7 @@ public class Pawn : Piece, IMixedRealityPointerHandler
                 {
                     this.movedTwoSquares = false;
                     board.takePiece(this, coords);
+                    hasTaken = true;
                     this.occupiedSquare = coords;
                     transform.position = this.board.CalculatePositionFromCoords(coords);
                     controller.endTurn();
@@ -113,11 +115,13 @@ public class Pawn : Piece, IMixedRealityPointerHandler
                     {
                         Vector2Int passedSquare = new Vector2Int(coords.x, coords.y - 1);
                         board.takePiece(this, passedSquare);
+                        hasTaken = true;
                     }
                     else
                     {
                         Vector2Int passedSquare = new Vector2Int(coords.x, coords.y + 1);
                         board.takePiece(this, passedSquare);
+                        hasTaken = true;
                     }
                     this.occupiedSquare = coords;
                     transform.position = this.board.CalculatePositionFromCoords(coords);
@@ -137,6 +141,8 @@ public class Pawn : Piece, IMixedRealityPointerHandler
         {
             transform.position = finalCoords;
         }
+        if (!hasTaken)
+            AudioManager.instance.Play("move");
     }
 
 

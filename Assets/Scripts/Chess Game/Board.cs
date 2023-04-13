@@ -44,9 +44,9 @@ public class Board : MonoBehaviour
     }
 
 
-    public void takePiece(Piece itself, Vector2Int coords)
+    public bool takePiece(Piece itself, Vector2Int coords)
     {
-
+        bool isTaken = false;
         Piece pieceTaken = getPiece(coords);
         for (int i = 0; i < 32; i++)
         {
@@ -55,11 +55,13 @@ public class Board : MonoBehaviour
             */
             if ((controller.activePieces[i] != null) && (controller.activePieces[i] == pieceTaken) && (pieceTaken != itself) && (!pieceTaken.IsFromSameTeam(itself)))
             {
+                controller.hasCaptured = true;
                 controller.recordPieceRemoval(pieceTaken);               // adds taken piece to takenPieces list of player who took the piece and removes the taken piece from the activePieces list of the other player
                 controller.activePieces[i] = null;
                 double boardX = this.transform.position.x;
                 double boardY = this.transform.position.y;
                 double boardZ = this.transform.position.z;
+                isTaken = true;
 
                 // Making it so after being taken pieces appear beside the table
                 if (pieceTaken.getTeam() == TeamColor.White)
@@ -98,6 +100,7 @@ public class Board : MonoBehaviour
                 break;
             }
         }
+        return isTaken;
     }
 
     //to highlight the tiles that can be taken

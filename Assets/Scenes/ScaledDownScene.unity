@@ -189,6 +189,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   turnIndicator: {fileID: 704355973}
+  hasCaptured: 0
 --- !u!114 &119498245
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -356,6 +357,41 @@ MonoBehaviour:
   sounds:
   - name: move
     clip: {fileID: 8300000, guid: 9e3d99eba47ca96429aa8b4d93802a23, type: 3}
+    mixer: {fileID: 0}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: capture
+    clip: {fileID: 8300000, guid: aef90f40f325ccb4c832208f0cd4bc08, type: 3}
+    mixer: {fileID: 0}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: start
+    clip: {fileID: 8300000, guid: 9d8c25836f393284abd1773df2d9d9b6, type: 3}
+    mixer: {fileID: 0}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: castle
+    clip: {fileID: 8300000, guid: 9130d84e488413c41ad7e34a4b9aaef3, type: 3}
+    mixer: {fileID: 0}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: check
+    clip: {fileID: 8300000, guid: 330ba9298b008224f912bc65f3e92c4d, type: 3}
+    mixer: {fileID: 0}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: checkmate
+    clip: {fileID: 8300000, guid: 74e9037689f8a4549bb7de6abc5e059f, type: 3}
     mixer: {fileID: 0}
     volume: 1
     pitch: 1

@@ -14,7 +14,7 @@ public class ChessGameController : MonoBehaviour
     private PieceCreator pieceCreator;
     public Piece[] activePieces = new Piece[32];
     public TurnIndicator turnIndicator;
-
+    public bool hasCaptured;
     private Piece blackKing;
     private Piece whiteKing;
     private Piece checkedKing;
@@ -45,6 +45,7 @@ public class ChessGameController : MonoBehaviour
         board.SetDependencies(this);
         activePlayer = whitePlayer;
         turnIndicator.SetDependencies(this);
+        AudioManager.instance.Play("start");
     }
 
     public ChessPlayer getActivePlayer() {
@@ -171,10 +172,21 @@ public class ChessGameController : MonoBehaviour
             activePlayer = whitePlayer;
             turnIndicator.ColourTeam();
         }
-        if(checkCond()) {
+        if (checkCond())
+        {
             Debug.Log("Check");
             activePlayer.kingInCheck = true;
-            isGameOver();
+            bool checkMate = isGameOver();
+            if (!checkMate)
+            {
+                AudioManager.instance.Play("check");
+            }
+            else
+                AudioManager.instance.Play("checkmate");
+        }
+        else if (hasCaptured)
+        {
+            AudioManager.instance.Play("capture");
         }
         // Debug
         if (getActivePlayer() == whitePlayer) {
@@ -182,6 +194,7 @@ public class ChessGameController : MonoBehaviour
         } else {
             Debug.Log("Black");
         }
+        hasCaptured = false;
     }
     public void ChangeTeam() // to make cleaner
     {
@@ -219,6 +232,7 @@ public class ChessGameController : MonoBehaviour
             {
                 if (piece.avaliableMoves[z] == checkedKing.occupiedSquare)
                 {
+
                     return true;
                 }
             }

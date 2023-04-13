@@ -37,6 +37,7 @@ public class Knight : Piece
 
 	public override void MovePiece(Vector2Int coords)
 	{
+		bool hasTaken = false;
 		if (!taken)
 		{
 			Vector2Int displacement = coords - this.occupiedSquare;
@@ -47,10 +48,11 @@ public class Knight : Piece
 				{
 					if (offsets[i] == displacement)
 					{
+						
 						Piece pieceCheck = board.getPiece(coords);
 						if (pieceCheck)
 						{
-							board.takePiece(this, coords);
+							 hasTaken = board.takePiece(this, coords);
 						}
 						this.occupiedSquare = coords;
 						transform.position = this.board.CalculatePositionFromCoords(coords);
@@ -75,6 +77,8 @@ public class Knight : Piece
         {
 			transform.position = finalCoords;
 		}
+		if (!hasTaken)
+			AudioManager.instance.Play("move");
 	}
 
     public override void PossibleMoves()

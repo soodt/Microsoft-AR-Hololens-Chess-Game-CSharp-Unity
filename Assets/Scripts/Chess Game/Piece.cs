@@ -115,7 +115,7 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
     {
 		PossibleMoves();
 		removeMovesLeavingKingInCheck();
-        board.HightlightTiles(avaliableMoves);
+		board.HightlightTiles(avaliableMoves);
 		// Debug.Log("Down"); ;
 	}
 
@@ -130,7 +130,6 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
         avaliableMoves.Clear();
         board.HightlightTiles(avaliableMoves);	// destroys highlights
 		avaliableMoves = new List<Vector2Int>(temp); // resets available moves
-		AudioManager.instance.Play("move");
 
 		// Debug.Log("up");
 	}

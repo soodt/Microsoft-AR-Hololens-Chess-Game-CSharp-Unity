@@ -67,6 +67,8 @@ public class Rook : Piece
 
     public override void MovePiece(Vector2Int coords)
 	{
+        bool hasTaken = false;
+        bool hasCasteled = false;
         if (!taken)
         {
             if (this.getTeam() == controller.getActivePlayer().getTeam() && this.avaliableMoves.Contains(coords))
@@ -77,6 +79,7 @@ public class Rook : Piece
                     if (pieceCheck)
                     {
                         board.takePiece(this, coords);
+                        hasTaken = true;
                     }
                     this.occupiedSquare = coords;
                     transform.position = this.board.CalculatePositionFromCoords(coords);
@@ -92,6 +95,8 @@ public class Rook : Piece
                     if (pieceCheck && pieceCheck.typeName == "King" && pieceCheck.getTeam() == this.getTeam() && canCastle(pieceCheck))
                     {
                         castleMove(pieceCheck);
+                        AudioManager.instance.Play("castle");
+                        hasCasteled = true;
                     }
                     else
                     {
@@ -110,6 +115,8 @@ public class Rook : Piece
         {
             transform.position = finalCoords;
         }
+        if (!hasTaken && !hasCasteled)
+            AudioManager.instance.Play("move");
     }
 
     public override void PossibleMoves()
