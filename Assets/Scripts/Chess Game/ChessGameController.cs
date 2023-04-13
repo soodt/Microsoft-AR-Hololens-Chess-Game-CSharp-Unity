@@ -7,7 +7,7 @@ using Microsoft.MixedReality.Toolkit.UI;
 using Photon.Pun;
 
 [RequireComponent(typeof(PieceCreator))]
-public class ChessGameController : MonoBehaviour
+public class ChessGameController : MonoBehaviour, IPunObservable
 {
     [SerializeField] private BoardLayout startingBoardLayout;
     [SerializeField] private Board board;
@@ -254,6 +254,15 @@ public class ChessGameController : MonoBehaviour
         }
     }
 
+    private void NetworkUpdatePlayer(string activePlayerString)
+    {
+        if (activePlayerString == whitePlayer.ToString())
+        {
+            activePlayer = whitePlayer;
+        }
+        else activePlayer = blackPlayer;
+    }
+
     public bool checkCond()                     // Evaluates check condition return true if checked else false
     {
         ChessPlayer otherPlayer;
@@ -304,4 +313,15 @@ public class ChessGameController : MonoBehaviour
         return true;
     }
 
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            stream.SendNext(getActivePlayer().ToString());
+        }
+        else if (stream.IsReading)
+        {
+            NetworkUpdatePlayer((string)stream.ReceiveNext());
+        }
+    }
 }
