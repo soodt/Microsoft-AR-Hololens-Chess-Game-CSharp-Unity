@@ -23,6 +23,7 @@ public class AddComponents : MonoBehaviour, IPunInstantiateMagicCallback
         //Debug.Log(layoutIndex.ToString());
         //Debug.Log(gameMaster.ToString());
         gameMaster.GetComponent<ChessGameController>().NetworkInitialisePieces(layoutIndex, this.gameObject);
+        this.gameObject.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
         /**
             if (this.gameObject.GetComponent<BoxCollider>() != null) return;
             //make each piece interactable with AR
