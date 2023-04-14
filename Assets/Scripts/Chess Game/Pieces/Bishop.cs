@@ -194,4 +194,5 @@ public class Bishop : Piece
         else if (controller.checkCond()) s += "+";
         return s;
     }
+
 }

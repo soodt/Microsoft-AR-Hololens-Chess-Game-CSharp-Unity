@@ -5,12 +5,14 @@ using System.Linq;
 using UnityEngine;
 using Microsoft.MixedReality.Toolkit.Input;
 using Microsoft.MixedReality.Toolkit.UI;
+using Photon.Pun;
+using Photon.Realtime;
 
 [RequireComponent(typeof(MaterialSetter))]
 [RequireComponent(typeof(IObjectTweener))]
 
 
-public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
+public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler, IPunObservable
 {
 	[SerializeField] private MaterialSetter materialSetter;
 	public Board board { protected get; set; }
@@ -29,11 +31,17 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
     public abstract bool hasMovedTwoSquares();
 
     private void Awake()
+
+	private void Awake()
 	{
+		public PhotonView photonView;
+
 		availableMoves = new List<Vector2Int>();
 		materialSetter = GetComponent<MaterialSetter>();
 		hasMoved = false;
 		turnIndicator = GetComponent<TurnIndicator>();
+
+		photonView = gameObject.GetComponent<PhotonView>();
 	}
 
 	public TeamColor getTeam() {
@@ -130,6 +138,7 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
 		this.controller = c;
 		this.typeName = type;
 		transform.position = board.CalculatePositionFromCoords(coords);
+		//Debug.Log(controller);
 	}
 
     public void OnPointerDown(MixedRealityPointerEventData eventData)
@@ -158,4 +167,33 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler
     {
       //  Debug.Log("click");
     }
+
+	public void AssignPlayerBlack()
+    {
+		if (PhotonNetwork.PlayerList.Length == 2)
+        {
+			photonView.TransferOwnership(PhotonNetwork.PlayerList[1]);
+        }
+    }
+
+	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+	{
+		if (stream.IsWriting)
+		{
+			stream.SendNext(gameObject.transform.position);
+			stream.SendNext(gameObject.transform.rotation);
+			stream.SendNext(occupiedSquare.x);
+			stream.SendNext(occupiedSquare.y);
+			//Debug.Log(occupiedSquare.x);
+			//Debug.Log(this + " moved to " + occupiedSquare.x + ", " + occupiedSquare.y);
+		}
+		else if (stream.IsReading)
+		{
+			gameObject.transform.position = (Vector3)stream.ReceiveNext();
+			gameObject.transform.rotation = (Quaternion)stream.ReceiveNext();
+			occupiedSquare = new Vector2Int((int)stream.ReceiveNext(), (int)stream.ReceiveNext());
+
+			//occupiedSquare = new Vector2Int((int)x, (int)y);
+		}
+	}
 }

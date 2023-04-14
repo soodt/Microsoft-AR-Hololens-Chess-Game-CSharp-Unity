@@ -6,6 +6,8 @@ using Microsoft.MixedReality.Toolkit.Input;
 using Microsoft.MixedReality.Toolkit.UI;
 using TMPro;
 using UnityEngine.InputSystem.XR;
+using Photon.Pun;
+using Photon.Realtime;
 
 [RequireComponent(typeof(PieceCreator))]
 public class ChessGameController : MonoBehaviour
@@ -28,12 +30,17 @@ public class ChessGameController : MonoBehaviour
     public bool isSinglePlayer = false; //triggers on and off single player mode
     public ChessPlayer whitePlayer{get; set;}
     public ChessPlayer blackPlayer{get; set;}
-    private ChessPlayer activePlayer{get; set;}    
+    private ChessPlayer activePlayer{get; set;}
+
+    private PhotonView photonView;
+
 
     private void Awake()
     {
         SetDependencies();
         CreatePlayers();
+        photonView = gameObject.GetComponent<PhotonView>();
+
     }
 
     private void SetDependencies()
@@ -44,7 +51,7 @@ public class ChessGameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartNewGame();
+        //StartNewGame();
     }
 
      private void StartNewGame()
@@ -55,6 +62,22 @@ public class ChessGameController : MonoBehaviour
         turnIndicator.SetDependencies(this);
         ai = new SinglePlayer();
     }
+
+    public void StartNetworkGame()
+    {
+        NetworkCreatePieces(startingBoardLayout);
+
+    }
+
+    public String getActivePlayerString()
+    {
+        if (activePlayer == whitePlayer)
+        {
+            return "whitePlayer";
+        }
+        else return "blackPlayer";
+    }
+
 
     public ChessPlayer getActivePlayer() {
         return activePlayer;
@@ -74,6 +97,41 @@ public class ChessGameController : MonoBehaviour
         blackPlayer = new ChessPlayer(TeamColor.Black, board);
     }
 
+    private void NetworkCreatePieces(BoardLayout layout)
+    {
+        Debug.Log(layout.GetPiecesCount().ToString());
+        for (int i = 0; i < layout.GetPiecesCount(); i++)
+        {
+            string typeName = layout.GetSquarePieceNameAtIndex(i);
+            //Debug.Log(i.ToString() + " = " + typeName);
+            Type type = Type.GetType(typeName);
+            Piece newPiece = pieceCreator.CreateNetworkPiece(type, i).GetComponent<Piece>();
+            initailzeActivePieces(newPiece);
+        }
+
+    }
+
+    public void NetworkInitialisePieces(int layoutIndex, GameObject chessPiece)
+    {
+        board.SetDependencies(this);
+        activePlayer = whitePlayer;
+
+        Piece piece = chessPiece.GetComponent<Piece>();
+        TeamColor team = startingBoardLayout.GetSquareTeamColorAtIndex(layoutIndex);
+        Vector2Int squareCoords = startingBoardLayout.GetSquareCoordsAtIndex(layoutIndex);
+        string typeName = startingBoardLayout.GetSquarePieceNameAtIndex(layoutIndex);
+
+        InsertComponents(piece);
+
+        piece.SetData(squareCoords, team, board, this, typeName);
+
+        //Debug.Log(piece.controller);
+
+        assignTeam(piece, team);
+
+        activePieces[layoutIndex] = piece;
+
+    }
 
     private void CreatePiecesFromLayout(BoardLayout layout)
     {
@@ -88,48 +146,80 @@ public class ChessGameController : MonoBehaviour
         }
     }
 
-    public void CreatePieceAndInitialize(Vector2Int squareCoords, TeamColor team, Type type)
+    private void CreatePieceAndInitialize(Vector2Int squareCoords, TeamColor team, Type type)
     {
-        
         Piece newPiece = pieceCreator.CreatePiece(type).GetComponent<Piece>();
+
+        InsertComponents(newPiece);
+
+        newPiece.SetData(squareCoords, team, board, this, type.ToString());
+
+        initailzeActivePieces(newPiece);
+
+        assignTeam(newPiece, team);
+    }
+
+    private void InsertComponents(Piece newPiece)
+    {
         //make each piece interactable with AR
         newPiece.gameObject.AddComponent<BoxCollider>();
         newPiece.gameObject.AddComponent<NearInteractionGrabbable>();
         newPiece.gameObject.AddComponent<ObjectManipulator>();
+        //make each piece have the board anchor as parent.
+        newPiece.gameObject.AddComponent<BoardAnchorAsParent>();
 
         // add snapping to each piece
-        newPiece.GetComponent<ObjectManipulator>().OnManipulationEnded.AddListener ( delegate 
-            { 
-                float distance = board.squareSize*4;
-                Vector2Int newCoords = new Vector2Int(-1, -1);
-                for (int i = 0; i<8; i++)
+        newPiece.GetComponent<ObjectManipulator>().OnManipulationEnded.AddListener(delegate
+        {
+            float distance = board.squareSize * 4;
+            Vector2Int newCoords = new Vector2Int(-1, -1);
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
                 {
-                    for (int j = 0; j<8; j++)
+                    Vector2Int nextSquare = new Vector2Int(i, j);
+                    float newDistance = Vector3.Distance(newPiece.transform.position, board.CalculatePositionFromCoords(nextSquare));
+                    if (newDistance < distance)
                     {
-                        Vector2Int nextSquare = new Vector2Int(i, j);
-                        float newDistance = Vector3.Distance (newPiece.transform.position, board.CalculatePositionFromCoords(nextSquare));
-                        if (newDistance < distance)
-                        {
-                            distance = newDistance;
-                            newCoords.Set(i,j);
-                        }
+                        distance = newDistance;
+                        newCoords.Set(i, j);
                     }
                 }
-                if (distance < board.squareSize*1.5)
-                {
-                    newPiece.MovePiece(newCoords);
-                } else 
-                {
-                    newPiece.MovePiece(newPiece.occupiedSquare);
-                }
             }
+            if (distance < board.squareSize * 1.5)
+            {
+                newPiece.MovePiece(newCoords);
+            }
+            else
+            {
+                newPiece.MovePiece(newPiece.occupiedSquare);
+            }
+        }
         );
-        newPiece.SetData(squareCoords, team, board, this, type.ToString());
-        initailzeActivePieces(newPiece);
+    }
 
-        if (newPiece.getTeam() == TeamColor.White) {
+    public void initailzeActivePieces(Piece piece)
+    {
+
+        for (int i = 0; i < 32; i++)
+        {
+            if (this.activePieces[i] == null)
+            {
+                //Debug.Log("Pieces have been set.");
+                this.activePieces[i] = piece;
+                break;
+            }
+        }
+    }
+
+    private void assignTeam(Piece newPiece, TeamColor team)
+    {
+        if (newPiece.getTeam() == TeamColor.White)
+        {
             whitePlayer.AddPiece(newPiece);
-        } else {
+        }
+        else
+        {
             blackPlayer.AddPiece(newPiece);
         }
 
@@ -141,33 +231,39 @@ public class ChessGameController : MonoBehaviour
         }
     }
 
-    public void initailzeActivePieces(Piece piece)
+    public void recordPieceRemoval(Piece taken)
     {
-
-        for (int i = 0; i < 32; i++)
+        if (taken.getTeam() == TeamColor.White)
         {
-            if (this.activePieces[i] == null)
-                {
-                    this.activePieces[i] = piece;
-                    break;
-                }
-        }
-    }
-
-    public void recordPieceRemoval(Piece taken) {
-        if (taken.getTeam() == TeamColor.White) {
             blackPlayer.AddToTakenPieces(taken);
             whitePlayer.RemovePiece(taken);
-        } else {
+        }
+        else
+        {
             whitePlayer.AddToTakenPieces(taken);
             blackPlayer.RemovePiece(taken);
         }
+
         taken.transform.position += new Vector3(0.0f, -5f, 0.0f);
+
+        if (taken.photonView != null && PhotonNetwork.PlayerList.Length >= 2)
+        {
+            if (taken.photonView.Controller == PhotonNetwork.PlayerList[0])
+            {
+                taken.photonView.TransferOwnership(PhotonNetwork.PlayerList[1]);
+            }
+            else taken.photonView.TransferOwnership(PhotonNetwork.PlayerList[0]);
+
+            taken.transform.position += new Vector3(0.0f, -5f, 0.0f);
+        }
+
     }
 
-    public void endTurn() {
+    public void endTurn()
+    {
         // Swap active player
-        if (getActivePlayer().kingInCheck) {
+        if (getActivePlayer().kingInCheck)
+        {
             // player managed to get themselves out of check
             Debug.Log("Succesfully moved out of check");
             getActivePlayer().kingInCheck = false;
@@ -175,11 +271,15 @@ public class ChessGameController : MonoBehaviour
             checkedKing.SetMaterial(teamMaterial);
             checkedKing = null;
         }
-        if (getActivePlayer() == whitePlayer) {
+
+        if (getActivePlayer() == whitePlayer)
+        {
             activePlayer = blackPlayer;
-            foreach (Piece p in blackPlayer.activePieces) {
-                if (p.typeName == "Pawn") {
-                    Pawn pawnref = (Pawn) p;
+            foreach (Piece p in blackPlayer.activePieces)
+            {
+                if (p.typeName == "Pawn")
+                {
+                    Pawn pawnref = (Pawn)p;
                     pawnref.movedTwoSquares = false;
                 }
             }
@@ -188,17 +288,26 @@ public class ChessGameController : MonoBehaviour
             {
                 ai.getComputerMove("h6", activePieces);
             }
-        } else if (getActivePlayer() == blackPlayer) {
+        }
+        else if (getActivePlayer() == blackPlayer)
+        {
             activePlayer = whitePlayer;
-            foreach (Piece p in whitePlayer.activePieces) {
-                if (p.typeName == "Pawn") {
-                    Pawn pawnref = (Pawn) p;
+            foreach (Piece p in whitePlayer.activePieces)
+            {
+                if (p.typeName == "Pawn")
+                {
+                    Pawn pawnref = (Pawn)p;
                     pawnref.movedTwoSquares = false;
                 }
             }
             turnIndicator.ColourTeam();
         }
-        if(checkCond()) {
+        if (photonView != null && PhotonNetwork.PlayerList.Length >= 2)
+        {
+            photonView.RPC("UpdateNetworkTurn", RpcTarget.All, getActivePlayerString());
+        }
+        if (checkCond())
+        {
             Debug.Log("Check");
             activePlayer.kingInCheck = true;
             checkedKing.SetMaterial(red);
@@ -208,10 +317,14 @@ public class ChessGameController : MonoBehaviour
         {
             isGameOver();
         }
+
         // Debug
-        if (getActivePlayer() == whitePlayer) {
+        if (getActivePlayer() == whitePlayer)
+        {
             //Debug.Log("White");
-        } else {
+        }
+        else
+        {
             //Debug.Log("Black");
         }
         /*
@@ -225,7 +338,17 @@ public class ChessGameController : MonoBehaviour
             checkedKing.SetMaterial(teamMaterial);
         }
         */
+
+
     }
+
+    [PunRPC]
+    private void UpdateNetworkTurn(string activePlayerString)
+    {
+        NetworkUpdatePlayer(activePlayerString);
+        Debug.Log("It is the turn of " + activePlayerString);
+    }
+
     public void ChangeTeam() // to make cleaner
     {
         if (getActivePlayer() == whitePlayer)
@@ -237,6 +360,15 @@ public class ChessGameController : MonoBehaviour
             activePlayer = whitePlayer;
         }
         
+    }
+
+    private void NetworkUpdatePlayer(string activePlayerString)
+    {
+        if (activePlayerString.Equals("whitePlayer"))
+        {
+            activePlayer = whitePlayer;
+        }
+        else activePlayer = blackPlayer;
     }
 
     public bool checkCond()                     // Evaluates check condition return true if checked else false
@@ -331,24 +463,25 @@ public class ChessGameController : MonoBehaviour
         return true;
     }
 
-    public bool isGameOver() {
-        if (checkStaleMate())
-        {
-            Debug.Log("Stalemate");
-            Debug.Log("Draw");
-            return true;
-        }
+    public bool isGameOver()
+    {
         foreach (Piece p in activePlayer.activePieces)
         {
             p.PossibleMoves();
             p.removeMovesLeavingKingInCheck();
-            if (p.availableMoves.Count != 0) {
+            if (p.avaliableMoves.Count != 0)
+            {
                 return false;
             }
         }
-        if (activePlayer.kingInCheck) {
+        if (activePlayer.kingInCheck)
+        {
             Debug.Log("Checkmate");
-        } 
+        }
+        else
+        {
+            Debug.Log("Stalemate");
+        }
         return true;
     }
 
