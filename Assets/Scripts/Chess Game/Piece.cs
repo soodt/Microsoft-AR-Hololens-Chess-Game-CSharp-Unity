@@ -138,6 +138,8 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler, IPunOb
 	{
 		if (stream.IsWriting)
 		{
+			stream.SendNext(gameObject.transform.position);
+			stream.SendNext(gameObject.transform.rotation);
 			stream.SendNext(occupiedSquare.x);
 			stream.SendNext(occupiedSquare.y);
 			//Debug.Log(occupiedSquare.x);
@@ -145,7 +147,8 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler, IPunOb
 		}
 		else if (stream.IsReading)
 		{
-
+			gameObject.transform.position = (Vector3)stream.ReceiveNext();
+			gameObject.transform.rotation = (Quaternion)stream.ReceiveNext();
 			occupiedSquare = new Vector2Int((int)stream.ReceiveNext(), (int)stream.ReceiveNext());
 
 			//occupiedSquare = new Vector2Int((int)x, (int)y);
