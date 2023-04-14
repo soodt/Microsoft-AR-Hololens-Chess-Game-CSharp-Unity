@@ -17,7 +17,5 @@ public class Main : MonoBehaviour
     }
     public void quit()
     {
-        Debug.Log("Quitting");
-        UnityEditor.Application.isPlaying = false;
     }
 }
