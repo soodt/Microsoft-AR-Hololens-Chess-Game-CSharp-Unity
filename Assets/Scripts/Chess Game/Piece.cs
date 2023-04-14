@@ -28,7 +28,7 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler, IPunOb
 
 	public String typeName {get; set;}
 
-	private PhotonView photonView;
+	public PhotonView photonView;
 
 	private void Awake()
 	{

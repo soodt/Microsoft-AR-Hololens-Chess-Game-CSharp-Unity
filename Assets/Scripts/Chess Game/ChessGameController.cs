@@ -5,6 +5,7 @@ using UnityEngine;
 using Microsoft.MixedReality.Toolkit.Input;
 using Microsoft.MixedReality.Toolkit.UI;
 using Photon.Pun;
+using Photon.Realtime;
 
 [RequireComponent(typeof(PieceCreator))]
 public class ChessGameController : MonoBehaviour//, IPunObservable
@@ -225,7 +226,20 @@ public class ChessGameController : MonoBehaviour//, IPunObservable
             whitePlayer.AddToTakenPieces(taken);
             blackPlayer.RemovePiece(taken);
         }
+
         taken.transform.position += new Vector3(0.0f, -5f, 0.0f);
+
+        if (taken.photonView != null && PhotonNetwork.PlayerList.Length >= 2)
+        {
+            if (taken.photonView.Controller == PhotonNetwork.PlayerList[0])
+            {
+                taken.photonView.TransferOwnership(PhotonNetwork.PlayerList[1]);
+            }
+            else taken.photonView.TransferOwnership(PhotonNetwork.PlayerList[0]);
+
+            taken.transform.position += new Vector3(0.0f, -5f, 0.0f);
+        }
+
     }
 
     public void endTurn() {
@@ -253,7 +267,10 @@ public class ChessGameController : MonoBehaviour//, IPunObservable
             Debug.Log("Black");
         }
 
-        photonView.RPC("UpdateNetworkTurn", RpcTarget.All, getActivePlayerString());
+        if (photonView != null && PhotonNetwork.PlayerList.Length >= 2)
+        {
+            photonView.RPC("UpdateNetworkTurn", RpcTarget.All, getActivePlayerString());
+        }
     }
 
     [PunRPC]
