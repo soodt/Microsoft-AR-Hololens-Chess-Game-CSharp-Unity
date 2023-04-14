@@ -102,7 +102,7 @@ namespace ChessRoom
             {
                 PhotonNetwork.Instantiate(playerWhite.name, Vector3.zero, Quaternion.identity);
             }
-            if (playersInRoom == 2)
+            else if (playersInRoom == 2)
             {
                 PhotonNetwork.Instantiate(playerBlack.name, Vector3.zero, Quaternion.identity);
             }
