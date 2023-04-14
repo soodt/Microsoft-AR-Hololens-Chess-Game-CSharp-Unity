@@ -255,11 +255,16 @@ public class ChessGameController : MonoBehaviour//, IPunObservable
         } else if (getActivePlayer() == blackPlayer) {
             activePlayer = whitePlayer;
         }
-        if(checkCond()) {
+        if (photonView != null && PhotonNetwork.PlayerList.Length >= 2)
+        {
+            photonView.RPC("UpdateNetworkTurn", RpcTarget.All, getActivePlayerString());
+        }
+        if (checkCond()) {
             Debug.Log("Check");
             activePlayer.kingInCheck = true;
             isGameOver();
         }
+
         // Debug
         if (getActivePlayer() == whitePlayer) {
             Debug.Log("White");
@@ -267,10 +272,7 @@ public class ChessGameController : MonoBehaviour//, IPunObservable
             Debug.Log("Black");
         }
 
-        if (photonView != null && PhotonNetwork.PlayerList.Length >= 2)
-        {
-            photonView.RPC("UpdateNetworkTurn", RpcTarget.All, getActivePlayerString());
-        }
+        
     }
 
     [PunRPC]
