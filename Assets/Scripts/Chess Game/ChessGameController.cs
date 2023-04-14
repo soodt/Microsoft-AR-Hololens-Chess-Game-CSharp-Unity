@@ -7,7 +7,7 @@ using Microsoft.MixedReality.Toolkit.UI;
 using Photon.Pun;
 
 [RequireComponent(typeof(PieceCreator))]
-public class ChessGameController : MonoBehaviour, IPunObservable
+public class ChessGameController : MonoBehaviour//, IPunObservable
 {
     [SerializeField] private BoardLayout startingBoardLayout;
     [SerializeField] private Board board;
@@ -19,13 +19,15 @@ public class ChessGameController : MonoBehaviour, IPunObservable
     private Piece checkedKing;
     public ChessPlayer whitePlayer{get; set;}
     public ChessPlayer blackPlayer{get; set;}
-    private ChessPlayer activePlayer{get; set;}    
+    private ChessPlayer activePlayer{get; set;}
+
+    private PhotonView photonView;
 
     private void Awake()
     {
         SetDependencies();
         CreatePlayers();
-
+        photonView = gameObject.GetComponent<PhotonView>();
     }
 
     private void SetDependencies()
@@ -250,7 +252,17 @@ public class ChessGameController : MonoBehaviour, IPunObservable
         } else {
             Debug.Log("Black");
         }
+
+        photonView.RPC("UpdateNetworkTurn", RpcTarget.All, getActivePlayerString());
     }
+
+    [PunRPC]
+    private void UpdateNetworkTurn(string activePlayerString)
+    {
+        NetworkUpdatePlayer(activePlayerString);
+        Debug.Log("It is the turn of " + activePlayerString);
+    }
+
     public void ChangeTeam() // to make cleaner
     {
         if (getActivePlayer() == whitePlayer)
@@ -321,7 +333,7 @@ public class ChessGameController : MonoBehaviour, IPunObservable
         }
         return true;
     }
-
+    /**
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.IsWriting)
@@ -335,5 +347,5 @@ public class ChessGameController : MonoBehaviour, IPunObservable
             NetworkUpdatePlayer((string)stream.ReceiveNext());
             //Debug.Log("Updated activePlayer = " + getActivePlayerString());
         }
-    }
+    }*/
 }
