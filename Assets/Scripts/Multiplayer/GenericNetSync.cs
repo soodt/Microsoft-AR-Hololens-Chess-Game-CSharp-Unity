@@ -1,5 +1,6 @@
 using Photon.Pun;
 using UnityEngine;
+using Photon.Realtime;
 
 // Modified file from MRTK.Tutorials.MultiUserCapabilities.
 public class GenericNetSync : MonoBehaviourPun, IPunObservable
@@ -38,6 +39,25 @@ public class GenericNetSync : MonoBehaviourPun, IPunObservable
         }
 
         var trans = transform;
+
+        if (PhotonNetwork.PlayerList.Length == 2 && photonView.Controller == PhotonNetwork.PlayerList[1])
+        {
+            trans.localPosition = new Vector3(-0.08f, 0.4f, 0.8f);
+            mainCamera.transform.position = trans.localPosition;
+
+            trans.Rotate(0.0f, 180.0f, 0.0f, Space.Self);
+            mainCamera.transform.rotation = trans.localRotation;
+        }
+        else if (PhotonNetwork.PlayerList.Length > 2 && photonView.Controller != PhotonNetwork.PlayerList[0])
+        {
+
+        }
+        else
+        {
+            trans.localPosition = new Vector3(-0.08f, 0.4f, -1.4f);
+            mainCamera.transform.position = trans.localPosition;
+        }
+
         startingLocalPosition = trans.localPosition;
         startingLocalRotation = trans.localRotation;
 
