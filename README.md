@@ -1,4 +1,4 @@
-# Updated version - Final Sprint
+# Final Product
 
 ## The Project: 
 
@@ -14,7 +14,7 @@ Our project is to create a Chess Mixed Reality Video Game to be used on Hololens
 
 ## Progress:
 
-The project is still in progress and therefore some features are still being developed. The following features have been successfully implemented:
+The following features have been successfully implemented:
 
 - Scaled down board, pieces and highlights as per the Hololens demo.
 - Piece movement 
@@ -22,18 +22,10 @@ The project is still in progress and therefore some features are still being dev
 - Check recognition
 - When a player is in check, they now must make a move that takes themselves out of check 
 - Console will print checkmate when checkmate occurs, and stalemate if a stalemate occurs
+- Multiplayer functionality
 
 ## Development & Testing:
 
-The project us being created with Unity and MRTK. The new features for the game are being tested locally and on a Hololens when possible. 
+The project is being created with Unity and MRTK. The new features for the game are being tested locally and on a Hololens when possible. 
 
-The CI/CD pipeline is currently in development and Azure is being used to implement this. 
-
-## Features to be implemented as per the product backlog:
-
-- Implement CI/CD workflow
-- Optimise capturing
-- Integrate chess engine made by another group
-- Creation of a start menu
-- Pawn promotion
-- Tile highlight turns red when a take is available
+The CI/CD pipeline has been devloped using Azure. Unit tests have been written too. 
