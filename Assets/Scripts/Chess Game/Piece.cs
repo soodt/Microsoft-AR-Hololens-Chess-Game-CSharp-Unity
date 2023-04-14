@@ -6,6 +6,7 @@ using UnityEngine;
 using Microsoft.MixedReality.Toolkit.Input;
 using Microsoft.MixedReality.Toolkit.UI;
 using Photon.Pun;
+using Photon.Realtime;
 
 [RequireComponent(typeof(MaterialSetter))]
 [RequireComponent(typeof(IObjectTweener))]
@@ -27,11 +28,14 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler, IPunOb
 
 	public String typeName {get; set;}
 
+	private PhotonView photonView;
+
 	private void Awake()
 	{
 		avaliableMoves = new List<Vector2Int>();
 		materialSetter = GetComponent<MaterialSetter>();
 		hasMoved = false;
+		photonView = gameObject.GetComponent<PhotonView>();
 	}
 
 	public TeamColor getTeam() {
@@ -132,6 +136,14 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler, IPunOb
     public void OnPointerClicked(MixedRealityPointerEventData eventData)
     {
       //  Debug.Log("click");
+    }
+
+	public void AssignPlayerBlack()
+    {
+		if (PhotonNetwork.PlayerList.Length == 2)
+        {
+			photonView.TransferOwnership(PhotonNetwork.PlayerList[1]);
+        }
     }
 
 	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
