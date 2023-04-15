@@ -146,7 +146,7 @@ public class ChessGameController : MonoBehaviour
         }
     }
 
-    private void CreatePieceAndInitialize(Vector2Int squareCoords, TeamColor team, Type type)
+    public void CreatePieceAndInitialize(Vector2Int squareCoords, TeamColor team, Type type)
     {
         Piece newPiece = pieceCreator.CreatePiece(type).GetComponent<Piece>();
 
@@ -469,7 +469,7 @@ public class ChessGameController : MonoBehaviour
         {
             p.PossibleMoves();
             p.removeMovesLeavingKingInCheck();
-            if (p.avaliableMoves.Count != 0)
+            if (p.availableMoves.Count != 0)
             {
                 return false;
             }

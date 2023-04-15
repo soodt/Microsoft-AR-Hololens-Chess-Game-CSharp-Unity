@@ -126,7 +126,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   materialSetter: {fileID: 0}
-  avaliableMoves: []
+  availableMoves: []
+  taken: 0
+  finalCoords: {x: 0, y: 0, z: 0}
+  photonView: {fileID: 0}
 --- !u!114 &-4895994521309187846
 MonoBehaviour:
   m_ObjectHideFlags: 0

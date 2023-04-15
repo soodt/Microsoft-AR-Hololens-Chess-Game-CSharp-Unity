@@ -29,13 +29,10 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler, IPunOb
 	public abstract bool isAttackingSquare(Vector2Int coords);
 	public String typeName {get; set;}
     public abstract bool hasMovedTwoSquares();
-
-    private void Awake()
+	public PhotonView photonView;
 
 	private void Awake()
 	{
-		public PhotonView photonView;
-
 		availableMoves = new List<Vector2Int>();
 		materialSetter = GetComponent<MaterialSetter>();
 		hasMoved = false;

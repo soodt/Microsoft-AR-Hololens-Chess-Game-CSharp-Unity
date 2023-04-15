@@ -45,6 +45,7 @@ MonoBehaviour:
   - PunRPC_ShareAzureAnchorId
   - PunRPC_ToggleExplodedView
   - PunRPC_TogglePlacementHints
+  - UpdateNetworkTurn
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
