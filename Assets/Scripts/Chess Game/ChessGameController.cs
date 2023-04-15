@@ -37,6 +37,7 @@ public class ChessGameController : MonoBehaviour
 
     private void Awake()
     {
+        isSinglePlayer = false;
         SetDependencies();
         CreatePlayers();
         photonView = gameObject.GetComponent<PhotonView>();
@@ -51,7 +52,11 @@ public class ChessGameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //StartNewGame();
+        Debug.Log(isSinglePlayer);
+        if (isSinglePlayer)
+        {
+            StartNewGame();
+        }
     }
 
      private void StartNewGame()
@@ -115,6 +120,7 @@ public class ChessGameController : MonoBehaviour
     {
         board.SetDependencies(this);
         activePlayer = whitePlayer;
+        isSinglePlayer = false;
 
         Piece piece = chessPiece.GetComponent<Piece>();
         TeamColor team = startingBoardLayout.GetSquareTeamColorAtIndex(layoutIndex);
