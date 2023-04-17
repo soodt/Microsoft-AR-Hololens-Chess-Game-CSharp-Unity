@@ -14,7 +14,7 @@ public class SquareSelector : MonoBehaviour
     public void ShowSelection(Dictionary<Vector3, bool> squareInfo)  // used to select the squares and apply the materials
     {
         ClearSelection();
-        Debug.Log(squareInfo.Count);
+        //Debug.Log(squareInfo.Count);
         foreach (var data in squareInfo)
         {
             GameObject selector = Instantiate(selectorPrefab, data.Key, Quaternion.identity);

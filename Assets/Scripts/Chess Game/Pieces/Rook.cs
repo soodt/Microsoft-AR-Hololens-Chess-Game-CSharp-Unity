@@ -1,11 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 public class Rook : Piece
 {
-    public override List<Vector2Int> SelectAvaliableSquares()
+    public override List<Vector2Int> SelectAvailableSquares()
     {
         throw new System.NotImplementedException();
     }
@@ -71,8 +72,11 @@ public class Rook : Piece
         bool hasCasteled = false;
         if (!taken)
         {
-            if (this.getTeam() == controller.getActivePlayer().getTeam() && this.avaliableMoves.Contains(coords))
+            if (this.getTeam() == controller.getActivePlayer().getTeam() && this.availableMoves.Contains(coords))
             {
+                bool capture = false;
+                Vector2Int prevCoords = new Vector2Int(this.occupiedSquare.x, this.occupiedSquare.y);
+
                 if ((coords.x - this.occupiedSquare.x == 0 | coords.y - this.occupiedSquare.y == 0) && canMoveThere(coords))
                 {
                     Piece pieceCheck = board.getPiece(coords);
@@ -80,6 +84,7 @@ public class Rook : Piece
                     {
                         board.takePiece(this, coords);
                         hasTaken = true;
+                        capture = true;
                     }
                     this.occupiedSquare = coords;
                     transform.position = this.board.CalculatePositionFromCoords(coords);
@@ -87,6 +92,7 @@ public class Rook : Piece
                     {
                         this.hasMoved = true;
                     }
+                    print(AlgebraicNotation(coords, prevCoords, capture, false, false, false));
                     controller.endTurn();
                 }
                 else
@@ -94,6 +100,7 @@ public class Rook : Piece
                     Piece pieceCheck = board.getPiece(coords);
                     if (pieceCheck && pieceCheck.typeName == "King" && pieceCheck.getTeam() == this.getTeam() && canCastle(pieceCheck))
                     {
+                        print(AlgebraicNotation(coords, prevCoords, capture, false, false, true));
                         castleMove(pieceCheck);
                         AudioManager.instance.Play("castle");
                         hasCasteled = true;
@@ -121,7 +128,7 @@ public class Rook : Piece
 
     public override void PossibleMoves()
     {
-        avaliableMoves.Clear();
+        availableMoves.Clear();
         if (!taken)
         {
             for (int i = 0; i < 8; i++)
@@ -132,11 +139,11 @@ public class Rook : Piece
                     Piece pieceCheck = board.getPiece(square);
                     if (squareIsMoveable(square) && canMoveThere(square)) // this should be implemented when the obj is picked up to highlight the possible squares. 
                     {
-                        avaliableMoves.Add(square);
+                        availableMoves.Add(square);
                     }
                     else if (pieceCheck && pieceCheck.typeName == "King" && pieceCheck.getTeam() == this.getTeam() && canCastle(pieceCheck))
                     {
-                        avaliableMoves.Add(square); // add castling move if available
+                        availableMoves.Add(square); // add castling move if available
                     }
                 }
             }
@@ -210,5 +217,64 @@ public class Rook : Piece
     public override bool hasMovedTwoSquares()
     {
         return false;
+    }
+    public override String AlgebraicNotation(Vector2Int coords, Vector2Int prevCoords, bool capture, bool pawnPromote, bool enPassant, bool castle)
+    {
+        String s = "R";
+
+        foreach (Piece p in controller.getActivePlayer().activePieces)
+        {
+            if (!p.taken)
+            {
+                if (p.typeName == "Rook" && p != this)
+                {
+                    if (p.CanMoveTo(coords))
+                    {
+                        if (prevCoords.x != p.occupiedSquare.x)
+                        {
+                            if (prevCoords.x == 0) s += "a";
+                            if (prevCoords.x == 1) s += "b";
+                            if (prevCoords.x == 2) s += "c";
+                            if (prevCoords.x == 3) s += "d";
+                            if (prevCoords.x == 4) s += "e";
+                            if (prevCoords.x == 5) s += "f";
+                            if (prevCoords.x == 6) s += "g";
+                            if (prevCoords.x == 7) s += "h";
+                        }
+                        else
+                        {
+                            s += prevCoords.y + 1;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (capture) s += "x";
+        if (coords.x == 0) s += "a";
+        if (coords.x == 1) s += "b";
+        if (coords.x == 2) s += "c";
+        if (coords.x == 3) s += "d";
+        if (coords.x == 4) s += "e";
+        if (coords.x == 5) s += "f";
+        if (coords.x == 6) s += "g";
+        if (coords.x == 7) s += "h";
+        s += coords.y + 1;
+        if (castle)
+        {
+            if (this.getTeam() == TeamColor.White)
+            {
+                if (prevCoords[0] == 0) s = "0-0-0";
+                else s = "0-0";
+            }
+            else
+            {
+                if (prevCoords[0] == 0) s = "0-0-0";
+                else s = "0-0";
+            }
+        }
+        if (controller.checkmate()) s += "#";
+        else if (controller.checkCond()) s += "+";
+        return s;
     }
 }

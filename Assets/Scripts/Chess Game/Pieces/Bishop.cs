@@ -23,7 +23,7 @@ public class Bishop : Piece
         onGrabStarted.Invoke();
     }
     */
-    public override List<Vector2Int> SelectAvaliableSquares()
+    public override List<Vector2Int> SelectAvailableSquares()
     {
         throw new NotImplementedException();
     }
@@ -78,20 +78,23 @@ public class Bishop : Piece
         bool hasTaken = false;
         if (!taken)
         {
-            if (this.getTeam() == controller.getActivePlayer().getTeam() && this.avaliableMoves.Contains(coords))
+            if (this.getTeam() == controller.getActivePlayer().getTeam() && this.availableMoves.Contains(coords))
             {
                 Vector2Int displacement = coords - this.occupiedSquare;
-
+                bool capture = false;
 
                 if (coords != this.occupiedSquare && System.Math.Abs(displacement.x) == System.Math.Abs(displacement.y) && canMoveThere(coords))
                 {
                     Piece pieceCheck = board.getPiece(coords);
                     if (pieceCheck)
                     {
-                       hasTaken =  board.takePiece(this, coords);
+                      hasTaken =  board.takePiece(this, coords);
+                      board.takePiece(this, coords);
+                      capture = true;
                     }
                     this.occupiedSquare = coords;
                     transform.position = this.board.CalculatePositionFromCoords(coords);
+                    print(AlgebraicNotation(coords, coords, capture, false, false, false));
                     controller.endTurn();
                     //moved = true;
                 }
@@ -116,7 +119,7 @@ public class Bishop : Piece
 
     public override void PossibleMoves()
     {
-        avaliableMoves.Clear();
+        availableMoves.Clear();
         if (!taken)
         {
             for (int i = 0; i < 8; i++)
@@ -127,7 +130,7 @@ public class Bishop : Piece
                     Vector2Int displacementToSquare = square - this.occupiedSquare; // this is to go through all the squares checking which are safe to move to
                     if (square != this.occupiedSquare && squareIsMoveable(displacementToSquare) && canMoveThere(square)) // this should be implemented when the obj is picked up to highlight the possible squares. 
                     {
-                        avaliableMoves.Add(square);
+                        availableMoves.Add(square);
                     }
                 }
             }
@@ -149,4 +152,51 @@ public class Bishop : Piece
     {
         return false;
     }
+    public override String AlgebraicNotation(Vector2Int coords, Vector2Int prevCoords, bool capture, bool pawnPromote, bool enPassant, bool castle)
+    {
+        String s = "B";
+
+        foreach (Piece p in controller.getActivePlayer().activePieces)
+        {
+            if (!p.taken)
+            {
+                if (p.typeName == "Bishop" && p != this)
+                {
+                    if (p.CanMoveTo(coords))
+                    {
+                        if (prevCoords.x != p.occupiedSquare.x)
+                        {
+                            if (prevCoords.x == 0) s += "a";
+                            if (prevCoords.x == 1) s += "b";
+                            if (prevCoords.x == 2) s += "c";
+                            if (prevCoords.x == 3) s += "d";
+                            if (prevCoords.x == 4) s += "e";
+                            if (prevCoords.x == 5) s += "f";
+                            if (prevCoords.x == 6) s += "g";
+                            if (prevCoords.x == 7) s += "h";
+                        }
+                        else
+                        {
+                            s += prevCoords.y + 1;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (capture) s += "x";
+        if (coords.x == 0) s += "a";
+        if (coords.x == 1) s += "b";
+        if (coords.x == 2) s += "c";
+        if (coords.x == 3) s += "d";
+        if (coords.x == 4) s += "e";
+        if (coords.x == 5) s += "f";
+        if (coords.x == 6) s += "g";
+        if (coords.x == 7) s += "h";
+        s += coords.y + 1;
+        if (controller.checkmate()) s += "#";
+        else if (controller.checkCond()) s += "+";
+        return s;
+    }
+
 }

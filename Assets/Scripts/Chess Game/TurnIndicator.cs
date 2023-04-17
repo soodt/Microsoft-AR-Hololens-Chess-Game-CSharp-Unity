@@ -22,7 +22,7 @@ public class TurnIndicator : MonoBehaviour
         this.controller = chessController;
     }
     public void ColourTeam() { // used to show whose turn it is... a simple implementation
-        Debug.Log("made it");
+        //Debug.Log("made it");
         if (BallRenderer.material.color == Color.white)
         {
             BallRenderer.material.color = Color.black;
