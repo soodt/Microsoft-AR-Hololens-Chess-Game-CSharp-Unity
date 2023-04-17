@@ -24,13 +24,15 @@ public class GenericNetSync : MonoBehaviourPun, IPunObservable
         }
         else
         {
-            networkLocalPosition = (Vector3) stream.ReceiveNext();
-            networkLocalRotation = (Quaternion) stream.ReceiveNext();
+            networkLocalPosition = (Vector3)stream.ReceiveNext();
+            networkLocalRotation = (Quaternion)stream.ReceiveNext();
         }
     }
 
     private void Start()
     {
+        if (!photonView.IsMine) return;
+
         mainCamera = Camera.main;
 
         if (isUser)
@@ -40,7 +42,12 @@ public class GenericNetSync : MonoBehaviourPun, IPunObservable
 
         var trans = transform;
 
-        if (PhotonNetwork.PlayerList.Length == 2 && photonView.Controller == PhotonNetwork.PlayerList[1])
+        if (gameObject.name == "User1")
+        {
+            trans.localPosition = new Vector3(-0.08f, 0.4f, -1.4f);
+            mainCamera.transform.position = trans.localPosition;
+        }
+        else if (gameObject.name == "User2")
         {
             trans.localPosition = new Vector3(-0.08f, 0.4f, 0.8f);
             mainCamera.transform.position = trans.localPosition;
@@ -48,14 +55,9 @@ public class GenericNetSync : MonoBehaviourPun, IPunObservable
             trans.Rotate(0.0f, 180.0f, 0.0f, Space.Self);
             mainCamera.transform.rotation = trans.localRotation;
         }
-        else if (PhotonNetwork.PlayerList.Length > 2 && photonView.Controller != PhotonNetwork.PlayerList[0])
-        {
-
-        }
         else
         {
-            trans.localPosition = new Vector3(-0.08f, 0.4f, -1.4f);
-            mainCamera.transform.position = trans.localPosition;
+
         }
 
         startingLocalPosition = trans.localPosition;
