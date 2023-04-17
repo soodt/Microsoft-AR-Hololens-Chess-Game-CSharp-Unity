@@ -28,7 +28,7 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler, IPunOb
 	public abstract List<Vector2Int> SelectAvailableSquares();
 	public abstract bool isAttackingSquare(Vector2Int coords);
 	public String typeName {get; set;}
-  public abstract bool hasMovedTwoSquares();
+	public abstract bool hasMovedTwoSquares();
 	public PhotonView photonView;
 
 	private void Awake()
@@ -142,7 +142,7 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler, IPunOb
   {
 		PossibleMoves();
 		removeMovesLeavingKingInCheck();
-		board.HightlightTiles(avaliableMoves);
+		board.HightlightTiles(availableMoves);
 		// Debug.Log("Down"); ;
 	}
 
@@ -154,10 +154,10 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler, IPunOb
 
   public void OnPointerUp(MixedRealityPointerEventData eventData)
   {
-		List<Vector2Int> temp = new List<Vector2Int>(avaliableMoves); // creates temporary copy
-    avaliableMoves.Clear();
-    board.HightlightTiles(avaliableMoves);	// destroys highlights
-		avaliableMoves = new List<Vector2Int>(temp); // resets available moves
+		List<Vector2Int> temp = new List<Vector2Int>(availableMoves); // creates temporary copy
+		availableMoves.Clear();
+		board.HightlightTiles(availableMoves);  // destroys highlights
+		availableMoves = new List<Vector2Int>(temp); // resets available moves
 
 		// Debug.Log("up");
 	}
