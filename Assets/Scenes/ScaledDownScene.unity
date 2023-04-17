@@ -192,6 +192,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   turnIndicator: {fileID: 704355973}
+  hasCaptured: 0
   isSinglePlayer: 1
 --- !u!114 &119498245
 MonoBehaviour:
@@ -292,6 +293,61 @@ MonoBehaviour:
   freeSquareMaterial: {fileID: 2100000, guid: a319da9ce2632db40842dad69da7a343, type: 2}
   enemySquareMaterial: {fileID: 2100000, guid: 8f2743e6dce3dce48b6f9fc9eccf3d03, type: 2}
   selectorPrefab: {fileID: 2912707483993903054, guid: ca9f2642268fecb498f8084d6cc88ec0, type: 3}
+--- !u!114 &119872359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 119872355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6c48c61ea3d6a5469cc407d71d0fad7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: move
+    clip: {fileID: 8300000, guid: 9e3d99eba47ca96429aa8b4d93802a23, type: 3}
+    mixer: {fileID: 0}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: capture
+    clip: {fileID: 8300000, guid: aef90f40f325ccb4c832208f0cd4bc08, type: 3}
+    mixer: {fileID: 0}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: start
+    clip: {fileID: 8300000, guid: 9d8c25836f393284abd1773df2d9d9b6, type: 3}
+    mixer: {fileID: 0}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: castle
+    clip: {fileID: 8300000, guid: 9130d84e488413c41ad7e34a4b9aaef3, type: 3}
+    mixer: {fileID: 0}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: check
+    clip: {fileID: 8300000, guid: 330ba9298b008224f912bc65f3e92c4d, type: 3}
+    mixer: {fileID: 0}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: checkmate
+    clip: {fileID: 8300000, guid: 74e9037689f8a4549bb7de6abc5e059f, type: 3}
+    mixer: {fileID: 0}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
 --- !u!1 &416698248
 GameObject:
   m_ObjectHideFlags: 0

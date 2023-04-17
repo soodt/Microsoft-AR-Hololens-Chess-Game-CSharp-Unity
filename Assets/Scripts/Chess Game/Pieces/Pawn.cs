@@ -93,6 +93,9 @@ public class Pawn : Piece, IMixedRealityPointerHandler
     }
     public override void MovePiece(Vector2Int coords)
     {
+        bool hasTaken = false;
+        if (!taken)
+        {
         if (this.getTeam() == controller.getActivePlayer().getTeam() && this.availableMoves.Contains(coords)) {
             // If it is this team's turn
             Vector2Int prevCoords = new Vector2Int(this.occupiedSquare.x, this.occupiedSquare.y);
@@ -101,66 +104,96 @@ public class Pawn : Piece, IMixedRealityPointerHandler
             bool promoted = false;
             if (squareIsMoveable(coords))
             {
-                if (this.occupiedSquare.y - coords.y == 2 || this.occupiedSquare.y - coords.y == -2)
+                // If it is this team's turn
+                if (squareIsMoveable(coords))
                 {
-                    this.movedTwoSquares = true;
+                    if (this.occupiedSquare.y - coords.y == 2 || this.occupiedSquare.y - coords.y == -2)
+                    {
+                        this.movedTwoSquares = true;
+                    }
+                    else
+                    {
+                        this.movedTwoSquares = false;
+                    }
+                    this.occupiedSquare = coords;
+                    transform.position = this.board.CalculatePositionFromCoords(coords);
+                    this.hasMoved = true;
+                    queening();
+                    controller.endTurn();
                 }
-                else
+                else if (canPawnTake(coords))
                 {
+                    capture = true;
                     this.movedTwoSquares = false;
+                    board.takePiece(this, coords);
+                    hasTaken = true;
+                    this.occupiedSquare = coords;
+                    transform.position = this.board.CalculatePositionFromCoords(coords);
+                    this.hasMoved = true;
+                    queening();
+                    controller.endTurn();
                 }
-                this.occupiedSquare = coords;
-                transform.position = this.board.CalculatePositionFromCoords(coords);
-                this.hasMoved = true;
-                queening();
-                controller.endTurn();
-            } else if (canPawnTake(coords)){
-                capture = true;
-                this.movedTwoSquares = false;
-                board.takePiece(this, coords);
-                this.occupiedSquare = coords;
-                transform.position = this.board.CalculatePositionFromCoords(coords);
-                this.hasMoved = true;
-                queening();
-                controller.endTurn();
-            } else if (canTakeEnPassant(coords)) {
-                enPassant= true;
-                capture = true;
-                if (this.getTeam() == TeamColor.White) { 
-                    Vector2Int passedSquare = new Vector2Int(coords.x, coords.y - 1);
-                    board.takePiece(this, passedSquare);
-                } else {
-                    Vector2Int passedSquare = new Vector2Int(coords.x, coords.y + 1);
-                    board.takePiece(this, passedSquare);
+                else if (canTakeEnPassant(coords))
+                {
+                    enPassant= true;
+                    capture = true;
+                    if (this.getTeam() == TeamColor.White)
+                    {
+                        Vector2Int passedSquare = new Vector2Int(coords.x, coords.y - 1);
+                        board.takePiece(this, passedSquare);
+                        hasTaken = true;
+                    }
+                    else
+                    {
+                        Vector2Int passedSquare = new Vector2Int(coords.x, coords.y + 1);
+                        board.takePiece(this, passedSquare);
+                        hasTaken = true;
+                    }
+                    this.occupiedSquare = coords;
+                    transform.position = this.board.CalculatePositionFromCoords(coords);
+                    this.hasMoved = true;
+                    queening();
+                    controller.endTurn();
                 }
-                this.occupiedSquare = coords;
-                transform.position = this.board.CalculatePositionFromCoords(coords);
-                this.hasMoved = true;
-                queening();
-                controller.endTurn();
             }
+            else
             {
+                // If not this team's turn, snap back to occupied square
                 transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
             }
+
             print(AlgebraicNotation(coords, prevCoords, capture, promoted, enPassant, false));
         } else {
             // If not this team's turn, snap back to occupied square
             transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
         }
+        else
+        {
+            transform.position = finalCoords;
+        }
+        if (!hasTaken)
+            AudioManager.instance.Play("move");
     }
 
 
     public override void PossibleMoves()
     {
+        avaliableMoves.Clear();
+        
         availableMoves.Clear();
+        if (!taken)
+        
         for (int i = 0; i < 8; i++)
         {
-            for (int j = 0; j < 8; j++)
+            for (int i = 0; i < 8; i++)
             {
-                Vector2Int square = new Vector2Int(i, j); // this is to go through all the squares checking which are safe to move to
-                if (squareIsMoveable(square) || canPawnTake(square) || canTakeEnPassant(square)) // this should be implemented when the obj is picked up to highlight the possible squares. 
+                for (int j = 0; j < 8; j++)
                 {
-                    availableMoves.Add(square);
+                    Vector2Int square = new Vector2Int(i, j); // this is to go through all the squares checking which are safe to move to
+                    if (squareIsMoveable(square) || canPawnTake(square) || canTakeEnPassant(square)) // this should be implemented when the obj is picked up to highlight the possible squares. 
+                    {
+                        avaliableMoves.Add(square);
+                    }
                 }
             }
         }

@@ -44,9 +44,9 @@ public class Board : MonoBehaviour
     }
 
 
-    public void takePiece(Piece itself, Vector2Int coords)
+    public bool takePiece(Piece itself, Vector2Int coords)
     {
-
+        bool isTaken = false;
         Piece pieceTaken = getPiece(coords);
         for (int i = 0; i < 32; i++)
         {
@@ -55,20 +55,26 @@ public class Board : MonoBehaviour
             */
             if ((controller.activePieces[i] != null) && (controller.activePieces[i] == pieceTaken) && (pieceTaken != itself) && (!pieceTaken.IsFromSameTeam(itself)))
             {
+                controller.hasCaptured = true;
                 controller.recordPieceRemoval(pieceTaken);               // adds taken piece to takenPieces list of player who took the piece and removes the taken piece from the activePieces list of the other player
                 controller.activePieces[i] = null;
+                double boardX = this.transform.position.x;
+                double boardY = this.transform.position.y;
+                double boardZ = this.transform.position.z;
+                isTaken = true;
+
                 // Making it so after being taken pieces appear beside the table
                 if (pieceTaken.getTeam() == TeamColor.White)
                 {
                     //pieceTaken.setOut(pieceTaken);
-                    double zOffset = -1 + (0.20 * (15 - controller.whitePlayer.activePieces.Count));
-                    double xOffset = -1;
+                    double zOffset = boardZ-1 + (0.20 * (15 - controller.whitePlayer.activePieces.Count));
+                    double xOffset = boardX-1;
                     if (controller.whitePlayer.activePieces.Count<=8)
                     {
-                        zOffset = -1 + (0.20 * (8 - controller.whitePlayer.activePieces.Count));
-                        xOffset = -1.30;
+                        zOffset = boardZ -1 + (0.20 * (8 - controller.whitePlayer.activePieces.Count));
+                        xOffset = boardX -1.30;
                     }
-                    Vector3 finalCoord = new Vector3((float)xOffset, 0, (float)zOffset);
+                    Vector3 finalCoord = new Vector3((float)xOffset, (float)boardY, (float)zOffset);
                     pieceTaken.transform.position = finalCoord;
                     pieceTaken.finalCoords = finalCoord;
                     //  pieceTaken.GetComponent<NearInteractionGrabbable>().enabled = false;
@@ -76,17 +82,17 @@ public class Board : MonoBehaviour
                 }
                 else
                 {
-                    double zOffset = 0.1890001 - (0.20 * (15 - controller.blackPlayer.activePieces.Count));
-                    double xOffset = 0.8;
+                    double zOffset = boardZ + 0.1890001 - (0.20 * (15 - controller.blackPlayer.activePieces.Count));
+                    double xOffset = boardX + 0.8;
                     if (controller.blackPlayer.activePieces.Count <= 8)
                     {
-                        zOffset = 0.1890001 - (0.20 * (8 - controller.blackPlayer.activePieces.Count));
-                        xOffset = 1.1;
+                        zOffset = boardZ + 0.1890001 - (0.20 * (8 - controller.blackPlayer.activePieces.Count));
+                        xOffset = boardX + 1.1;
                     }
-                    Vector3 finalCoord = new Vector3((float)xOffset, 0, (float)zOffset);
+                    Vector3 finalCoord = new Vector3((float)xOffset, (float)boardY, (float)zOffset);
                     pieceTaken.transform.position = finalCoord;
                     pieceTaken.finalCoords = finalCoord;
-                    //  pieceTaken.GetComponent<NearInteractionGrabbable>().enabled = false;
+                    // pieceTaken.GetComponent<NearInteractionGrabbable>().enabled = false;
                     pieceTaken.taken = true;
                 }
                 // pieceTaken.GetComponent<MeshRenderer>().enabled = false; // turns piece invisible instead of destroying it
@@ -94,6 +100,7 @@ public class Board : MonoBehaviour
                 break;
             }
         }
+        return isTaken;
     }
 
     //to highlight the tiles that can be taken

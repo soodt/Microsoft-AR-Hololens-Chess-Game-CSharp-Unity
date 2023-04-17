@@ -28,7 +28,7 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler, IPunOb
 	public abstract List<Vector2Int> SelectAvailableSquares();
 	public abstract bool isAttackingSquare(Vector2Int coords);
 	public String typeName {get; set;}
-    public abstract bool hasMovedTwoSquares();
+  public abstract bool hasMovedTwoSquares();
 	public PhotonView photonView;
 
 	private void Awake()
@@ -138,27 +138,30 @@ public abstract class Piece : MonoBehaviour, IMixedRealityPointerHandler, IPunOb
 		//Debug.Log(controller);
 	}
 
-    public void OnPointerDown(MixedRealityPointerEventData eventData)
-    {
+  public void OnPointerDown(MixedRealityPointerEventData eventData)
+  {
 		PossibleMoves();
 		removeMovesLeavingKingInCheck();
-        board.HightlightTiles(availableMoves);
-       // Debug.Log("Down"); ;
-    }
+		board.HightlightTiles(avaliableMoves);
+		// Debug.Log("Down"); ;
+	}
+
 
     public void OnPointerDragged(MixedRealityPointerEventData eventData)
     {
 
     }
 
-    public void OnPointerUp(MixedRealityPointerEventData eventData)
-    {
-		List<Vector2Int> temp = new List<Vector2Int>(availableMoves); // creates temporary copy
-        availableMoves.Clear();
-        board.HightlightTiles(availableMoves);	// destroys highlights
-		availableMoves = new List<Vector2Int>(temp); // resets available moves
-       // Debug.Log("up");
-    }
+  public void OnPointerUp(MixedRealityPointerEventData eventData)
+  {
+		List<Vector2Int> temp = new List<Vector2Int>(avaliableMoves); // creates temporary copy
+    avaliableMoves.Clear();
+    board.HightlightTiles(avaliableMoves);	// destroys highlights
+		avaliableMoves = new List<Vector2Int>(temp); // resets available moves
+
+		// Debug.Log("up");
+	}
+
 
     public void OnPointerClicked(MixedRealityPointerEventData eventData)
     {

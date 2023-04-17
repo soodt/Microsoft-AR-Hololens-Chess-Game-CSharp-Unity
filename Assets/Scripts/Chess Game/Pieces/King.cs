@@ -27,6 +27,8 @@ public class King : Piece
 
     public override void MovePiece(Vector2Int coords)
     {
+        bool hasTaken = false;
+        bool hasCasteled = false;
         if (!taken)
         {
             if (this.getTeam() == controller.getActivePlayer().getTeam() && this.availableMoves.Contains(coords))
@@ -38,6 +40,7 @@ public class King : Piece
                     Piece pieceCheck = board.getPiece(coords);
                     if (pieceCheck)
                     {
+                        hasTaken = true;
                         board.takePiece(this, coords);
                         capture = true;
                     }
@@ -57,6 +60,8 @@ public class King : Piece
                     {
                         print(AlgebraicNotation(coords, coords, capture, false, false, true));
                         castleMove(pieceCheck);
+                        AudioManager.instance.Play("castle");
+                        hasCasteled = true;
                     }
                     else
                     {
@@ -75,6 +80,8 @@ public class King : Piece
         {
             transform.position = finalCoords;
         }
+        if (!hasTaken && !hasCasteled)
+            AudioManager.instance.Play("move");
     }
 
     public override void PossibleMoves()

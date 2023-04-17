@@ -91,6 +91,7 @@ public class Queen : Piece
 
     public override void MovePiece(Vector2Int coords)
     {
+        bool hasTaken = false;
         if (!taken)
         {
             Vector2Int displacement = coords - this.occupiedSquare;
@@ -108,6 +109,7 @@ public class Queen : Piece
                             Piece pieceCheck = board.getPiece(coords);
                             if (pieceCheck)
                             {
+                                hasTaken = board.takePiece(this, coords);
                                 board.takePiece(this, coords);
                                 capture = true;
                             }
@@ -136,6 +138,8 @@ public class Queen : Piece
             {
                 transform.position = finalCoords;
             }
+        if (!hasTaken)
+            AudioManager.instance.Play("move");
 
     }
 
