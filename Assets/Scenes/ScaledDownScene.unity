@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -193,6 +193,7 @@ MonoBehaviour:
   - {fileID: 0}
   turnIndicator: {fileID: 704355973}
   hasCaptured: 0
+  currentKing: {fileID: 0}
   isSinglePlayer: 1
 --- !u!114 &119498245
 MonoBehaviour:
@@ -228,7 +229,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &119498247
 MonoBehaviour:
@@ -275,79 +276,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9b8d58eb9df360488ce43b89f89145e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bottomLeftSquareTransform: {fileID: 416698249}
-  squareSize: 0.15
-  controller: {fileID: 0}
---- !u!114 &119872358
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+--- !u!1 &341281876 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8502560365771216830, guid: be3ad212ea551a64a89badbca6c92cfd, type: 3}
+  m_PrefabInstance: {fileID: 8502560366330410892}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aaa0af672ae2da644a87b6b7020a6be2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  freeSquareMaterial: {fileID: 2100000, guid: a319da9ce2632db40842dad69da7a343, type: 2}
-  enemySquareMaterial: {fileID: 2100000, guid: 8f2743e6dce3dce48b6f9fc9eccf3d03, type: 2}
-  selectorPrefab: {fileID: 2912707483993903054, guid: ca9f2642268fecb498f8084d6cc88ec0, type: 3}
---- !u!114 &119872359
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 119872355}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6c48c61ea3d6a5469cc407d71d0fad7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sounds:
-  - name: move
-    clip: {fileID: 8300000, guid: 9e3d99eba47ca96429aa8b4d93802a23, type: 3}
-    mixer: {fileID: 0}
-    volume: 1
-    pitch: 1
-    loop: 0
-    source: {fileID: 0}
-  - name: capture
-    clip: {fileID: 8300000, guid: aef90f40f325ccb4c832208f0cd4bc08, type: 3}
-    mixer: {fileID: 0}
-    volume: 1
-    pitch: 1
-    loop: 0
-    source: {fileID: 0}
-  - name: start
-    clip: {fileID: 8300000, guid: 9d8c25836f393284abd1773df2d9d9b6, type: 3}
-    mixer: {fileID: 0}
-    volume: 1
-    pitch: 1
-    loop: 0
-    source: {fileID: 0}
-  - name: castle
-    clip: {fileID: 8300000, guid: 9130d84e488413c41ad7e34a4b9aaef3, type: 3}
-    mixer: {fileID: 0}
-    volume: 1
-    pitch: 1
-    loop: 0
-    source: {fileID: 0}
-  - name: check
-    clip: {fileID: 8300000, guid: 330ba9298b008224f912bc65f3e92c4d, type: 3}
-    mixer: {fileID: 0}
-    volume: 1
-    pitch: 1
-    loop: 0
-    source: {fileID: 0}
-  - name: checkmate
-    clip: {fileID: 8300000, guid: 74e9037689f8a4549bb7de6abc5e059f, type: 3}
-    mixer: {fileID: 0}
-    volume: 1
-    pitch: 1
-    loop: 0
-    source: {fileID: 0}
 --- !u!1 &416698248
 GameObject:
   m_ObjectHideFlags: 0
@@ -580,7 +513,7 @@ Transform:
   m_Children:
   - {fileID: 704355977}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &963194225
 GameObject:
@@ -808,7 +741,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1418122949
 GameObject:
@@ -841,7 +774,7 @@ Transform:
   m_Children:
   - {fileID: 1735106611}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1418122951
 MonoBehaviour:
@@ -887,7 +820,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1438555943
 MonoBehaviour:
@@ -910,6 +843,61 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8502560365771216831, guid: be3ad212ea551a64a89badbca6c92cfd, type: 3}
   m_PrefabInstance: {fileID: 8502560366330410892}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1735106619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 341281876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6c48c61ea3d6a5469cc407d71d0fad7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: move
+    clip: {fileID: 8300000, guid: 9e3d99eba47ca96429aa8b4d93802a23, type: 3}
+    mixer: {fileID: 0}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: capture
+    clip: {fileID: 8300000, guid: aef90f40f325ccb4c832208f0cd4bc08, type: 3}
+    mixer: {fileID: 0}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: castle
+    clip: {fileID: 8300000, guid: 9130d84e488413c41ad7e34a4b9aaef3, type: 3}
+    mixer: {fileID: 0}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: check
+    clip: {fileID: 8300000, guid: 330ba9298b008224f912bc65f3e92c4d, type: 3}
+    mixer: {fileID: 0}
+    volume: 1
+    pitch: 1
+    loop: 0
+    source: {fileID: 0}
+  - name: checkmate
+    clip: {fileID: 8300000, guid: 74e9037689f8a4549bb7de6abc5e059f, type: 3}
+    mixer: {fileID: 0}
+    volume: 0
+    pitch: 0
+    loop: 0
+    source: {fileID: 0}
+  - name: start
+    clip: {fileID: 8300000, guid: 9d8c25836f393284abd1773df2d9d9b6, type: 3}
+    mixer: {fileID: 0}
+    volume: 0
+    pitch: 0
+    loop: 0
+    source: {fileID: 0}
 --- !u!1 &1895959842
 GameObject:
   m_ObjectHideFlags: 0
@@ -1002,7 +990,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1 &2010457773
 GameObject:
@@ -1034,7 +1022,7 @@ Transform:
   m_Children:
   - {fileID: 963194228}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2020841708
 GameObject:
@@ -1082,7 +1070,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2020841711
 MonoBehaviour:
