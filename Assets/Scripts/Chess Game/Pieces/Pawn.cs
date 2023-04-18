@@ -104,64 +104,60 @@ public class Pawn : Piece, IMixedRealityPointerHandler
                 bool promoted = false;
                 if (squareIsMoveable(coords))
                 {
-                    // If it is this team's turn
-                    if (squareIsMoveable(coords))
+
+                    if (this.occupiedSquare.y - coords.y == 2 || this.occupiedSquare.y - coords.y == -2)
                     {
-                        if (this.occupiedSquare.y - coords.y == 2 || this.occupiedSquare.y - coords.y == -2)
-                        {
-                            this.movedTwoSquares = true;
-                        }
-                        else
-                        {
-                            this.movedTwoSquares = false;
-                        }
-                        this.occupiedSquare = coords;
-                        transform.position = this.board.CalculatePositionFromCoords(coords);
-                        this.hasMoved = true;
-                        queening();
-                        controller.endTurn();
+                        this.movedTwoSquares = true;
                     }
-                    else if (canPawnTake(coords))
+                    else
                     {
-                        capture = true;
                         this.movedTwoSquares = false;
-                        board.takePiece(this, coords);
-                        hasTaken = true;
-                        this.occupiedSquare = coords;
-                        transform.position = this.board.CalculatePositionFromCoords(coords);
-                        this.hasMoved = true;
-                        queening();
-                        controller.endTurn();
                     }
-                    else if (canTakeEnPassant(coords))
-                    {
-                        enPassant = true;
-                        capture = true;
-                        if (this.getTeam() == TeamColor.White)
-                        {
-                            Vector2Int passedSquare = new Vector2Int(coords.x, coords.y - 1);
-                            board.takePiece(this, passedSquare);
-                            hasTaken = true;
-                        }
-                        else
-                        {
-                            Vector2Int passedSquare = new Vector2Int(coords.x, coords.y + 1);
-                            board.takePiece(this, passedSquare);
-                            hasTaken = true;
-                        }
-                        this.occupiedSquare = coords;
-                        transform.position = this.board.CalculatePositionFromCoords(coords);
-                        this.hasMoved = true;
-                        queening();
-                        controller.endTurn();
-                    }
-                }
-                else
-                {
-                    // If not this team's turn, snap back to occupied square
-                    transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
+                    this.occupiedSquare = coords;
+                    transform.position = this.board.CalculatePositionFromCoords(coords);
+                    this.hasMoved = true;
+                    queening();
+                    controller.endTurn();
                 }
 
+                else if (canPawnTake(coords))
+                {
+                    capture = true;
+                    this.movedTwoSquares = false;
+                    board.takePiece(this, coords);
+                    hasTaken = true;
+                    this.occupiedSquare = coords;
+                    transform.position = this.board.CalculatePositionFromCoords(coords);
+                    this.hasMoved = true;
+                    queening();
+                    controller.endTurn();
+                }
+                else if (canTakeEnPassant(coords))
+                {
+                    enPassant = true;
+                    capture = true;
+                    if (this.getTeam() == TeamColor.White)
+                    {
+                        Vector2Int passedSquare = new Vector2Int(coords.x, coords.y - 1);
+                        board.takePiece(this, passedSquare);
+                        hasTaken = true;
+                    }
+                    else
+                    {
+                        Vector2Int passedSquare = new Vector2Int(coords.x, coords.y + 1);
+                        board.takePiece(this, passedSquare);
+                        hasTaken = true;
+                    }
+                    this.occupiedSquare = coords;
+                    transform.position = this.board.CalculatePositionFromCoords(coords);
+                    this.hasMoved = true;
+                    queening();
+                    controller.endTurn();
+               
+                }
+                {
+                    transform.position = this.board.CalculatePositionFromCoords(this.occupiedSquare);
+                }
                 print(AlgebraicNotation(coords, prevCoords, capture, promoted, enPassant, false));
             } 
             else 
